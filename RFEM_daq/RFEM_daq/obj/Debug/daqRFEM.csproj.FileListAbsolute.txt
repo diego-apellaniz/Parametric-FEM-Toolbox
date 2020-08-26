@@ -1,0 +1,8 @@
+D:\Diego\Documentos\Visual Studio 2017\Projects\daqRFEM\daqRFEM\bin\daqRFEM.dll
+D:\Diego\Documentos\Visual Studio 2017\Projects\daqRFEM\daqRFEM\bin\daqRFEM.pdb
+D:\Diego\Documentos\Visual Studio 2017\Projects\daqRFEM\daqRFEM\obj\Debug\daqRFEM.csprojResolveAssemblyReference.cache
+D:\Diego\Documentos\Visual Studio 2017\Projects\daqRFEM\daqRFEM\obj\Debug\daqRFEM.Properties.Resources.resources
+D:\Diego\Documentos\Visual Studio 2017\Projects\daqRFEM\daqRFEM\obj\Debug\daqRFEM.csproj.GenerateResource.Cache
+D:\Diego\Documentos\Visual Studio 2017\Projects\daqRFEM\daqRFEM\obj\Debug\daqRFEM.csproj.CoreCompileInputs.cache
+D:\Diego\Documentos\Visual Studio 2017\Projects\daqRFEM\daqRFEM\obj\Debug\daqRFEM.dll
+D:\Diego\Documentos\Visual Studio 2017\Projects\daqRFEM\daqRFEM\obj\Debug\daqRFEM.pdb

@@ -1,0 +1,343 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Grasshopper.Kernel;
+using Grasshopper.Kernel.Types;
+using Grasshopper.Kernel.Parameters;
+using Rhino.Geometry;
+using RFEM_daq.UIWidgets;
+
+using RFEM_daq.GUI;
+using RFEM_daq.HelperLibraries;
+using RFEM_daq.RFEM;
+using RFEM_daq.Utilities;
+using Dlubal.RFEM5;
+using System.Runtime.InteropServices;
+
+namespace RFEM_daq.Deprecated
+{
+    public class Component_GetData_GUI_OBSOLETE : GH_SwitcherComponent
+    {
+        // Declare class variables outside the method "SolveInstance" so their values persist 
+        // when the method is called again.
+        List<RFNode> rfNodes = new List<RFNode>();
+        List<RFLine> rfLines = new List<RFLine>();
+        List<RFMember> rfMembers = new List<RFMember>();
+        List<RFSurface> rfSurfaces = new List<RFSurface>();
+        List<RFOpening> rfOpenings = new List<RFOpening>();
+        List<RFSupportP> rfSupportsP = new List<RFSupportP>();
+        List<RFSupportL> rfSupportsL = new List<RFSupportL>();
+        List<RFLineHinge> rfLineHinges = new List<RFLineHinge>();
+        List<RFCroSec> rfCroSecs = new List<RFCroSec>();
+        List<RFMaterial> rfMaterials = new List<RFMaterial>();
+        List<RFNodalLoad> rfNodalLoads = new List<RFNodalLoad>();
+
+
+        int modelDataCount = 0;
+        int modelDataCount1 = 0;
+        int modelDataCount2 = 0;
+
+
+        /// <summary>
+        /// Each implementation of GH_Component must provide a public 
+        /// constructor without any arguments.
+        /// Category represents the Tab in which the component will appear, 
+        /// Subcategory the panel. If you use non-existing tab or panel names, 
+        /// new tabs/panels will automatically be created.
+        /// </summary>
+        public Component_GetData_GUI_OBSOLETE()
+          : base("Get Data", "Get Data", "Gets Data from the RFEM Model.", "B+G Toolbox", "RFEM")
+        {
+        }
+
+        // Define Keywords to search for this Component more easily in Grasshopper
+        public override IEnumerable<string> Keywords => new string[] {"rf", "get", "data"};
+
+        /// <summary>
+        /// Registers all the input parameters for this component.
+        /// </summary>
+        protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+        {
+            // Use the pManager object to register your input parameters.
+            pManager.AddBooleanParameter("Nodes in RFEM Model", "Nodes", "Nodes to get from the RFEM Model.", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Lines in RFEM Model", "Lines", "Lines to get from the RFEM Model.", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Members in RFEM Model", "Members", "Members to get from the RFEM Model.", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Surfaces in RFEM Model", "Surfaces", "Surfaces to get from the RFEM Model.", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Openings in RFEM Model", "Openings", "Openings to get from the RFEM Model.", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Nodal Supports in RFEM Model", "NodSup", "Nodal Supports to get from the RFEM Model.", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Line Supports in RFEM Model", "LineSup", "Line Supports to get from the RFEM Model.", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Line Hinges in RFEM Model", "LineHinges", "Line Hinges to get from the RFEM Model.", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Cross Sections in RFEM Model", "CroSecs", "Cross Sections to get from the RFEM Model.", GH_ParamAccess.item, false);
+            //pManager.AddBooleanParameter("Materials in RFEM Model", "Materials", "Materials to get from the RFEM Model.", GH_ParamAccess.item, false);
+            //pManager.AddParameter(new Param_Filter_GUI(), "Filter", "Filter", "Filter RFEM Objects", GH_ParamAccess.list);
+            //pManager[5].Optional = true;
+            pManager.AddBooleanParameter("Run component?", "Run", "If true, the programm is executed.", GH_ParamAccess.item, false);
+            modelDataCount = pManager.ParamCount;
+            // If you want to change properties of certain parameters, 
+            // you can use the pManager instance to access them by index:
+            // pManager[0].Optional = true;
+        }
+
+        /// <summary>
+        /// Registers all the output parameters for this component.
+        /// </summary>
+        protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+        {
+            // Use the pManager object to register your output parameters.
+            // Output parameters do not have default values, but they too must have the correct access type.
+            pManager.RegisterParam(new Param_RFEM(), "Nodes", "Nodes", "Nodes from the RFEM Model.", GH_ParamAccess.list);
+            pManager.RegisterParam(new Param_RFEM(), "Lines", "Lines", "Lines from the RFEM Model.", GH_ParamAccess.list);
+            pManager.RegisterParam(new Param_RFEM(), "Members", "Members", "Members from the RFEM Model.", GH_ParamAccess.list);
+            pManager.RegisterParam(new Param_RFEM(), "Surfaces", "Surfaces", "Surfaces from the RFEM Model.", GH_ParamAccess.list);
+            pManager.RegisterParam(new Param_RFEM(), "Openings", "Openings", "Openings from the RFEM Model.", GH_ParamAccess.list);
+            pManager.RegisterParam(new Param_RFEM(), "Nodal Supports", "NodSup", "Nodal Supports from the RFEM Model.", GH_ParamAccess.list);
+            pManager.RegisterParam(new Param_RFEM(), "Line Supports", "LineSup", "Line Supports from the RFEM Model.", GH_ParamAccess.list);
+            pManager.RegisterParam(new Param_RFEM(), "Line Hinges", "LHinges", "Line Hinges from the RFEM Model.", GH_ParamAccess.list);
+            pManager.RegisterParam(new Param_RFEM(), "Cross Sections", "CroSec", "Cross Sections from the RFEM Model.", GH_ParamAccess.list);
+            //pManager.RegisterParam(new Param_RFEM(), "Materials", "Mat", "Materials from the RFEM Model.", GH_ParamAccess.list);
+            // Sometimes you want to hide a specific parameter from the Rhino preview.
+            // You can use the HideParameter() method as a quick way:
+            // pManager.HideParameter(0);
+        }
+
+        protected override void RegisterEvaluationUnits(EvaluationUnitManager mngr)
+        {
+            EvaluationUnit evaluationUnit = new EvaluationUnit("Get Data", "Get Data", "Gets Data from the RFEM Model.", RFEM_daq.Properties.Resources.icon_GetData);
+            mngr.RegisterUnit(evaluationUnit);
+
+            //evaluationUnit.RegisterInputParam(new Param_Boolean(), "Nodes in RFEM Model", "Nodes", "Nodes to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
+            //evaluationUnit.RegisterInputParam(new Param_Boolean(), "Lines in RFEM Model", "Lines", "Lines to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
+            //evaluationUnit.RegisterInputParam(new Param_Boolean(), "Members in RFEM Model", "Members", "Members to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
+            //evaluationUnit.RegisterInputParam(new Param_Boolean(), "Surfaces in RFEM Model", "Surfaces", "Surfaces to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
+            //evaluationUnit.RegisterInputParam(new Param_Boolean(), "Openings in RFEM Model", "Openings", "Openings to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
+
+            //evaluationUnit.RegisterOutputParam(new Param_RFEM_GUI(), "Nodes", "Nodes", "Nodes from the RFEM Model.");
+
+            //modelDataCount1 = evaluationUnit.Inputs.Count;
+            //GH_ExtendableMenu gH_ExtendableMenu1 = new GH_ExtendableMenu(0, "model_data");
+            //gH_ExtendableMenu1.Name = "Model Data";
+            ////gH_ExtendableMenu1.Collapse();
+            //evaluationUnit.AddMenu(gH_ExtendableMenu1);
+            //for (int i = 0; i < modelDataCount; i++)
+            //{
+            //    gH_ExtendableMenu1.RegisterInputPlug(evaluationUnit.Inputs[i]);
+            //}
+
+            //evaluationUnit.RegisterInputParam(new Param_Boolean(), "Nodal Loads", "NLoads", "Nodal Loads from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
+            //evaluationUnit.Inputs[0].Parameter.Optional = true;
+            //evaluationUnit.RegisterOutputParam(new Param_RFEM(), "Nodal Loads", "NLoads", "Nodal Loads from the RFEM Model.");
+
+            
+            modelDataCount2 = evaluationUnit.Inputs.Count;
+
+            //GH_ExtendableMenu gH_ExtendableMenu = new GH_ExtendableMenu(0, "Load Data");
+            //gH_ExtendableMenu.Name = "Load Data";
+            //gH_ExtendableMenu.Collapse();
+            //evaluationUnit.AddMenu(gH_ExtendableMenu);
+            //for (int i = 0; i < modelDataCount2; i++)
+            //{
+            //    gH_ExtendableMenu.RegisterInputPlug(evaluationUnit.Inputs[i]);
+            //    gH_ExtendableMenu.RegisterOutputPlug(evaluationUnit.Outputs[i]);
+            //}
+
+            evaluationUnit.RegisterInputParam(new Param_Filter(), "Filter", "Filter", "Filter RFEM Objects", GH_ParamAccess.list);
+            evaluationUnit.Inputs[modelDataCount2].Parameter.Optional = true;
+            evaluationUnit.RegisterInputParam(new Param_String(), "Model Name", "Model Name", "Segment of the name of the RFEM Model to get information from", GH_ParamAccess.item);
+            evaluationUnit.Inputs[modelDataCount2 + 1].Parameter.Optional = true;
+
+            GH_ExtendableMenu gH_ExtendableMenu2 = new GH_ExtendableMenu(1, "advanced");
+            gH_ExtendableMenu2.Name = "Advanced";
+            gH_ExtendableMenu2.Collapse();
+            evaluationUnit.AddMenu(gH_ExtendableMenu2);
+            for (int i = modelDataCount2; i < modelDataCount2 + 2; i++)
+            {
+                gH_ExtendableMenu2.RegisterInputPlug(evaluationUnit.Inputs[i]);
+            }
+
+
+        }
+
+        /// <summary>
+        /// This is the method that actually does the work.
+        /// </summary>
+        /// <param name="DA">The DA object can be used to retrieve data from input parameters and 
+        /// to store data in output parameters.</param>
+        protected override void SolveInstance(IGH_DataAccess DA, EvaluationUnit unit)
+        {
+            // Input counter
+            modelDataCount1 = modelDataCount + modelDataCount2;
+
+            // RFEM variables
+            var modelName = "";
+            IModel model = null;
+            IModelData data = null;
+            //ILoads loads = null;
+
+            // Assign GH Input
+            bool getnodes = false;
+            bool getlines = false;
+            bool getmembers = false;
+            bool getsurfaces = false;
+            bool getopenings = false;
+            bool getsupportsP = false;
+            bool getsupportsL = false;
+            bool getLineHinges = false;
+            bool getCroSecs = false;
+            //bool getMaterials = false;
+            //bool getNodalLoads = false;
+            bool run = false;
+            var ghFilters = new List<GH_RFFilter>();
+            var inFilters = new List<RFFilter>();
+            DA.GetData(0, ref getnodes);
+            DA.GetData(1, ref getlines);
+            DA.GetData(2, ref getmembers);
+            DA.GetData(3, ref getsurfaces);
+            DA.GetData(4, ref getopenings);
+            DA.GetData(5, ref getsupportsP);
+            DA.GetData(6, ref getsupportsL);
+            DA.GetData(7, ref getLineHinges);
+            DA.GetData(8, ref getCroSecs);
+            //DA.GetData(9, ref getMaterials);
+            DA.GetData(modelDataCount + modelDataCount2 -1, ref run);
+                    //DA.GetData(11, ref getNodalLoads);
+            if (DA.GetDataList(modelDataCount1, ghFilters))
+            {
+                inFilters = ghFilters.Select(x => x.Value).ToList();
+            }
+
+            // Do stuff
+            if (run)
+            {
+                if (!DA.GetData(modelDataCount1+1, ref modelName))
+                {
+                    Component_GetData.ConnectRFEM(ref model, ref data);
+                }else
+                {
+                    Component_GetData.ConnectRFEM(modelName, ref model, ref data);
+                }                
+                Component_GetData.ClearOutput(ref rfNodes, ref rfLines, ref rfMembers, ref rfSurfaces, ref rfOpenings,
+                    ref rfSupportsP, ref rfSupportsL, ref rfLineHinges, ref rfCroSecs, ref rfMaterials, ref rfNodalLoads);            
+
+                  try
+                {
+                    if (getnodes)
+                    {
+                        var filNodes = Component_GetData.FilterNodes(data, inFilters);
+                        rfNodes = Component_GetData.GetRFNodes(filNodes, data);
+                    }
+                    if (getlines)
+                    {
+                        var filLines = Component_GetData.FilterLines(data, inFilters);
+                        rfLines = Component_GetData.GetRFLines(filLines, data);
+                    }
+                    if (getmembers)
+                    {
+                        var filMembers = Component_GetData.FilterMembers(data, inFilters);
+                        rfMembers = Component_GetData.GetRFMembers(filMembers, data);
+                    }
+                    if (getsurfaces)
+                    {
+                        var filSrfcs = Component_GetData.FilterSurfaces(data, inFilters);
+                        rfSurfaces = Component_GetData.GetRFSurfaces(filSrfcs, data);
+                    }
+                    if (getopenings)
+                    {
+                        var filOpenings = Component_GetData.FilterOpenings(data, inFilters);
+                        rfOpenings = Component_GetData.GetRFOpenings(filOpenings,data);
+                    }
+                    if (getsupportsP)
+                    {
+                        var filSupportsP = Component_GetData.FilterSupsP(data, inFilters);
+                        rfSupportsP = Component_GetData.GetRFSupportsP(filSupportsP, data);
+                    }
+                    if (getsupportsL)
+                    {
+                        var filSupportsL = Component_GetData.FilterSupsL(data, inFilters);
+                        rfSupportsL = Component_GetData.GetRFSupportsL(filSupportsL, data);
+                    }
+                    if (getLineHinges)
+                    {
+                        var filLineHinges = Component_GetData.FilterLH(data, inFilters);
+                        rfLineHinges = Component_GetData.GetRFLineHinges(filLineHinges, data);
+                    }
+                    if (getCroSecs)
+                    {
+                        var filCroSecs = Component_GetData.FilterCroSecs(data, inFilters);
+                        rfCroSecs = Component_GetData.GetRFCroSecs(filCroSecs, data);
+                    }
+                    //if (getMaterials)
+                    //{
+                    //    var filMaterials = Component_GetData.FilterMaterials(data, inFilters);
+                    //    rfMaterials = Component_GetData.GetRFMaterials(filMaterials, data);
+                    //}
+                    ////Get Loads?
+                    //if (getNodalLoads)
+                    //{
+                    //    Component_GetData.GetLoadsFromRFEM(ref model, ref loads);
+                    //}
+                    //    if (getNodalLoads)
+                    //{
+                    //    var filNodalLoads = Component_GetData.FilterNodalLoads(data, loads, inFilters);
+                    //    rfNodalLoads = Component_GetData.GetRFNodalLoads(filNodalLoads, data);
+                    //}
+                }
+                catch (Exception ex)
+                {
+                    Component_GetData.ClearOutput(ref rfNodes, ref rfLines, ref rfMembers, ref rfSurfaces, ref rfOpenings,
+                        ref rfSupportsP, ref rfSupportsL, ref rfLineHinges, ref rfCroSecs, ref rfMaterials, ref rfNodalLoads);
+                    throw ex;
+                }
+                Component_GetData.DisconnectRFEM(ref model, ref data);
+            }
+
+            // Assign GH Output
+            DA.SetDataList(0, rfNodes);
+            DA.SetDataList(1, rfLines);
+            DA.SetDataList(2, rfMembers);
+            DA.SetDataList(3, rfSurfaces);
+            DA.SetDataList(4, rfOpenings);
+            DA.SetDataList(5, rfSupportsP);
+            DA.SetDataList(6, rfSupportsL);
+            DA.SetDataList(7, rfLineHinges);
+            DA.SetDataList(8, rfCroSecs);
+            //DA.SetDataList(9, rfMaterials);
+// DA.SetDataList(10, rfNodalLoads);
+        }
+
+        /// <summary>
+        /// The Exposure property controls where in the panel a component icon 
+        /// will appear. There are seven possible locations (primary to septenary), 
+        /// each of which can be combined with the GH_Exposure.obscure flag, which 
+        /// ensures the component will only be visible on panel dropdowns.
+        /// </summary>
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.hidden; }
+        }
+
+        /// <summary>
+        /// Provides an Icon for every component that will be visible in the User Interface.
+        /// Icons need to be 24x24 pixels.
+        /// </summary>
+        protected override System.Drawing.Bitmap Icon
+        {
+            get
+            {
+                // You can add image files to your project resources and access them like this:
+                //return Resources.IconForThisComponent;
+                return RFEM_daq.Properties.Resources.icon_GetData;                
+            }
+        }
+
+        /// <summary>
+        /// Each component must have a unique Guid to identify it. 
+        /// It is vital this Guid doesn't change otherwise old ghx files 
+        /// that use the old ID will partially fail during loading.
+        /// </summary>
+        public override Guid ComponentGuid
+        {
+            get { return new Guid("4fce949a-c299-4a74-aa7a-494caa13a72f"); }
+        }
+    }
+}
