@@ -1,0 +1,10 @@
+D:\Diego\OneDrive\Projects\Repos\Parametric-FEM-Toolbox\RFEM_daq\RFEM_daq\obj\x64\Debug\Parametric-FEM-Toolbox.csprojAssemblyReference.cache
+D:\Diego\OneDrive\Projects\Repos\Parametric-FEM-Toolbox\RFEM_daq\RFEM_daq\obj\x64\Debug\Parametric-FEM-Toolbox.csproj.GenerateResource.cache
+D:\Diego\OneDrive\Projects\Repos\Parametric-FEM-Toolbox\RFEM_daq\RFEM_daq\obj\x64\Debug\RFEM_daq.dll
+D:\Diego\OneDrive\Projects\Repos\Parametric-FEM-Toolbox\RFEM_daq\RFEM_daq\obj\x64\Debug\RFEM_daq.pdb
+D:\Diego\OneDrive\Projects\Repos\Parametric-FEM-Toolbox\RFEM_daq\RFEM_daq\bin\x64\Debug\RFEM_daq.dll
+D:\Diego\OneDrive\Projects\Repos\Parametric-FEM-Toolbox\RFEM_daq\RFEM_daq\bin\x64\Debug\RFEM_daq.pdb
+D:\Diego\OneDrive\Projects\Repos\Parametric-FEM-Toolbox\RFEM_daq\RFEM_daq\bin\x64\Debug\Eto.dll
+D:\Diego\OneDrive\Projects\Repos\Parametric-FEM-Toolbox\RFEM_daq\RFEM_daq\bin\x64\Debug\Eto.xml
+D:\Diego\OneDrive\Projects\Repos\Parametric-FEM-Toolbox\RFEM_daq\RFEM_daq\obj\x64\Debug\RFEM_daq.Properties.Resources.resources
+D:\Diego\OneDrive\Projects\Repos\Parametric-FEM-Toolbox\RFEM_daq\RFEM_daq\obj\x64\Debug\Parametric-FEM-Toolbox.csproj.CopyComplete
