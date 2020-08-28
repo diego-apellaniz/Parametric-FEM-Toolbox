@@ -24,6 +24,8 @@ This software is licensed under the Apache 2 license: http://www.apache.org/lice
 
 ## Acknowledgement
 
+This plugin was developed in collaboration with Bollinger+Grohmann. Thanks for the Beta Testing and all the feedback.
+
 The GUI and the structure of this Plug-In is based to a large extent on the code of Karamba3D, developed by Clemens Preisinger in cooperation with Bollinger und Grohmann ZT GmbH in Vienna.
 
 ## Examples
