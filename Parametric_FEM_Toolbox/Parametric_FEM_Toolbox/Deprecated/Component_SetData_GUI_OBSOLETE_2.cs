@@ -225,7 +225,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     // Set Loads
                     if (DA.GetDataList(modelDataCount, ghNodalLoads))
                     {
-                        Component_GetData.GetLoadsFromRFEM(ref model, ref loads);
+                        Component_GetData.GetLoadsFromRFEM(model, ref loads);
                         data.SetRFNodalLoads(loads, ghNodalLoads, ref nodalLoadNo);
                     }
                 }

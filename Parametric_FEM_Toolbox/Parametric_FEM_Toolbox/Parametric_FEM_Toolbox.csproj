@@ -105,6 +105,7 @@
     <Compile Include="Deprecated\Component_FilterData_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\Component_FilterData_GUI_OBSOLETE_2.cs" />
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_3.cs" />
+    <Compile Include="GUI\Component_GetResults_GUI.cs" />
     <Compile Include="GUI\Component_RFSrfcSupport_GUI.cs" />
     <Compile Include="GUI\Component_RFResultCombo_GUI.cs" />
     <Compile Include="GUI\Component_RFLoadCombo_GUI.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="GUI\SubComponent_Filter_SupsL_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_NodalLoads_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_SupsP_GUI.cs" />
+    <Compile Include="HelperLibraries\Component_GetResults.cs" />
     <Compile Include="HelperLibraries\Component_RFOpening.cs" />
     <Compile Include="HelperLibraries\Component_RFSurface.cs" />
     <Compile Include="HelperLibraries\Component_RFLine.cs" />
@@ -491,6 +493,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\toolbox_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon_OptimizeCS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon_GetResults.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

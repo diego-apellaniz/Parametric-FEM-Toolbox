@@ -273,7 +273,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     //Get Loads?
                     if (getNodalLoads)
                     {
-                        Component_GetData.GetLoadsFromRFEM(ref model, ref loads);
+                        Component_GetData.GetLoadsFromRFEM(model, ref loads);
                     }
                         if (getNodalLoads)
                     {

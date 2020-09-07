@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Properties;
+using Parametric_FEM_Toolbox.Properties;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Parametric_FEM_Toolbox.RFEM;

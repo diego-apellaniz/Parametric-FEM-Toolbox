@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Properties {
+namespace Parametric_FEM_Toolbox.Properties {
     using System;
     
     
@@ -523,6 +523,26 @@ namespace Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icon_GetResults {
+            get {
+                object obj = ResourceManager.GetObject("icon_GetResults", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_OptimizeCS {
+            get {
+                object obj = ResourceManager.GetObject("icon_OptimizeCS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icon_RF_List {
             get {
                 object obj = ResourceManager.GetObject("icon_RF_List", resourceCulture);
@@ -706,16 +726,6 @@ namespace Properties {
         internal static System.Drawing.Bitmap icon_SetData {
             get {
                 object obj = ResourceManager.GetObject("icon_SetData", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap OptimizeCS {
-            get {
-                object obj = ResourceManager.GetObject("OptimizeCS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

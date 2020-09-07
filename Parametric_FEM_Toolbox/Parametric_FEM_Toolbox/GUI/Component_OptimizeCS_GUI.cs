@@ -62,7 +62,7 @@ namespace Parametric_FEM_Toolbox.GUI
 
         protected override void RegisterEvaluationUnits(EvaluationUnitManager mngr)
         {
-            EvaluationUnit evaluationUnit = new EvaluationUnit("Optimize Cross Sections", "Optimize CroSec", "Performs a Cross Section Optimization with the EC3 Module.", Properties.Resources.icon_SetData);
+            EvaluationUnit evaluationUnit = new EvaluationUnit("Optimize Cross Sections", "Optimize CroSec", "Performs a Cross Section Optimization with the EC3 Module.", Properties.Resources.icon_OptimizeCS);
             mngr.RegisterUnit(evaluationUnit);
 
 
@@ -201,7 +201,7 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                 // You can add image files to your project resources and access them like this:
                 //return Resources.IconForThisComponent;
-                return Properties.Resources.Disassemble_Surface;                
+                return Properties.Resources.icon_OptimizeCS;                
             }
         }
 

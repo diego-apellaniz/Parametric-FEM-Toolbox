@@ -3129,7 +3129,6 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         public static List<LoadCombination> FilterLoadCombos(Dlubal.RFEM5.IModelData data, ILoads loads, List<RFFilter> filters)
         {
             var outLoadCombos = new List<LoadCombination>();
-            var mycombos = loads.GetLoadCombinations();
 
             foreach (var lc in loads.GetLoadCombinations())
             {
@@ -3204,7 +3203,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
 
         #endregion
 
-        #region LoadCombo
+        #region ResultCombo
 
         public static List<ResultCombination> FilterResultCombos(Dlubal.RFEM5.IModelData data, ILoads loads, List<RFFilter> filters)
         {
@@ -3363,7 +3362,8 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 // checks RF-COM license and locks the application for using by COM
                 model.GetApplication().LockLicense();
                 data = model.GetModelData();
-                // We want to rewrite the lists, but not to add new items.    
+                // We want to rewrite the lists, but not to add new items.   
+
             }
             catch (Exception ex)
             {
@@ -3428,13 +3428,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             System.GC.WaitForPendingFinalizers();
         }
 
-        public static void GetLoadsFromRFEM(ref IModel model, ref ILoads loads)
+        public static void GetLoadsFromRFEM(IModel model, ref ILoads loads)
         {
             try
             {
                 // Already Connected to an opened RFEM model
-                model = Marshal.GetActiveObject("RFEM5.Model") as IModel;
+                //model = Marshal.GetActiveObject("RFEM5.Model") as IModel;
                 loads = model.GetLoads();
+
                 // We want to rewrite the lists, but not to add new items.    
             }
             catch (Exception ex)

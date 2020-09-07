@@ -334,7 +334,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         if (loads == null)
                         {
-                            Component_GetData.GetLoadsFromRFEM(ref model, ref loads);
+                            Component_GetData.GetLoadsFromRFEM(model, ref loads);
                         }
                         data.SetRFLoadCases(loads, ghLoadCases, ref loadcaseNo, ref errorMsg);
                     }
@@ -342,7 +342,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         if (loads == null)
                         {
-                            Component_GetData.GetLoadsFromRFEM(ref model, ref loads);
+                            Component_GetData.GetLoadsFromRFEM(model, ref loads);
                         }
                         data.SetRFLoadCombos(loads, ghLoadCombos, ref loadcomboNo, ref errorMsg);
                     }
@@ -350,7 +350,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         if (loads == null)
                         {
-                            Component_GetData.GetLoadsFromRFEM(ref model, ref loads);
+                            Component_GetData.GetLoadsFromRFEM(model, ref loads);
                         }
                         data.SetRFResultCombos(loads, ghLoadCases, ref resultcomboNo, ref errorMsg);
                     }
@@ -359,7 +359,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         if (loads == null)
                         {
-                            Component_GetData.GetLoadsFromRFEM(ref model, ref loads);
+                            Component_GetData.GetLoadsFromRFEM(model, ref loads);
                         }
                         data.SetRFNodalLoads(loads, ghNodalLoads, ref nodalLoadNo, ref errorMsg);
                     }
@@ -367,7 +367,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         if (loads == null)
                         {
-                            Component_GetData.GetLoadsFromRFEM(ref model, ref loads);
+                            Component_GetData.GetLoadsFromRFEM(model, ref loads);
                         }                        
                         data.SetRFLineLoads(loads, ghLineLoads, ref lineLoadNo, ref errorMsg);
                     }
@@ -375,7 +375,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         if (loads == null)
                         {
-                            Component_GetData.GetLoadsFromRFEM(ref model, ref loads);
+                            Component_GetData.GetLoadsFromRFEM(model, ref loads);
                         }
                         data.SetRFMemberLoads(loads, ghMemberLoads, ref memberLoadNo, ref errorMsg);
                     }
@@ -383,7 +383,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         if (loads == null)
                         {
-                            Component_GetData.GetLoadsFromRFEM(ref model, ref loads);
+                            Component_GetData.GetLoadsFromRFEM(model, ref loads);
                         }
                         data.SetRFSurfaceLoads(loads, ghSurfaceLoads, ref surfaceLoadNo, ref errorMsg);
                     }
@@ -391,7 +391,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         if (loads == null)
                         {
-                            Component_GetData.GetLoadsFromRFEM(ref model, ref loads);
+                            Component_GetData.GetLoadsFromRFEM(model, ref loads);
                         }
                         data.SetRFFreePolygonLoads(loads, ghPolyLoads, ref polyLoadNo, ref errorMsg);
                     }
