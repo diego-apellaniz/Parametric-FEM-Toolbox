@@ -104,7 +104,7 @@ namespace Parametric_FEM_Toolbox.GUI
             evaluationUnit.RegisterInputParam(new Param_Number(), "Scale Factor", "Scale Factor", "Scale Factor applied to the deformed shape.", GH_ParamAccess.item, new GH_Number(1));
             evaluationUnit.Inputs[0].Parameter.Optional = true;
 
-            evaluationUnit.RegisterOutputParam(new Param_Curve(), "Crv", "Cuves", "Deformed shape of the linear elemnents of the RFEM Model.");
+            evaluationUnit.RegisterOutputParam(new Param_Curve(), "Crv", "Curves", "Deformed shape of the linear elemnents of the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_Mesh(), "Msh", "Meshes", "Deformed shape of the surface elemnents of the RFEM Model.");
 
             //modelDataCount = evaluationUnit.Inputs.Count;

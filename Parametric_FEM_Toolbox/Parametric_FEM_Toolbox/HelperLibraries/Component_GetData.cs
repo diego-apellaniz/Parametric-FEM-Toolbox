@@ -3021,6 +3021,21 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             foreach (var item in loads)
             {
                 var rfPolyLoad = new RFFreePolygonLoad(item.Value, item.Key.Item2);
+                // Get polygons
+                var rfsfcs = new List<RFSurface>();
+                var allSfcs = GetRFSurfaces(data.GetSurfaces().ToList(), data);
+                if (rfPolyLoad.SurfaceList != "")
+                {
+                    foreach (var sfcNo in rfPolyLoad.SurfaceList.ToInt())
+                    {
+                        rfsfcs.AddRange(allSfcs.Where(x => x.No == sfcNo));
+                    }
+                }
+                else
+                {
+                    rfsfcs = allSfcs;
+                }
+                rfPolyLoad.Polygon = rfPolyLoad.GetPolygons(rfsfcs);
                 rfPolyLoadList.Add(rfPolyLoad);
             }
             return rfPolyLoadList;

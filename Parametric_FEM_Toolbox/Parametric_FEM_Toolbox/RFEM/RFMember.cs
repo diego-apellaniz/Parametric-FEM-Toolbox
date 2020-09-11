@@ -59,7 +59,10 @@ namespace Parametric_FEM_Toolbox.RFEM
         {
             ToModify = other.ToModify;
             ToDelete = other.ToDelete;
-            BaseLine = new RFLine(other.BaseLine);
+            if (other.BaseLine != null)
+            {
+                BaseLine = new RFLine(other.BaseLine);
+            }            
             Frames = other.Frames;
         }
 

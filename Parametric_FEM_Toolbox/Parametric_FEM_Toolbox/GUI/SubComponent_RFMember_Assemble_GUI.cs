@@ -158,6 +158,12 @@ namespace Parametric_FEM_Toolbox.GUI
                 rFMember.SetFrames();                
                 rFMember.StartCrossSectionNo = sCS;
             }
+            else if (DA.GetData(4, ref lineNo) && DA.GetData(1, ref sCS))
+            {
+                rFMember.LineNo = lineNo;
+                rFMember.BaseLine = null;
+                rFMember.StartCrossSectionNo = sCS;
+            }
             else
             {
                 msg = "Insufficient input parameters. Provide either Input Curve and Start Cross Section or existing RFMember Object. ";
@@ -180,10 +186,10 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                 rFMember.Comment = comment;
             }
-            if (DA.GetData(4, ref lineNo))
-            {
-                rFMember.LineNo = lineNo;
-            }
+            //if (DA.GetData(4, ref lineNo))
+            //{
+            //    rFMember.LineNo = lineNo;
+            //}
             if (DA.GetData(5, ref memberType))
             {
                 rFMember.Type = (MemberType)memberType;

@@ -172,10 +172,10 @@ namespace Parametric_FEM_Toolbox.RFEM
             var separator = new char[] { ';', ',' };
             var coordList = CornerPointList.Split(separator);
             var pointList = new List<Point3d>();
-            for (int i = 0; i < coordList.Length / 2; i++)
+            for (int i = 0; i <= coordList.Length / 2; i++)
             {
-                var value1 = Convert.ToDouble(coordList[i * 2]);
-                var value2 = Convert.ToDouble(coordList[i * 2 + 1]);
+                var value1 = Convert.ToDouble(coordList[(i * 2) % coordList.Length]);
+                var value2 = Convert.ToDouble(coordList[(i * 2 + 1) % coordList.Length]);
                 switch (ProjectionType)
                 {
                     case (PlaneType.PlaneXZ):

@@ -359,7 +359,10 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         {
             // Draw Line in RFEM
             var myRFLine = rfMember.BaseLine;
-            rfMember.LineNo = data.SetRFLine(ref myRFLine, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo).No;
+            if (rfMember.LineNo == 0)
+            {
+                rfMember.LineNo = data.SetRFLine(ref myRFLine, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo).No;
+            }            
             // Set member with a provided index number or without
             if (rfMember.No == 0)
             {
