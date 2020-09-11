@@ -6,6 +6,12 @@ This Plug-In enables an interoperability between RFEM and Grasshopper through th
 
 This repository belongs to Diego Apellániz - <dapellaniz@bollinger-grohmann.de>
 
+## Acknowledgement
+
+This plugin was developed in collaboration with Bollinger+Grohmann. Thanks for the Beta Testing and all the feedback.
+
+The code of the GUI-Widgets vomes from Karamba3D and they were developed by Clemens Preisinger and Christoph Zimmel in cooperation with Bollinger und Grohmann ZT GmbH in Vienna.
+
 ## Installation
 
 Download the latest .gha file under [releases](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/releases), unblock it and place it in your Grasshopper library folder: C:\Users\XX\AppData\Roaming\Grasshopper\Libraries
@@ -22,11 +28,6 @@ Please report any bugs or requests for enhancement in the GitHub issue tracker.
 
 This software is licensed under the Apache 2 license: http://www.apache.org/licenses/LICENSE-2.0
 
-## Acknowledgement
-
-This plugin was developed in collaboration with Bollinger+Grohmann. Thanks for the Beta Testing and all the feedback.
-
-The GUI and the structure of this Plug-In is based to a large extent on the code of Karamba3D, developed by Clemens Preisinger in cooperation with Bollinger und Grohmann ZT GmbH in Vienna.
 
 ## Examples
 

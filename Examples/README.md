@@ -54,3 +54,39 @@ This Plug-In supports the use of Grasshopper Scripting Components to deal with R
 Two C# scripts are included in this file to show how to read properties of RF-Objects and how to create new RF-Objects or modify existing ones.
 
 ![alt text](https://lojmjq.db.files.1drv.com/y4m6mzkUGHsBKURoQEC9KryIe0ai1LUGBZKbO4tglJhGMNXb4E3x-0RNDS3scwy66Qcoy9mZFMbKUvIntx8-U9nw5Iu5EG0Wzx-DOHFwtpUaV_VYzd6TOAsELyaXfVUdyjSbCIGiLp0J_tzfdInZ83SqqTIR96-N2v4Yb960WBvG1RdfOcuB9cAuJn9izsy7Tx8rycITgh8yqXC78n4GzV4VQ?width=694&height=741&cropmode=none "Scripting - GH")
+
+## Loads
+
+The process of defining load data and load cases for an RFEM Modell inside Grasshopper is explained.
+Some key aspects to take into account:
+
+- It is possible to define model data, load data and load cases and combos within the same Set Data Component.  The export process to RFEM is faster this way since the connection between GH and RFEM is required only once.
+- It can be very efficient to define theLive Load with chessboard distribution in Grasshopper.
+- Get free polygon loads in grasshopper and assign a different color to the loads of each load case to enhance visualization
+
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example5-GH.png)
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example5-RFEM.png)
+
+## Extrude Members
+
+It is indeed possible to import cross section shapes into Grasshopper in order to extrude members into 3D objects.
+Some key aspects to take into account:
+
+- Have a look into the member types of your structure first. Some member types such as "Rigid", "Tension", etc. don´t provide information of assigned cross sections.
+- Note that some cross sections are made up of more than one curve!
+- Member local axis will be imported as perpendicular frames at the start and end of member base lines.
+- Cross sections will be imported into O(0,0,0). It´s necessary to align their local axis with the member local axis.
+
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example6-GH.png)
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example6-RFEM.png)
+
+## Calculation
+
+Through this example, you will learn to:
+
+- Edit existing RFEM Models
+- Run the analysis of structural models from Grasshopper
+- Run a cross section optimization from grasshopper
+- Combine the cross section optimization with a geometric optimization using Galapagos
+
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example7-RFEM.jpg)
