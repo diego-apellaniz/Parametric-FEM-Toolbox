@@ -10,7 +10,7 @@ This repository belongs to Diego Apellániz - <dapellaniz@bollinger-grohmann.de>
 
 This plugin was developed in collaboration with Bollinger+Grohmann. Thanks for the Beta Testing and all the feedback.
 
-The code of the GUI-Widgets comes from Karamba3D. They were developed by Clemens Preisinger and Christoph Zimmel in cooperation with Bollinger und Grohmann ZT GmbH in Vienna.
+The code of the GUI-Widgets comes from Karamba3D. They were developed by Christoph Zimmel in cooperation with Bollinger und Grohmann ZT GmbH in Vienna.
 
 ## Installation
 
