@@ -443,6 +443,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Extrude_Members {
+            get {
+                object obj = ResourceManager.GetObject("Extrude_Members", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icon_FilterLine {
             get {
                 object obj = ResourceManager.GetObject("icon_FilterLine", resourceCulture);

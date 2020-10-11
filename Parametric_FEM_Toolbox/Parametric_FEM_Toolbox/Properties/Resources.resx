@@ -232,6 +232,9 @@
   <data name="Disassemble_SurfaceLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Disassemble_SurfaceLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Extrude_Members" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Extrude_Members.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="icon_FilterLine" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_FilterLine.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
