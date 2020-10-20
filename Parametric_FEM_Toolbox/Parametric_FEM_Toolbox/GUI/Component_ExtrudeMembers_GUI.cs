@@ -6,13 +6,15 @@ using Parametric_FEM_Toolbox.RFEM;
 using Rhino.Geometry;
 using System.Linq;
 using Grasshopper.Kernel.Types.Transforms;
+using Parametric_FEM_Toolbox.UIWidgets;
 
 namespace Parametric_FEM_Toolbox.GUI
 {
-    public class Component_ExtrudeMembers_GUI : GH_Component
+    public class Component_ExtrudeMembers_GUI : GH_SwitcherComponent    
     {
-        // Declare class variables outside the method "SolveInstance" so their values persist 
-        // when the method is called again.
+        private List<SubComponent> subcomponents_ = new List<SubComponent>();
+        public override string UnitMenuName => "Type of Component";
+        protected override string DefaultEvaluationUnit => subcomponents_[0].name();
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -24,6 +26,7 @@ namespace Parametric_FEM_Toolbox.GUI
         public Component_ExtrudeMembers_GUI()
           : base("Extrude Members", "Extrude", "Extrude members using the geometry of the cross sections assigned to them.", "B+G Toolbox", "RFEM")
         {
+            this.Hidden = (true);
         }
 
         // Define Keywords to search for this Component more easily in Grasshopper
@@ -48,11 +51,34 @@ namespace Parametric_FEM_Toolbox.GUI
         {
             // Use the pManager object to register your output parameters.
             // Output parameters do not have default values, but they too must have the correct access type.
-            pManager.AddBrepParameter("Extrussions", "E", "Extruded members.", GH_ParamAccess.list);
+            //pManager.AddBrepParameter("Extrussions", "E", "Extruded members.", GH_ParamAccess.list);
+            //pManager.AddPlaneParameter("Extrussions", "Caux", "Extruded members.", GH_ParamAccess.list);
 
             // Sometimes you want to hide a specific parameter from the Rhino preview.
             // You can use the HideParameter() method as a quick way:
             // pManager.HideParameter(0);
+        }
+
+        protected override void RegisterEvaluationUnits(EvaluationUnitManager mngr)
+        {
+            subcomponents_.Add(new SubComponent_ExtrudeMembers_NURBS_GUI());
+            subcomponents_.Add(new SubComponent_ExtrudeMembers_MESH_GUI());
+
+            foreach (SubComponent item in subcomponents_)
+            {
+                item.registerEvaluationUnits(mngr);
+                item.Parent_Component = (GH_DocumentObject)this;
+            }
+        }
+
+
+        protected override void OnComponentLoaded()
+        {
+            base.OnComponentLoaded();
+            foreach (SubComponent item in subcomponents_)
+            {
+                item.OnComponentLoaded();
+            }
         }
 
         /// <summary>
@@ -60,86 +86,24 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         /// <param name="DA">The DA object can be used to retrieve data from input parameters and 
         /// to store data in output parameters.</param>
-        protected override void SolveInstance(IGH_DataAccess DA)
+        protected override void SolveInstance(IGH_DataAccess DA, EvaluationUnit unit)
         {
-            // Input
-            var inGH = new GH_RFEM();
-            var inGH2 = new List<GH_RFEM>();
-            var iMember = new RFMember();
-            var iCroSecs = new List<RFCroSec>();
-
-            // Output
-            var oExtrussion = new List<Brep>();
-            var auxcrvs = new List<Curve>();
-
-            // Register input parameters
-            if(!DA.GetData(0, ref inGH)) return;
-            iMember = (RFMember)inGH.Value;
-            if (!DA.GetDataList(1, inGH2)) return;
-            foreach (var cs in inGH2)
+            if (unit != null)
             {
-                iCroSecs.Add((RFCroSec)cs.Value);
+                foreach (SubComponent item in subcomponents_)
+                {
+                    if (unit.Name.Equals(item.name()))
+                    {
+                        item.SolveInstance(DA, out string msg, out GH_RuntimeMessageLevel level);
+                        if (msg != "")
+                        {
+                            this.AddRuntimeMessage(level, msg + "It may cause errors.");
+                        }
+                        return;
+                    }
+                }
+                throw new Exception("Invalid sub-component");
             }
-
-            // Check input
-            var cs_indeces = iCroSecs.Select(x => x.No);
-            if (!(cs_indeces.Contains(iMember.StartCrossSectionNo)) || (!(cs_indeces.Contains(iMember.EndCrossSectionNo))))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"Provide cross sections for member No {iMember.No}.");
-                return;
-            }
-
-            // Get base geometry
-            var crosecs1 = iCroSecs.Where(x => x.No == iMember.StartCrossSectionNo).ToList()[0].Shape;
-            var crosecs2 = iCroSecs.Where(x => x.No == iMember.EndCrossSectionNo).ToList()[0].Shape;
-            var baseline = iMember.BaseLine.ToCurve();
-
-            // Check geometry
-            if ((crosecs1.Sum(x => x.SpanCount) != crosecs2.Sum(x => x.SpanCount)) || (crosecs1.Count != crosecs2.Count))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"Provide similar cross sections for member No {iMember.No}.");
-                return;
-            }
-
-            // Orient cross sections
-            var plane1 = iMember.Frames[0];
-            var orientation_1 = (ITransform)new Orientation(new Plane(Point3d.Origin, new Vector3d(0, 0, 1)), plane1);
-            var trans1 = orientation_1.ToMatrix();
-            var plane2 = iMember.Frames[1];
-            var orientation_2 = (ITransform)new Orientation(new Plane(Point3d.Origin, new Vector3d(0, 0, 1)), plane2);
-            var trans2 = orientation_2.ToMatrix();
-            var trancrvs_1 = new List<Curve>();
-            var trancrvs_2 = new List<Curve>();
-            for (int i = 0; i < crosecs1.Count; i++)
-            {             
-                var cro_aux_1 = crosecs1[i].DuplicateCurve();
-                cro_aux_1.Transform(trans1);
-                trancrvs_1.Add(cro_aux_1);
-                var cro_aux_2 = crosecs2[i].DuplicateCurve();
-                cro_aux_2.Transform(trans2);
-                trancrvs_2.Add(cro_aux_2);
-            }
-
-
-            // Extrude member -> just non tapered members
-            //
-            //for (int i = 0; i < crosecs1.Count; i++)
-            //{
-            //    oExtrussion.AddRange(Brep.CreateFromLoft(new List<Curve>() { trancrvs_1[i], trancrvs_2[i] }, Point3d.Unset, Point3d.Unset, LoftType.Straight, false));
-            //}
-
-            for (int i = 0; i < crosecs1.Count; i++)
-            {
-                var baseline_aux = baseline.DuplicateCurve();
-                Vector3d translationVector = trancrvs_1[i].PointAtStart - baseline_aux.PointAtStart;
-                baseline_aux.Translate(translationVector);
-                SumSurface sumSurface = SumSurface.Create(trancrvs_1[i], baseline_aux);
-                oExtrussion.Add(sumSurface.ToBrep());
-            }
-
-
-            // Assign output
-            DA.SetDataList(0, oExtrussion);
         }
 
         /// <summary>
@@ -174,7 +138,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("3570bd81-f52c-4225-a028-e25b8b63bc98"); }
+            get { return new Guid("a71f7b05-a7a0-40ff-9bbb-d1492eb15112"); }
         }
     }
 }

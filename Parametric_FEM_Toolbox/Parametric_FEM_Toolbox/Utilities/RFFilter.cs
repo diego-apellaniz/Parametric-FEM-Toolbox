@@ -259,6 +259,14 @@ namespace Parametric_FEM_Toolbox.Utilities
         public List<string> RCoDescription { get; set; }
         public List<string> RCoDefinition { get; set; }
         public List<bool> RCoToSolve { get; set; }
+        public List<int> MHList { get; set; }
+        public List<string> MHComment { get; set; }
+        public List<Interval> MHTx { get; set; }
+        public List<Interval> MHTy { get; set; }
+        public List<Interval> MHTz { get; set; }
+        public List<Interval> MHRx { get; set; }
+        public List<Interval> MHRy { get; set; }
+        public List<Interval> MHRz { get; set; }
 
     }
 }

@@ -363,7 +363,6 @@ namespace Parametric_FEM_Toolbox.UIWidgets
                     }
                 }
             }
-
         }
     }
 }

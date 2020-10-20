@@ -23,6 +23,7 @@ namespace Parametric_FEM_Toolbox.UIWidgets
         protected string _header;
         protected string _name;
         protected bool _showToolTip = true;
+        protected PointF transfromation;
         public RectangleF CanvasBounds => canvasBounds;
         public RectangleF Bounds => bounds;
         /// <summary>

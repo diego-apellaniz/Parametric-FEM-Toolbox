@@ -153,6 +153,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Assemble_MemberRelease {
+            get {
+                object obj = ResourceManager.GetObject("Assemble_MemberRelease", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Assemble_NodalLoad {
             get {
                 object obj = ResourceManager.GetObject("Assemble_NodalLoad", resourceCulture);
@@ -336,6 +346,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         internal static System.Drawing.Bitmap Disassemble_MemberLoad {
             get {
                 object obj = ResourceManager.GetObject("Disassemble_MemberLoad", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Disassemble_MemberRelease {
+            get {
+                object obj = ResourceManager.GetObject("Disassemble_MemberRelease", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -646,6 +666,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         internal static System.Drawing.Bitmap icon_RFEM_FilterMember {
             get {
                 object obj = ResourceManager.GetObject("icon_RFEM_FilterMember", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_RFEM_FilterMemberRelease {
+            get {
+                object obj = ResourceManager.GetObject("icon_RFEM_FilterMemberRelease", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -57,10 +57,10 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Common Files\Dlubal\ImportExport\RX-Common.NET\Dlubal.RFEM3.dll</HintPath>
     </Reference>
-    <Reference Include="Dlubal.RFEM5, Version=5.2.0.0, Culture=neutral, PublicKeyToken=f22b2f92593d105e, processorArchitecture=AMD64">
+    <Reference Include="Dlubal.RFEM5, Version=5.5.0.0, Culture=neutral, PublicKeyToken=f22b2f92593d105e, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\..\..\..\..\Desktop\diego\SDK\Reference Assemblies\x64\Dlubal.RFEM5.dll</HintPath>
+      <HintPath>..\..\..\..\..\Otros\cominterfaces\SDK\Reference Assemblies\x64\Dlubal.RFEM5.dll</HintPath>
     </Reference>
     <Reference Include="Dlubal.STEEL_EC3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6e4df275960cb606, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
@@ -105,8 +105,10 @@
     <Compile Include="Deprecated\Component_FilterData_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\Component_FilterData_GUI_OBSOLETE_2.cs" />
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_3.cs" />
+    <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_4.cs" />
     <Compile Include="GUI\Component_GetResults_GUI.cs" />
     <Compile Include="GUI\Component_ExtrudeMembers_GUI.cs" />
+    <Compile Include="GUI\Component_RFMemberHinge_GUI.cs" />
     <Compile Include="GUI\Component_RFSrfcSupport_GUI.cs" />
     <Compile Include="GUI\Component_RFResultCombo_GUI.cs" />
     <Compile Include="GUI\Component_RFLoadCombo_GUI.cs" />
@@ -151,10 +153,13 @@
     <Compile Include="Deprecated\Component_SetData_GUI_OBSOLETE_2.cs" />
     <Compile Include="GUI\Component_OptimizeCS_GUI.cs" />
     <Compile Include="Deprecated\Component_SetData_GUI_OBSOLETE_3.cs" />
+    <Compile Include="Deprecated\Component_SetData_GUI_OBSOLETE_4.cs" />
     <Compile Include="GUI\Component_SetData_GUI.cs" />
     <Compile Include="GUI\Component_GetData_GUI.cs" />
     <Compile Include="Deprecated\Component_RFNode_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\SubComponent_Filter_Members_GUI_OBSOLETE.cs" />
+    <Compile Include="GUI\SubComponent_ExtrudeMembers_MESH_GUI.cs" />
+    <Compile Include="GUI\SubComponent_Filter_MemberHinges_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_ResultCombos_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_LoadCombos_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_LoadCases_GUI.cs" />
@@ -167,6 +172,9 @@
     <Compile Include="Deprecated\SubComponent_RFMember_Disassemble_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\SubComponent_RFMember_Assemble_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\SubComponent_RFMember_Disassemble_GUI_OBSOLETE_2.cs" />
+    <Compile Include="GUI\SubComponent_ExtrudeMembers_NURBS_GUI.cs" />
+    <Compile Include="GUI\SubComponent_RFMemberHinge_Disassemble_GUI.cs" />
+    <Compile Include="GUI\SubComponent_RFMemberHinge_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFSrfcSupport_Disassemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFSrfcSupport_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFResultCombo_Disassemble_GUI.cs" />
@@ -211,12 +219,14 @@
     <Compile Include="GUI\SubComponent_Filter_SupsL_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_NodalLoads_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_SupsP_GUI.cs" />
+    <Compile Include="HelperLibraries\Component_ExtrudeMembers.cs" />
     <Compile Include="HelperLibraries\Component_GetResults.cs" />
     <Compile Include="HelperLibraries\Component_RFOpening.cs" />
     <Compile Include="HelperLibraries\Component_RFSurface.cs" />
     <Compile Include="HelperLibraries\Component_RFLine.cs" />
     <Compile Include="HelperLibraries\Component_SetData.cs" />
     <Compile Include="HelperLibraries\Component_GetData.cs" />
+    <Compile Include="RFEM\RFMemberHinge.cs" />
     <Compile Include="RFEM\RFResultCombo.cs" />
     <Compile Include="RFEM\RFLoadCombo.cs" />
     <Compile Include="RFEM\RFLoadCase.cs" />
@@ -256,7 +266,11 @@
     <Compile Include="UIWidgets\GH_ExtendableComponentAttributes.cs" />
     <Compile Include="UIWidgets\GH_SwitchAction.cs" />
     <Compile Include="UIWidgets\GH_SwitcherComponent.cs" />
+    <Compile Include="UIWidgets\MenuSlider.cs" />
+    <Compile Include="UIWidgets\MenuStaticText.cs" />
     <Compile Include="UIWidgets\RuntimeComponentData.cs" />
+    <Compile Include="UIWidgets\SilderDialog.cs" />
+    <Compile Include="UIWidgets\SliderDialogResult.cs" />
     <Compile Include="UIWidgets\SubComponent.cs" />
     <Compile Include="UIWidgets\ValueChangeEventHandler.cs" />
     <Compile Include="UIWidgets\EvaluationUnit.cs" />
@@ -503,6 +517,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Extrude_Members.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Assemble_MemberRelease.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Disassemble_MemberRelease.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon_RFEM_FilterMemberRelease.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
