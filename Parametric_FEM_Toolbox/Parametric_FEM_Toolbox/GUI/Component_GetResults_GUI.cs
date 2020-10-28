@@ -42,7 +42,10 @@ namespace Parametric_FEM_Toolbox.GUI
         IFeMesh _rfemMesh = null;
         IResults _lcresults = null;
         IModelData _saveddata = null;
+        RFResults outResults = null;
         //NodalDeformations[] _deformations = null;
+
+
 
 
         //int modelDataCount = 0;
@@ -88,6 +91,8 @@ namespace Parametric_FEM_Toolbox.GUI
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             // Use the pManager object to register your output parameters.
+            pManager.AddParameter(new Param_RFEM(), "Calculation Results", "Results", "Calculation results of the specified load case or load combination.", GH_ParamAccess.item);
+
             // Output parameters do not have default values, but they too must have the correct access type.
             // Sometimes you want to hide a specific parameter from the Rhino preview.
             // You can use the HideParameter() method as a quick way:
@@ -211,10 +216,7 @@ namespace Parametric_FEM_Toolbox.GUI
         protected override void SolveInstance(IGH_DataAccess DA, EvaluationUnit unit)
         {
 
-            //OnComponentLoaded();
-
-            // Input counter
-            //modelDataCount1 = 1 + modelDataCount2;
+                     
 
             // RFEM variables
             var modelName = "";
@@ -222,8 +224,9 @@ namespace Parametric_FEM_Toolbox.GUI
             IModelData data = null;
             ILoads loads = null;
 
-            // Output message
+            // Output            
             var msg = new List<string>();
+
 
             // Assign GH Input
             bool run = false;
@@ -263,6 +266,36 @@ namespace Parametric_FEM_Toolbox.GUI
                     _rfemMesh = _results.GetFeMesh();
                     _feMeshes = CreateFEMeshes(ref msg);
                     // _controlPoints = CreateControlPoints(ref msg); -> Obtained with displacements
+
+                    // Get results to display
+                    if (_loadDrop.Items.Count > 0 && _resetLC && msg.Count == 0)
+                    {
+                        int no = Int16.Parse(_loadDrop.Items[_loadDrop.Value].name.Split(' ')[1]);
+                        if (_loadDrop.Value < _countCases)
+                        {
+                            _lcresults = _results.GetResultsInFeNodes(LoadingType.LoadCaseType, no);
+                            outResults = new RFResults(_lcresults, data, LoadingType.LoadCaseType, no);
+                        }
+                        else if (_loadDrop.Value < _countCases + _countCombos)
+                        {
+                            _lcresults = _results.GetResultsInFeNodes(LoadingType.LoadCombinationType, no);
+                            outResults = new RFResults(_lcresults, data, LoadingType.LoadCombinationType, no);
+                        }
+                        else if (_loadDrop.Value < _countCases + _countCombos + _countRcombos)
+                        {
+                            _lcresults = _results.GetResultsInFeNodes(LoadingType.ResultCombinationType, no);
+                            outResults = new RFResults(_lcresults, data, LoadingType.ResultCombinationType, no);
+                        }
+                        else
+                        {
+                            msg.Add("Load case or combo not found");
+                        }
+                        // Get deformations
+                        _meshdisplacements = GetMeshDisplacements(ref msg);
+                        _memberdisplacements = GetMemberDisplacements(ref msg);
+                        // Set _resetLC to false again
+                        _resetLC = false;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -271,50 +304,29 @@ namespace Parametric_FEM_Toolbox.GUI
                     _rfemMesh = null;
                     _results = null;
                     _lcresults = null;
+                    outResults = null;
                     _feMeshes.Clear();
                     _meshdisplacements.Clear();
                     _deformedMeshes.Clear();
                     _controlPoints.Clear();
                     _memberdisplacements.Clear();
-                    _deformedMembers.Clear();
+                    _deformedMembers.Clear();                    
                     throw ex;
                 }
                 Component_GetData.DisconnectRFEM(ref model, ref data);
             }
-            // Get results to display
-            if (_loadDrop.Items.Count > 0 && _resetLC && msg.Count==0)
-            {
-                int no = Int16.Parse(_loadDrop.Items[_loadDrop.Value].name.Split(' ')[1]);
-                if (_loadDrop.Value < _countCases)
-                {
-                    _lcresults = _results.GetResultsInFeNodes(LoadingType.LoadCaseType, no);
-                }
-                else if (_loadDrop.Value < _countCases + _countCombos)
-                {
-                    _lcresults = _results.GetResultsInFeNodes(LoadingType.LoadCombinationType, no);
-                }
-                else if (_loadDrop.Value < _countCases + _countCombos + _countRcombos)
-                {
-                    _lcresults = _results.GetResultsInFeNodes(LoadingType.ResultCombinationType, no);
-                }
-                else
-                {
-                    msg.Add("Load case or combo not found");
-                }
-                // Get deformations
-                _meshdisplacements = GetMeshDisplacements(ref msg);
-                _memberdisplacements = GetMemberDisplacements(ref msg);
-                // Set _resetLC to false again
-                _resetLC = false;
-            }
+            
 
             // Get output
             _deformedMeshes = GetDeformedMeshes(scale, ref msg);
             _deformedMembers = GetDeformedMembers(scale, ref msg);
 
+            // Output calculation results
+            DA.SetData(0, outResults);
+
             // Assign GH Output
-            DA.SetDataTree(0, _deformedMembers);
-            DA.SetDataTree(1, _deformedMeshes);
+            DA.SetDataTree(1, _deformedMembers);
+            DA.SetDataTree(2, _deformedMeshes);
 
             if (msg.Count != 0)
             {
@@ -430,6 +442,10 @@ namespace Parametric_FEM_Toolbox.GUI
             var oDisplacements = new DataTree<Vector3d>();
             foreach (var member in rfmembers)
             {
+                if (member.Type == MemberType.NullMember)
+                {
+                    continue;
+                }
                 // Add also control points. We are just going to get one set of control points for each curve regardless thne result type                
                 var pts_path = new GH_Path(member.No);
                 _controlPoints.RemovePath(pts_path);

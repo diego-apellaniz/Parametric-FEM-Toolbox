@@ -108,6 +108,7 @@
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_4.cs" />
     <Compile Include="GUI\Component_GetResults_GUI.cs" />
     <Compile Include="GUI\Component_ExtrudeMembers_GUI.cs" />
+    <Compile Include="GUI\Component_ResultsMemberForces_GUI.cs" />
     <Compile Include="GUI\Component_RFMemberHinge_GUI.cs" />
     <Compile Include="GUI\Component_RFSrfcSupport_GUI.cs" />
     <Compile Include="GUI\Component_RFResultCombo_GUI.cs" />
@@ -226,6 +227,8 @@
     <Compile Include="HelperLibraries\Component_RFLine.cs" />
     <Compile Include="HelperLibraries\Component_SetData.cs" />
     <Compile Include="HelperLibraries\Component_GetData.cs" />
+    <Compile Include="RFEM\RFResults.cs" />
+    <Compile Include="RFEM\RFMemberForces.cs" />
     <Compile Include="RFEM\RFMemberHinge.cs" />
     <Compile Include="RFEM\RFResultCombo.cs" />
     <Compile Include="RFEM\RFLoadCombo.cs" />
@@ -526,6 +529,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\icon_RFEM_FilterMemberRelease.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Results_MemberForces.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -321,9 +321,9 @@ namespace Parametric_FEM_Toolbox.GUI
                 Component_GetData.ClearOutput(ref rfNodes, ref rfLines, ref rfMembers, ref rfSurfaces, ref rfOpenings,
                     ref rfSupportsP, ref rfSupportsL, ref rfSupportsS, ref rfLineHinges, ref rfCroSecs, ref rfMaterials, ref rfNodalLoads,
                     ref rfLineLoads, ref rfMemberLoads, ref rfSurfaceLoads, ref rfPolyLoads, ref rfLoadCases, ref rfLoadCombos,
-                    ref rfResultCombos, ref rfMemberHinges);            
+                    ref rfResultCombos, ref rfMemberHinges);
 
-                  try
+                try
                 {
                     if (getnodes)
                     {
