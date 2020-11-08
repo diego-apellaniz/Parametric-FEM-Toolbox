@@ -108,6 +108,8 @@
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_4.cs" />
     <Compile Include="GUI\Component_GetResults_GUI.cs" />
     <Compile Include="GUI\Component_ExtrudeMembers_GUI.cs" />
+    <Compile Include="GUI\Component_ResultsNodeReactions_GUI.cs" />
+    <Compile Include="GUI\Component_ResultsSurfaceForces_GUI.cs" />
     <Compile Include="GUI\Component_ResultsMemberForces_GUI.cs" />
     <Compile Include="GUI\Component_RFMemberHinge_GUI.cs" />
     <Compile Include="GUI\Component_RFSrfcSupport_GUI.cs" />
@@ -532,6 +534,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Results_MemberForces.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Results_Reactions.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Results_ShellForces.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
