@@ -303,6 +303,10 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         data.SetRFCroSecs(ghCSs, ref croSecNo, ref errorMsg);
                     }
+                    if (DA.GetDataList(9, ghMHs))
+                    {
+                        data.SetRFMemberHinges(ghMHs, ref memberHingeNo, ref errorMsg);
+                    }
                     if (DA.GetDataList(1, ghNodes))
                     {
                         data.SetRFNodes(ghNodes, ref nodesNo, ref errorMsg);
@@ -334,11 +338,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     if (DA.GetDataList(8, ghSupsS))
                     {
                         data.SetRFSupportsS(ghSupsS, ref sfcSupNo, ref errorMsg);
-                    }
-                    if (DA.GetDataList(9, ghMHs))
-                    {
-                        data.SetRFMemberHinges(ghMHs, ref memberHingeNo, ref errorMsg);
-                    }
+                    }                    
                     if (DA.GetDataList(10, ghLHs))
                     {
                         data.SetRFLineHinges(ghLHs, ref lineHingeNo, ref errorMsg);

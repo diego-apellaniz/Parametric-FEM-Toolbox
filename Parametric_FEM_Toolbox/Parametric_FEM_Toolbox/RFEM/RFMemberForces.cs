@@ -16,19 +16,23 @@ namespace Parametric_FEM_Toolbox.RFEM
         public RFMemberForces()
         {
         }
-        public RFMemberForces(MemberForces[] member_forces) // rfem object as array because they are related to the same member
+        public RFMemberForces(List<MemberForces> member_forces) // rfem object as array because they are related to the same member
         {
-            if (member_forces.Length == 0)
+            if (member_forces.Count == 0)
             {
                 return;
             }
             MemberNo = member_forces[0].MemberNo;
             Flag = member_forces[0].Flag;
-            Forces = member_forces.Select(x => new Vector3d(x.Forces.ToPoint3d() / 1000)).ToList(); // Conversion to kN
-            Moments = member_forces.Select(x => new Vector3d(x.Moments.ToPoint3d() / 1000)).ToList(); // Conversion to kNm
-            Location = member_forces.Select(x => x.Location).ToList();
-            Type = member_forces[0].Type;
-
+            Forces = new List<Vector3d>();
+            Moments = new List<Vector3d>();
+            Location = new List<double>();
+            for (int i = 0; i < member_forces.Count; i++) // Theoretically, member forces shouls already have the right type
+            {
+                Forces.Add(new Vector3d(member_forces[i].Forces.ToPoint3d()));
+                Moments.Add(new Vector3d(member_forces[i].Moments.ToPoint3d()));
+                Location.Add(member_forces[i].Location);
+            }
             ToModify = false;
             ToDelete = false;
         }
@@ -51,7 +55,6 @@ namespace Parametric_FEM_Toolbox.RFEM
         public List<Vector3d> Forces { get; set; }
         public List<Vector3d> Moments { get; set; }
         public List<double> Location { get; set; }
-        public ResultsValueType Type { get; set; }
 
         // Additional Properties to the RFEM Struct
         public bool ToModify { get; set; }
@@ -63,7 +66,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         public override string ToString()
         {
             return string.Format($"RFEM-MemberForces;MemberNo:{MemberNo};" +
-                $"Type:{Type};Flag:{Flag};Locations:{Location.Count};");
+                $"Flag:{Flag};Locations:{Location.Count};");
         }
 
         ////Operator to retrieve a Line from an rfLine.

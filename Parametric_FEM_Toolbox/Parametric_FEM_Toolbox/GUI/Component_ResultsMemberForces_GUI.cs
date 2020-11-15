@@ -57,7 +57,7 @@ namespace Parametric_FEM_Toolbox.GUI
             pManager.AddVectorParameter("Forces", "F", "Member Forces [kN]", GH_ParamAccess.tree);
             pManager.AddVectorParameter("Moments", "M", "Member Moments [kNm]", GH_ParamAccess.tree);
             pManager.AddTextParameter("Results Flag", "Flag", "Results Flag", GH_ParamAccess.list);            
-            pManager.AddTextParameter("Results Type", "Type", "Results Value Type", GH_ParamAccess.list);
+            //pManager.AddTextParameter("Results Type", "Type", "Results Value Type", GH_ParamAccess.list);
 
             // Sometimes you want to hide a specific parameter from the Rhino preview.
             // You can use the HideParameter() method as a quick way:
@@ -76,9 +76,9 @@ namespace Parametric_FEM_Toolbox.GUI
             var treeLoc = new DataTree<double>();
             var treeF = new DataTree<Vector3d>();
             var treeM = new DataTree<Vector3d>();
-            var listLoading = new List<string>();
+            //var listLoading = new List<string>();
             var listFlag = new List<string>();
-            var listType = new List<string>();
+            //var listType = new List<string>();
 
             // Input
             var inGH = new GH_RFEM();
@@ -98,7 +98,6 @@ namespace Parametric_FEM_Toolbox.GUI
                 treeF.AddRange(member_forces[i].Forces, path);
                 treeM.AddRange(member_forces[i].Moments, path);
                 listFlag.Add(member_forces[i].Flag.ToString());
-                listType.Add(member_forces[i].Type.ToString());
             }
 
             // Output
@@ -107,7 +106,6 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetDataTree(2, treeF);
             DA.SetDataTree(3, treeM);
             DA.SetDataList(4, listFlag);
-            DA.SetDataList(5, listType);
         }
 
         /// <summary>

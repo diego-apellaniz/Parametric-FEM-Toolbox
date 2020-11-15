@@ -279,9 +279,7 @@ namespace Parametric_FEM_Toolbox.GUI
             var modelName = "";
             IModel model = null;
             IModelData data = null;
-            ILoads loads = null;
-
-            
+            ILoads loads = null;            
 
             // Assign GH Input
             bool run = false;
@@ -293,10 +291,7 @@ namespace Parametric_FEM_Toolbox.GUI
             if (run)
             {
                 msg = new List<string>();
-                _loadDropLastValue = 0; // reset dropdown menus if run
-                _resultDropLastValue = 0;
-                _lastLoadCase = "";
-                _lastType = 0;
+
                 if (!DA.GetData(5, ref modelName))
                 {
                     Component_GetData.ConnectRFEM(ref model, ref data);
@@ -313,8 +308,16 @@ namespace Parametric_FEM_Toolbox.GUI
                     // Get loads
                     Component_GetData.GetLoadsFromRFEM(model, ref loads);
                     // Update load cases and combos to display in dropdown menu
-                    loads.GetLoadCasesAndCombos(ref _lCasesAndCombos, ref _countCases, ref _countCombos, ref _countRcombos);
-                    _restoreDropDown = true;
+                    var newLoadCasesAndCombos = loads.GetLoadCasesAndCombos(ref _countCases, ref _countCombos, ref _countRcombos);
+                    if(_lCasesAndCombos == null || _lCasesAndCombos.Count == 0 || !_lCasesAndCombos.All(newLoadCasesAndCombos.Contains))
+                    {
+                        _lCasesAndCombos = newLoadCasesAndCombos;
+                        _loadDropLastValue = 0; // reset dropdown menus if run
+                        _resultDropLastValue = 0;
+                        _lastLoadCase = "";
+                        _lastType = 0;
+                        _restoreDropDown = true;
+                    }                    
                     // Get calculation results
                     _rfMembers = Component_GetData.GetRFMembers(data.GetMembers().ToList(), data);
                     _results = model.GetCalculation();
@@ -431,18 +434,15 @@ namespace Parametric_FEM_Toolbox.GUI
                     }
                     if (value < _countCases)
                     {
-                        _lcresults = _results.GetResultsInFeNodes(LoadingType.LoadCaseType, no);
-                        outResults = new RFResults(_lcresults, _saveddata, LoadingType.LoadCaseType, no);
+                        _lcresults = _results.GetResultsInFeNodes(LoadingType.LoadCaseType, no);                        
                     }
                     else if (value < _countCases + _countCombos)
                     {
                         _lcresults = _results.GetResultsInFeNodes(LoadingType.LoadCombinationType, no);
-                        outResults = new RFResults(_lcresults, _saveddata, LoadingType.LoadCombinationType, no);
                     }
                     else if (value < _countCases + _countCombos + _countRcombos)
                     {
                         _lcresults = _results.GetResultsInFeNodes(LoadingType.ResultCombinationType, no);
-                        outResults = new RFResults(_lcresults, _saveddata, LoadingType.ResultCombinationType, no);
                     }
                     else
                     {
@@ -462,6 +462,8 @@ namespace Parametric_FEM_Toolbox.GUI
                     }
                     _meshdisplacementsByType = GetMeshDisplacementsByType(result_type);
                     _memberdisplacementsByType = GetMemberDisplacementsByType(result_type);
+                    // Get analysis results
+                    outResults = new RFResults(_lcresults, _saveddata, iLoadCase, (ResultsValueType)result_type);
                     // Set _resetLC to false again
                     _resetLC = false;                    
                 }
@@ -473,6 +475,9 @@ namespace Parametric_FEM_Toolbox.GUI
                     }
                     _meshdisplacementsByType = GetMeshDisplacementsByType(result_type);
                     _memberdisplacementsByType = GetMemberDisplacementsByType(result_type);
+                    // Get analysis results
+                    outResults = new RFResults(_lcresults, _saveddata, iLoadCase, (ResultsValueType)result_type);
+                    // Set _resetType to false again
                     _resetResultType = false;
                 }
                 _lastType = result_type;

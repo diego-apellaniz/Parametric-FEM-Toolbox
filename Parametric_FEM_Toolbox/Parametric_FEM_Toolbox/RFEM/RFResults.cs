@@ -16,16 +16,16 @@ namespace Parametric_FEM_Toolbox.RFEM
         public RFResults()
         {
         }
-        public RFResults(IResults results, IModelData data, LoadingType loadingType, int loadNo) // rfem object as array because they are related to the same member
+        public RFResults(IResults results, IModelData data, string loadcase, ResultsValueType type) // rfem object as array because they are related to the same member
         {
-            LoadingType = loadingType;
-            LoadNo = loadNo;
-            MemberForces = GetRFMemberForces(results, data);
+            LoadCase = loadcase;
+            Type = type;
+            MemberForces = GetRFMemberForces(results, data, type);
             ToModify = false;
             ToDelete = false;
         }
 
-        public List<RFMemberForces> GetRFMemberForces(IResults results, IModelData data)
+        public List<RFMemberForces> GetRFMemberForces(IResults results, IModelData data, ResultsValueType type)
         {
             var myForces = new List<RFMemberForces>();
             foreach (var member in data.GetMembers())
@@ -34,8 +34,9 @@ namespace Parametric_FEM_Toolbox.RFEM
                 {
                     continue;
                 }
-                var forces = results.GetMemberInternalForces(member.No, ItemAt.AtNo, true);
-                myForces.Add(new RFMemberForces(forces));
+                var forces = results.GetMemberInternalForces(member.No, ItemAt.AtNo, true); // get results of the right type
+                var filtered_forces = forces.Where(x => x.Type == Type).ToList();
+                myForces.Add(new RFMemberForces(filtered_forces));
             }
             return myForces;
         }
@@ -52,10 +53,10 @@ namespace Parametric_FEM_Toolbox.RFEM
         //}
 
         // Properties to Wrap Fields from RFEM Struct
-        public LoadingType LoadingType { get; set; }
-        public int LoadNo { get; set; }
+        public string LoadCase { get; set; }
+        public ResultsValueType Type { get; set; }
 
-        public List<RFMemberForces> MemberForces { get; set; }
+    public List<RFMemberForces> MemberForces { get; set; }
         //public int CrossSectionNo { get; set; } // makes no sense?
 
         // Additional Properties to the RFEM Struct
@@ -67,7 +68,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         // Parameters are separated by ";". The component split text can be used to break the string down into a list.
         public override string ToString()
         {
-            return string.Format($"RFEM-Results:{LoadingType} {LoadNo}");
+            return string.Format($"RFEM-Results: {LoadCase}; Type: {Type}");
         }
 
         ////Operator to retrieve a Line from an rfLine.

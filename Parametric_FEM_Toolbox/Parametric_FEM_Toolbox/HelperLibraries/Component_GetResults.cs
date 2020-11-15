@@ -27,7 +27,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             rCombos = loads.GetLoadCases().Select(x => "ResultCombo " + x.Loading.No.ToString()).ToList();
         }
 
-        public static void GetLoadCasesAndCombos(this ILoads loads, ref List<string> lCasesAndCombos, ref int countCases, ref int countCombos, ref int countRcombos)
+        public static List<string> GetLoadCasesAndCombos(this ILoads loads, ref int countCases, ref int countCombos, ref int countRcombos)
         {
             var lCases = new List<string>();
             var lCombos = new List<string>();
@@ -40,10 +40,12 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             rCombos = loads.GetResultCombinations().Select(x => "ResultCombo " + x.Loading.No.ToString()).ToList();
             countRcombos = rCombos.Count;
 
-            lCasesAndCombos = new List<string>();
+            var lCasesAndCombos = new List<string>();
             lCasesAndCombos.AddRange(lCases);
             lCasesAndCombos.AddRange(lCombos);
             lCasesAndCombos.AddRange(rCombos);
+
+            return lCasesAndCombos;
         }
 
         //public class RFMeshResult
