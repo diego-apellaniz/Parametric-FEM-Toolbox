@@ -34,19 +34,6 @@ The process of exporting data from Grasshopper into RFEM revolves around the *"S
 ![alt text](https://m4jmjq.db.files.1drv.com/y4mmAejTyXGwkNPGK45dnLednLBa8Si6Lsil9cGLeFvK_eu98O2Bnv3FBA3RfRcDcXGhzJsVT5sXWUI0Iqr8kKp7p2MeZsqZ9rwwOO2KmCRxjR-wrsS7WPP4dMysCaUS84IhMnbGG2XSgNgaQtAJLh4Wf8T1MuT7pxNHYZ-bk1Q46CNQ7aCYzSbzBhZbWbVOTSaRg8Suotk-wA-3AbazYaSLg?width=773&height=389&cropmode=none "Set Data - GH")
 ![alt text](https://mojmjq.db.files.1drv.com/y4m9c61AZgWTYQnu0oUWVTVLjzODxq2ZFVZ5X6JQWtD3TGBY0RiP9s_tD7MefUE_fFHoqxd0JCCpppdmwg0_LOFOI_0hmiXLImeibVIG-KqrBRn6PPYhKL3XLKAetnojveAwJg_H_1Rg830EAqUKhVlQy8_6z_KlqtthizYBC0BNci7JI8FgPQ1P_XzLTdjYnyRkw4zGjmjQ0RQiZq3IdsnsA?width=843&height=494&cropmode=none "Set Data - REFM")
 
-## Non-Planar Surfaces
-
-Non-planar surfaces can be defined and imported the same way as any other surface. However, there are some particular aspects to consider when dealing with this kind of geometry. The following concepts are explored:
-
-- Dealing with BREPS -> They have to be deconstructed into single surfaces.
-- How the Plug-In automatically sets planar surfaces as "PlaneSurfaceType" and non-planar suraces as "QuadrangleSurfaceType"
-- Dealing with toroid geometries with duplicate edges. They have to be splited into two before being imported into RFEM.
-- How to manually set the "SurfaceGeometryType" of RF-Objects
-- Modifying existing RF-Objects INSIDE GRASSHOPPER
-
-![alt text](https://nijmjq.db.files.1drv.com/y4mhBnePBHYd9yHulAO5A6ZWqbBn8leV_I5IVkvUY_X_GsPPd75A2Xh3MwRCL0ZPdOOdAIF_2ODoB_lKTo9WgX7u9eSOSOMOLj48RSIiRNRJ_8TkdjvzPHq32-OjRVqT5JGhJHoIyqSNuEfYEEdV2xtoUVj334zAn63f1GC3CS0J_hDEiVjaLjNCHThLWTwbHo8Nu7saH5Kr88JTZ9uRTII1A?width=889&height=440&cropmode=none "Non-Planar Surfaces - GH")
-![alt text](https://l4jmjq.db.files.1drv.com/y4mGgmiAL3OSiq0D9lkWNDR3f8kAMXA9tpZK38Ae9sukMYEcD-RyCX4Vc193yvN1ckRNjGwAHdgbwpkDm8MWXfw3Wx7LqvUWcX7CDj1znutKR5qbSaxCWXp3-z5f1JId1CQu9cBN5xNH_OiV7DEeUedhFkrvo185s5I1OE8e9o5Lrkp-cTNZzpX1jRnoY_Vz4DT_24zUhz6jlE5hD3XhqD7rw?width=1684&height=715&cropmode=none "Non-Planar Surfaces - REFM")
-
 ## Scripting
 
 This Plug-In supports the use of Grasshopper Scripting Components to deal with RF-Objects.
@@ -66,19 +53,6 @@ Some key aspects to take into account:
 
 ![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example5-GH.png)
 ![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example5-RFEM.png)
-
-## Extrude Members
-
-It is indeed possible to import cross section shapes into Grasshopper in order to extrude members into 3D objects.
-Some key aspects to take into account:
-
-- Have a look into the member types of your structure first. Some member types such as "Rigid", "Tension", etc. don´t provide information of assigned cross sections.
-- Note that some cross sections are made up of more than one curve!
-- Member local axis will be imported as perpendicular frames at the start and end of member base lines.
-- Cross sections will be imported into O(0,0,0). It´s necessary to align their local axis with the member local axis.
-
-![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example6-GH.png)
-![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example6-RFEM.png)
 
 ## Calculation
 
