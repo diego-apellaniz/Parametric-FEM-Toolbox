@@ -48,6 +48,59 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return lCasesAndCombos;
         }
 
+        public static void GetLoadCasesAndCombos(this ILoads loads, ref List<string> lCasesAndCombos, ref ICalculation results, ref List<string> msg)
+        {
+            /// Get results just of calculated load cases and combos and add names to dropdown menu
+
+            lCasesAndCombos = new List<string>();
+            
+            // Load cases
+            foreach (var lc in loads.GetLoadCases())
+            {
+                var loading = lc.Loading;
+                if (loads.HasLoadingResults(loading))
+                {
+                    lCasesAndCombos.Add($"Load Case {loading.No}");
+                    var errors = results.Calculate(loading.Type, loading.No);
+                    if (errors != null)
+                    {
+                        msg.AddRange(errors.Select(x => x.Description));
+                    }                    
+                }
+            }
+
+            // Load combos
+            foreach (var lc in loads.GetLoadCombinations())
+            {
+                var loading = lc.Loading;
+                if (loads.HasLoadingResults(loading))
+                {
+                    lCasesAndCombos.Add($"Load Combo {loading.No}");
+                    var errors = results.Calculate(loading.Type, loading.No);
+                    if (errors != null)
+                    {
+                        msg.AddRange(errors.Select(x => x.Description));
+                    }
+                }
+            }
+
+            // Result combos
+            foreach (var lc in loads.GetResultCombinations())
+            {
+                var loading = lc.Loading;
+                if (loads.HasLoadingResults(loading))
+                {
+                    lCasesAndCombos.Add($"Load Combo {loading.No}");
+                    var errors = results.Calculate(loading.Type, loading.No);
+                    if (errors != null)
+                    {
+                        msg.AddRange(errors.Select(x => x.Description));
+                    }
+                }
+            }
+
+        }
+
         //public class RFMeshResult
         //{
         //    private int _surfaceNo;

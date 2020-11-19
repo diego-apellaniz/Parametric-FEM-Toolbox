@@ -321,6 +321,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     // Get calculation results
                     _rfMembers = Component_GetData.GetRFMembers(data.GetMembers().ToList(), data);
                     _results = model.GetCalculation();
+<<<<<<< Updated upstream
                     var errors = _results.CalculateApp(); // This does not calculate rf modules
                     if (errors != null)
                     {
@@ -334,6 +335,21 @@ namespace Parametric_FEM_Toolbox.GUI
                     }                    
                     // Disconect model
                     Component_GetData.DisconnectRFEM(ref model, ref data);
+=======
+                    //var errors = _results.CalculateAll();
+                    //if (errors != null)
+                    //{
+                    //    msg.AddRange(errors.Select(x => x.Description));
+                    //}                    
+                    //// Update load cases and combos to display in dropdown menu
+                    //loads.GetLoadCasesAndCombos(ref _lCasesAndCombos, ref _countCases, ref _countCombos, ref _countRcombos);
+                    loads.GetLoadCasesAndCombos(ref _lCasesAndCombos, ref _results, ref msg);
+                    updateDropDownMenu(_lCasesAndCombos);
+                    // Get Fe Meshes from RFEM
+                    _rfemMesh = _results.GetFeMesh();
+                    _feMeshes = CreateFEMeshes(ref msg);
+                    // _controlPoints = CreateControlPoints(ref msg); -> Obtained with displacements
+>>>>>>> Stashed changes
                 }
                 catch (Exception ex)
                 {
