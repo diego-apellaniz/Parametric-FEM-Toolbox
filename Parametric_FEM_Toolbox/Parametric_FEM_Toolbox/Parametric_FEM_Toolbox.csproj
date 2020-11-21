@@ -229,6 +229,8 @@
     <Compile Include="HelperLibraries\Component_RFLine.cs" />
     <Compile Include="HelperLibraries\Component_SetData.cs" />
     <Compile Include="HelperLibraries\Component_GetData.cs" />
+    <Compile Include="RFEM\RFNodalSupportForces.cs" />
+    <Compile Include="RFEM\RFSurfaceForces.cs" />
     <Compile Include="RFEM\RFResults.cs" />
     <Compile Include="RFEM\RFMemberForces.cs" />
     <Compile Include="RFEM\RFMemberHinge.cs" />
@@ -271,6 +273,7 @@
     <Compile Include="UIWidgets\GH_ExtendableComponentAttributes.cs" />
     <Compile Include="UIWidgets\GH_SwitchAction.cs" />
     <Compile Include="UIWidgets\GH_SwitcherComponent.cs" />
+    <Compile Include="UIWidgets\MenuCheckBox.cs" />
     <Compile Include="UIWidgets\MenuSlider.cs" />
     <Compile Include="UIWidgets\MenuStaticText.cs" />
     <Compile Include="UIWidgets\RuntimeComponentData.cs" />

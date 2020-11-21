@@ -16,16 +16,26 @@ namespace Parametric_FEM_Toolbox.RFEM
         public RFResults()
         {
         }
-        public RFResults(IResults results, IModelData data, string loadcase, ResultsValueType type) // rfem object as array because they are related to the same member
+        public RFResults(IResults results, IModelData data, string loadcase, bool member_forces, bool surface_forces, bool reaction_forces) // rfem object as array because they are related to the same member
         {
             LoadCase = loadcase;
-            Type = type;
-            MemberForces = GetRFMemberForces(results, data, type);
+            if (member_forces)
+            {
+                MemberForces = GetRFMemberForces(results, data);
+            }
+            if (surface_forces)
+            {
+                SurfaceForces = GetRFSurfaceForces(results, data);
+            }
+            if (reaction_forces)
+            {
+                NodalSupportForces = GetRFNodalSupportForces(results, data);
+            }            
             ToModify = false;
             ToDelete = false;
         }
 
-        public List<RFMemberForces> GetRFMemberForces(IResults results, IModelData data, ResultsValueType type)
+        public List<RFMemberForces> GetRFMemberForces(IResults results, IModelData data)
         {
             var myForces = new List<RFMemberForces>();
             foreach (var member in data.GetMembers())
@@ -35,29 +45,41 @@ namespace Parametric_FEM_Toolbox.RFEM
                     continue;
                 }
                 var forces = results.GetMemberInternalForces(member.No, ItemAt.AtNo, true); // get results of the right type
-                var filtered_forces = forces.Where(x => x.Type == Type).ToList();
-                myForces.Add(new RFMemberForces(filtered_forces));
+                  myForces.Add(new RFMemberForces(forces));
             }
             return myForces;
         }
 
+        public List<RFSurfaceForces> GetRFSurfaceForces(IResults results, IModelData data)
+        {
+            var myForces = new List<RFSurfaceForces>();
+            foreach (var surface in data.GetSurfaces())
+            {
+                if (surface.GeometryType == SurfaceGeometryType.UnknownGeometryType)
+                {
+                    continue;
+                }
+                var forces = results.GetSurfaceInternalForces(surface.No, ItemAt.AtNo);
+                myForces.Add(new RFSurfaceForces(forces));
+            }
+            return myForces;
+        }
 
-        //public RFMemberForces(RFMemberForces other) : this(other)
-        //{
-
-        //    //if (other.BaseLine != null)
-        //    //{
-        //    //    BaseLine = new RFLine(other.BaseLine);
-        //    //}            
-        //    //Frames = other.Frames;
-        //}
+        public List<RFNodalSupportForces> GetRFNodalSupportForces(IResults results, IModelData data)
+        {
+            var myForces = new List<RFNodalSupportForces>();
+            foreach (var nodalsupportforce in results.GetAllNodalSupportForces(false))
+            {
+                myForces.Add(new RFNodalSupportForces(nodalsupportforce, data));
+            }
+            return myForces;
+        }
 
         // Properties to Wrap Fields from RFEM Struct
         public string LoadCase { get; set; }
-        public ResultsValueType Type { get; set; }
-
-    public List<RFMemberForces> MemberForces { get; set; }
-        //public int CrossSectionNo { get; set; } // makes no sense?
+        public List<RFMemberForces> MemberForces { get; set; }
+        public List<RFSurfaceForces> SurfaceForces { get; set; }
+        public List<RFNodalSupportForces> NodalSupportForces { get; set; }
 
         // Additional Properties to the RFEM Struct
         public bool ToModify { get; set; }
@@ -68,18 +90,14 @@ namespace Parametric_FEM_Toolbox.RFEM
         // Parameters are separated by ";". The component split text can be used to break the string down into a list.
         public override string ToString()
         {
-            return string.Format($"RFEM-Results: {LoadCase}; Type: {Type}");
+            var outString = string.Format($"RFEM-Results: {LoadCase}; Available Results:" +
+                $"{((MemberForces == null) ? "" : " Member Forces,")}" +
+                $"{((SurfaceForces == null) ? "" : " Surface Forces,")}" +
+                $"{((NodalSupportForces == null) ? "" : " Nodal Support Forces,")}");
+            outString = outString.Substring(0, outString.Length - 1) + ";";
+            return outString;
         }
-
-        ////Operator to retrieve a Line from an rfLine.
-        //public static implicit operator MemberForces(RFMemberForces member_forces)
-        //{
-        //    Dlubal.RFEM5.MemberForces myForces = new Dlubal.RFEM5.MemberForces
-
-            
-        //    return myForces;
-        //}
-
+       
         // Convert RFEM Object into Rhino Geometry.
         // These methods are later implemented by the class GH_RFEM.
         public bool ToGH_Integer<T>(ref T target)

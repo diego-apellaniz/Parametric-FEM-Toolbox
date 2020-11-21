@@ -29,43 +29,16 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
 
         public static List<string> GetLoadCasesAndCombos(this ILoads loads, ref int countCases, ref int countCombos, ref int countRcombos)
         {
-            var lCases = new List<string>();
-            var lCombos = new List<string>();
-            var rCombos = new List<string>();
-
-            lCases = loads.GetLoadCases().Select(x => "LoadCase " + x.Loading.No.ToString()).ToList();
-            countCases = lCases.Count;
-            lCombos = loads.GetLoadCombinations().Select(x => "LoadCombo " + x.Loading.No.ToString()).ToList();
-            countCombos = lCombos.Count;
-            rCombos = loads.GetResultCombinations().Select(x => "ResultCombo " + x.Loading.No.ToString()).ToList();
-            countRcombos = rCombos.Count;
-
             var lCasesAndCombos = new List<string>();
-            lCasesAndCombos.AddRange(lCases);
-            lCasesAndCombos.AddRange(lCombos);
-            lCasesAndCombos.AddRange(rCombos);
 
-            return lCasesAndCombos;
-        }
-
-        public static void GetLoadCasesAndCombos(this ILoads loads, ref List<string> lCasesAndCombos, ref ICalculation results, ref List<string> msg)
-        {
-            /// Get results just of calculated load cases and combos and add names to dropdown menu
-
-            lCasesAndCombos = new List<string>();
-            
             // Load cases
             foreach (var lc in loads.GetLoadCases())
             {
                 var loading = lc.Loading;
                 if (loads.HasLoadingResults(loading))
                 {
-                    lCasesAndCombos.Add($"Load Case {loading.No}");
-                    var errors = results.Calculate(loading.Type, loading.No);
-                    if (errors != null)
-                    {
-                        msg.AddRange(errors.Select(x => x.Description));
-                    }                    
+                    lCasesAndCombos.Add($"LoadCase {loading.No}");
+                    countCases++;
                 }
             }
 
@@ -75,13 +48,9 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 var loading = lc.Loading;
                 if (loads.HasLoadingResults(loading))
                 {
-                    lCasesAndCombos.Add($"Load Combo {loading.No}");
-                    var errors = results.Calculate(loading.Type, loading.No);
-                    if (errors != null)
-                    {
-                        msg.AddRange(errors.Select(x => x.Description));
-                    }
+                    lCasesAndCombos.Add($"LoadCombo {loading.No}");
                 }
+                countCombos++;
             }
 
             // Result combos
@@ -90,35 +59,117 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 var loading = lc.Loading;
                 if (loads.HasLoadingResults(loading))
                 {
-                    lCasesAndCombos.Add($"Load Combo {loading.No}");
+                    lCasesAndCombos.Add($"ResultCombo {loading.No}");
+                }
+                countRcombos++;
+            }
+
+            return lCasesAndCombos;
+        }
+
+        public static void GetAllCalculatedResults(this ILoads loads, ref List<string> lCasesAndCombos, ref ICalculation results, ref int countCases, ref int countCombos, ref int countResultCombos, ref List<string> msg)
+        {
+            /// Get results just of calculated load cases and combos and add names to dropdown menu
+
+            lCasesAndCombos = new List<string>();
+            countCases = 0;
+            countCombos = 0;
+            countResultCombos = 0;
+
+            // Load cases
+            foreach (var lc in loads.GetLoadCases())
+            {
+                var loading = lc.Loading;
+                if (loads.HasLoadingResults(loading))
+                {
+                    lCasesAndCombos.Add($"LoadCase {loading.No}");
+                    var errors = results.Calculate(loading.Type, loading.No);
+                    if (errors != null)
+                    {
+                        msg.AddRange(errors.Select(x => x.Description));
+                    }
+                    countCases++;
+                }
+            }
+
+            // Load combos
+            foreach (var lc in loads.GetLoadCombinations())
+            {
+                var loading = lc.Loading;
+                if (loads.HasLoadingResults(loading))
+                {
+                    lCasesAndCombos.Add($"LoadCombo {loading.No}");
                     var errors = results.Calculate(loading.Type, loading.No);
                     if (errors != null)
                     {
                         msg.AddRange(errors.Select(x => x.Description));
                     }
                 }
+                countCombos++;
+            }
+
+            // Result combos
+            foreach (var lc in loads.GetResultCombinations())
+            {
+                var loading = lc.Loading;
+                if (loads.HasLoadingResults(loading))
+                {
+                    lCasesAndCombos.Add($"ResultCombo {loading.No}");
+                    var errors = results.Calculate(loading.Type, loading.No);
+                    if (errors != null)
+                    {
+                        msg.AddRange(errors.Select(x => x.Description));
+                    }
+                }
+                countResultCombos++;
             }
 
         }
 
-        //public class RFMeshResult
-        //{
-        //    private int _surfaceNo;
-        //    private ResultsValueType _valuetype;
-        //    private IDictionary<int, int> nodeIndex;
+        public static void GetResults(ref ICalculation results, string iLoadCase, ref List<string> msg)
+        {
+            var lc_name_parts = iLoadCase.Split(' ');
+            if (lc_name_parts.Length < 2)
+            {
+                msg.Add("Provide valid load case.");
+                return;
+            }
+            int no = 0;
+            if(!int.TryParse(lc_name_parts[1], out no))
+            {
+                msg.Add("Provide valid load case.");
+                return;
+            }
+            ErrorInfo[] errors;
+            switch (lc_name_parts[0])
+            {
+                case "LoadCase":
+                    errors = results.Calculate(LoadingType.LoadCaseType, no);
+                    if (errors != null)
+                    {
+                        msg.AddRange(errors.Select(x => x.Description));
+                    }            
+                    break;
+                case "LoadCombo":
+                    errors = results.Calculate(LoadingType.LoadCombinationType, no);
+                    if (errors != null)
+                    {
+                        msg.AddRange(errors.Select(x => x.Description));
+                    }
+                    break;
+                case "ResultCombo":
+                    errors = results.Calculate(LoadingType.LoadCombinationType, no);
+                    if (errors != null)
+                    {
+                        msg.AddRange(errors.Select(x => x.Description));
+                    }
+                    break;
+                default:
+                    msg.Add("Error retrieving calculation results from the model");
+                    break;
+            }
+        }
 
-        //    public RFMeshResult(int surfaceNo, ResultsValueType valuetype, IModelData data, List<FeMesh2DElement> elemenets)
-        //    {
-        //        _surfaceNo = surfaceNo;
-        //        _valuetype = valuetype;
 
-
-        //        foreach (var iteelementm in elemenets)
-        //        {
-
-        //        }
-
-        //    }
-        //}
     }
 }

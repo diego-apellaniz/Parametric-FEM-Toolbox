@@ -16,9 +16,9 @@ namespace Parametric_FEM_Toolbox.RFEM
         public RFMemberForces()
         {
         }
-        public RFMemberForces(List<MemberForces> member_forces) // rfem object as array because they are related to the same member
+        public RFMemberForces(MemberForces[] member_forces) // rfem object as array because they are related to the same member
         {
-            if (member_forces.Count == 0)
+            if (member_forces.Length == 0)
             {
                 return;
             }
@@ -27,29 +27,21 @@ namespace Parametric_FEM_Toolbox.RFEM
             Forces = new List<Vector3d>();
             Moments = new List<Vector3d>();
             Location = new List<double>();
-            for (int i = 0; i < member_forces.Count; i++) // Theoretically, member forces shouls already have the right type
+            Type = new List<string>();
+            for (int i = 0; i < member_forces.Length; i++)
             {
                 Forces.Add(new Vector3d(member_forces[i].Forces.ToPoint3d()));
                 Moments.Add(new Vector3d(member_forces[i].Moments.ToPoint3d()));
                 Location.Add(member_forces[i].Location);
+                Type.Add(member_forces[i].Type.ToString());
             }
             ToModify = false;
             ToDelete = false;
         }
 
-
-        //public RFMemberForces(RFMemberForces other) : this(other)
-        //{
-
-        //    //if (other.BaseLine != null)
-        //    //{
-        //    //    BaseLine = new RFLine(other.BaseLine);
-        //    //}            
-        //    //Frames = other.Frames;
-        //}
-
         // Properties to Wrap Fields from RFEM Struct
         public int MemberNo { get; set; }
+        public List<string> Type { get; set; }
         //public int CrossSectionNo { get; set; } // makes no sense?
         public ResultsFlag Flag { get; set; }
         public List<Vector3d> Forces { get; set; }

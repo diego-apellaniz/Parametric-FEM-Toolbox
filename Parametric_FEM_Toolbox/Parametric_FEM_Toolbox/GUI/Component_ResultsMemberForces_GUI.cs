@@ -34,7 +34,7 @@ namespace Parametric_FEM_Toolbox.GUI
             // You can often supply default values when creating parameters.
             // All parameters must have the correct access type. If you want 
             // to import lists or trees of values, modify the ParamAccess flag.
-            pManager.AddParameter(new Param_RFEM(), "Calculation Results", "Results", "Calculation results of a certain load case or load combination.", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_RFEM(), "Calculation Results", "Results", "Calculation results of a certain load case or load combination.", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -44,20 +44,12 @@ namespace Parametric_FEM_Toolbox.GUI
         {
             // Use the pManager object to register your output parameters.
             // Output parameters do not have default values, but they too must have the correct access type.
-
-            //pManager.AddPointParameter("Nodes", "N", "Tensegrity nodes", GH_ParamAccess.tree);
-
-            //pManager.AddGenericParameter("Poly", "P", "Polygon cables", GH_ParamAccess.list);
-            //pManager.AddGenericParameter("Bracing", "B", "Bracing cables", GH_ParamAccess.list);
-            //pManager.AddGenericParameter("Struts", "Str", "Strut elements", GH_ParamAccess.list);
-            //pManager.AddGenericParameter("Supports", "Sup", "Support points", GH_ParamAccess.list);
-
-            pManager.AddIntegerParameter("Member Number", "No", "Index of the RFEM Member", GH_ParamAccess.list);
+            pManager.AddIntegerParameter("Member Number", "No", "Index of the RFEM Member", GH_ParamAccess.tree);
             pManager.AddNumberParameter("Location", "Loc", "Location of results along member axis", GH_ParamAccess.tree);
             pManager.AddVectorParameter("Forces", "F", "Member Forces [kN]", GH_ParamAccess.tree);
             pManager.AddVectorParameter("Moments", "M", "Member Moments [kNm]", GH_ParamAccess.tree);
-            pManager.AddTextParameter("Results Flag", "Flag", "Results Flag", GH_ParamAccess.list);            
-            //pManager.AddTextParameter("Results Type", "Type", "Results Value Type", GH_ParamAccess.list);
+            pManager.AddTextParameter("Results Flag", "Flag", "Results Flag", GH_ParamAccess.tree);            
+            pManager.AddTextParameter("Results Type", "Type", "Results Value Type", GH_ParamAccess.list);
 
             // Sometimes you want to hide a specific parameter from the Rhino preview.
             // You can use the HideParameter() method as a quick way:
@@ -72,40 +64,66 @@ namespace Parametric_FEM_Toolbox.GUI
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             // Output variables
-            var listNo = new List<int>();
+            var treeNo = new DataTree<int>();
             var treeLoc = new DataTree<double>();
             var treeF = new DataTree<Vector3d>();
             var treeM = new DataTree<Vector3d>();
             //var listLoading = new List<string>();
-            var listFlag = new List<string>();
-            //var listType = new List<string>();
+            var treeFlag = new DataTree<string>();
+            var treeType = new DataTree<string>();
 
             // Input
-            var inGH = new GH_RFEM();
-            if (!DA.GetData(0, ref inGH))
+            var inGH = new List<GH_RFEM>();
+            var rfResults = new List<RFResults>();
+            if (!DA.GetDataList(0, inGH))
             {
                 return;
             }
-            var rfResults = (RFResults)inGH.Value;
-            var member_forces = rfResults.MemberForces;
+            foreach (var gh in inGH)
+            {
+                if (!(gh == null))
+                {
+                    rfResults.Add((RFResults)gh.Value);
+                }
+            }
+            var member_forces = new DataTree<RFMemberForces>();
+            for (int i = 0; i < rfResults.Count; i++)
+            {
+                if (!(rfResults[i].MemberForces == null))
+                {
+                    var path = new GH_Path(i);
+                    member_forces.AddRange(rfResults[i].MemberForces, path);
+                }                
+            }
 
             // Get output
-            for (int i = 0; i < member_forces.Count; i++)
+            if (member_forces.DataCount == 0)
             {
-                var path = new GH_Path(i);
-                listNo.Add(member_forces[i].MemberNo);
-                treeLoc.AddRange(member_forces[i].Location, path);
-                treeF.AddRange(member_forces[i].Forces, path);
-                treeM.AddRange(member_forces[i].Moments, path);
-                listFlag.Add(member_forces[i].Flag.ToString());
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No results available");
+                return;
+            }
+            for (int i = 0; i < member_forces.BranchCount; i++)
+            {                               
+                for (int j = 0; j < member_forces.Branch(i).Count; j++)
+                {
+                    var path1 = new GH_Path(i,j);
+                    var path2 = new GH_Path(i);
+                    treeNo.Add(member_forces.Branch(i)[j].MemberNo, path2);
+                    treeLoc.AddRange(member_forces.Branch(i)[j].Location, path1);
+                    treeF.AddRange(member_forces.Branch(i)[j].Forces, path1);
+                    treeM.AddRange(member_forces.Branch(i)[j].Moments, path1);                    
+                    treeType.AddRange(member_forces.Branch(i)[j].Type, path1);
+                    treeFlag.Add(member_forces.Branch(i)[j].Flag.ToString(), path2);
+                }                
             }
 
             // Output
-            DA.SetDataList(0, listNo);
+            DA.SetDataTree(0, treeNo);
             DA.SetDataTree(1, treeLoc);
             DA.SetDataTree(2, treeF);
             DA.SetDataTree(3, treeM);
-            DA.SetDataList(4, listFlag);
+            DA.SetDataTree(4, treeFlag);
+            DA.SetDataTree(5, treeType);
         }
 
         /// <summary>

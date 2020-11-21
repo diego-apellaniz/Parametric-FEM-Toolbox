@@ -21,7 +21,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// new tabs/panels will automatically be created.
         /// </summary>
         public Component_ResultsNodeReactions_GUI()
-            : base("Member Forces", "MForces", "Get Member Forces from Calculation Results.", "B+G Toolbox", "RFEM")
+            : base("Nodal Support Forces", "NSForces", "Get Nodal Support Forces from Calculation Results.", "B+G Toolbox", "RFEM")
         {
         }
 
@@ -34,7 +34,7 @@ namespace Parametric_FEM_Toolbox.GUI
             // You can often supply default values when creating parameters.
             // All parameters must have the correct access type. If you want 
             // to import lists or trees of values, modify the ParamAccess flag.
-            pManager.AddParameter(new Param_RFEM(), "Calculation Results", "Results", "Calculation results of a certain load case or load combination.", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_RFEM(), "Calculation Results", "Results", "Calculation results of a certain load case or load combination.", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -45,12 +45,11 @@ namespace Parametric_FEM_Toolbox.GUI
             // Use the pManager object to register your output parameters.
             // Output parameters do not have default values, but they too must have the correct access type.
 
-            //pManager.AddPointParameter("Nodes", "N", "Tensegrity nodes", GH_ParamAccess.tree);
-
-            //pManager.AddGenericParameter("Poly", "P", "Polygon cables", GH_ParamAccess.list);
-            //pManager.AddGenericParameter("Bracing", "B", "Bracing cables", GH_ParamAccess.list);
-            //pManager.AddGenericParameter("Struts", "Str", "Strut elements", GH_ParamAccess.list);
-            //pManager.AddGenericParameter("Supports", "Sup", "Support points", GH_ParamAccess.list);
+            pManager.AddIntegerParameter("Support Number", "No", "Index of the RFEM Nodal Support", GH_ParamAccess.tree);
+            pManager.AddPointParameter("Location", "Loc", "Support Location", GH_ParamAccess.tree);
+            pManager.AddVectorParameter("Forces", "F", "Member Forces in global CSys [kN]", GH_ParamAccess.tree);
+            pManager.AddVectorParameter("Moments", "M", "Member Moments in global CSys [kNm]", GH_ParamAccess.tree);
+            pManager.AddTextParameter("Results Type", "Type", "Results Value Type", GH_ParamAccess.tree);
 
             // Sometimes you want to hide a specific parameter from the Rhino preview.
             // You can use the HideParameter() method as a quick way:
@@ -64,7 +63,62 @@ namespace Parametric_FEM_Toolbox.GUI
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            // Output variables
+            var treeNo = new DataTree<int>();
+            var treeCoor = new DataTree<Point3d>();
+            var treeF = new DataTree<Vector3d>();
+            var treeM = new DataTree<Vector3d>();
+            var treeType = new DataTree<string>();
 
+            // Input
+            var inGH = new List<GH_RFEM>();
+            var rfResults = new List<RFResults>();
+            if (!DA.GetDataList(0, inGH))
+            {
+                return;
+            }
+            foreach (var gh in inGH)
+            {
+                if (!(gh == null))
+                {
+                    rfResults.Add((RFResults)gh.Value);
+                }
+            }
+            var reaction_forces = new DataTree<RFNodalSupportForces>();
+            for (int i = 0; i < rfResults.Count; i++)
+            {
+                if (!(rfResults[i].MemberForces == null))
+                {
+                    var path = new GH_Path(i);
+                    reaction_forces.AddRange(rfResults[i].NodalSupportForces, path);
+                }
+            }
+
+            // Get output
+            if (reaction_forces.DataCount == 0)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No results available");
+                return;
+            }
+            for (int i = 0; i < reaction_forces.BranchCount; i++)
+            {
+                for (int j = 0; j < reaction_forces.Branch(i).Count; j++)
+                {
+                    var path = new GH_Path(i);
+                    treeNo.Add(reaction_forces.Branch(i)[j].NodeNo, path);
+                    treeCoor.Add(reaction_forces.Branch(i)[j].Location, path);
+                    treeF.Add(reaction_forces.Branch(i)[j].Forces, path);
+                    treeM.Add(reaction_forces.Branch(i)[j].Moments, path);
+                    treeType.Add(reaction_forces.Branch(i)[j].Type, path);
+                }
+            }
+
+            // Output
+            DA.SetDataTree(0, treeNo);
+            DA.SetDataTree(1, treeCoor);
+            DA.SetDataTree(2, treeF);
+            DA.SetDataTree(3, treeM);
+            DA.SetDataTree(4, treeType);
         }
 
         /// <summary>

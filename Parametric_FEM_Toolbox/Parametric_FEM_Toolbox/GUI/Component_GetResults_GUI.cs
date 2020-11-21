@@ -65,6 +65,9 @@ namespace Parametric_FEM_Toolbox.GUI
         private string _lastLoadCase;
         private int _lastType;
         private bool _restoreDropDown;
+        private MenuCheckBox _memberForcesCheck;
+        private MenuCheckBox _surfaceForcesCheck;
+        private MenuCheckBox _nodalReactionsCheck;
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -160,7 +163,7 @@ namespace Parametric_FEM_Toolbox.GUI
 
             // Overwrite
             GH_ExtendableMenu gH_ExtendableMenu2 = new GH_ExtendableMenu(2, "Overwrite");
-            gH_ExtendableMenu2.Name = "Overwrite";
+            gH_ExtendableMenu2.Name = "Overwrite";            
             evaluationUnit.RegisterInputParam(new Param_String(), "Overwrite Load Case or Combo", "Load Case", "Overwrite selected load case or combo from the dropdown menu.", GH_ParamAccess.item);
             evaluationUnit.Inputs[1].Parameter.Optional = true;
             gH_ExtendableMenu2.RegisterInputPlug(evaluationUnit.Inputs[1]);
@@ -168,20 +171,41 @@ namespace Parametric_FEM_Toolbox.GUI
             evaluationUnit.Inputs[2].Parameter.Optional = true;
             evaluationUnit.Inputs[2].EnumInput = UtilLibrary.ListRFTypes(typeof(ResultsValueType));
             gH_ExtendableMenu2.RegisterInputPlug(evaluationUnit.Inputs[2]);
-            evaluationUnit.AddMenu(gH_ExtendableMenu2);
+            evaluationUnit.AddMenu(gH_ExtendableMenu2);          
+
+            // Select results
+            GH_ExtendableMenu gH_ExtendableMenu3 = new GH_ExtendableMenu(3, "Select Results");
+            gH_ExtendableMenu3.Name = "Select Results";
+            evaluationUnit.AddMenu(gH_ExtendableMenu3);
+            MenuPanel menuPanel2 = new MenuPanel(2, "panel_results");
+            menuPanel2.Header = "Select output results.\n";
+            _memberForcesCheck = new MenuCheckBox(0, "check member forces", "Member Forces");
+            _memberForcesCheck.ValueChanged += _memberForcesCheck__valueChanged;
+            _memberForcesCheck.Active = true;
+            _memberForcesCheck.Header = "Add member forces to output results.";
+            _surfaceForcesCheck = new MenuCheckBox(1, "check surface forces", "Surface Forces");
+            _surfaceForcesCheck.ValueChanged += _surfaceForcesCheck__valueChanged;
+            _surfaceForcesCheck.Active = true;
+            _surfaceForcesCheck.Header = "Add surface forces to output results.";
+            _nodalReactionsCheck = new MenuCheckBox(2, "check nodal reactions", "Nodal Reactions");
+            _nodalReactionsCheck.ValueChanged += _nodalReactionsCheck__valueChanged;
+            _nodalReactionsCheck.Active = true;
+            _nodalReactionsCheck.Header = "Add nodal reactions to output results.";
+            menuPanel2.AddControl(_memberForcesCheck);
+            menuPanel2.AddControl(_surfaceForcesCheck);
+            menuPanel2.AddControl(_nodalReactionsCheck);
+            gH_ExtendableMenu3.AddControl(menuPanel2);
 
             // Advanced
-            evaluationUnit.RegisterInputParam(new Param_RFEM(), "Trigger", "Trigger", "Input to trigger the optimization", GH_ParamAccess.tree);
-            evaluationUnit.Inputs[3].Parameter.Optional = true;
             evaluationUnit.RegisterInputParam(new Param_String(), "Model Name", "Model Name", "Segment of the name of the RFEM Model to get information from", GH_ParamAccess.item);
-            evaluationUnit.Inputs[4].Parameter.Optional = true;
-            GH_ExtendableMenu gH_ExtendableMenu3 = new GH_ExtendableMenu(3, "Advanced");
-            gH_ExtendableMenu3.Name = "Advanced";
-            gH_ExtendableMenu3.Collapse();
-            evaluationUnit.AddMenu(gH_ExtendableMenu3);
-            for (int i = 3; i < 3 + 2; i++)
+            evaluationUnit.Inputs[3].Parameter.Optional = true;
+            GH_ExtendableMenu gH_ExtendableMenu4 = new GH_ExtendableMenu(4, "Advanced");
+            gH_ExtendableMenu4.Name = "Advanced";
+            gH_ExtendableMenu4.Collapse();
+            evaluationUnit.AddMenu(gH_ExtendableMenu4);
+            for (int i = 3; i < 3 + 1; i++)
             {
-                gH_ExtendableMenu3.RegisterInputPlug(evaluationUnit.Inputs[i]);
+                gH_ExtendableMenu4.RegisterInputPlug(evaluationUnit.Inputs[i]);
             }
         }
 
@@ -212,6 +236,27 @@ namespace Parametric_FEM_Toolbox.GUI
             _ = (MenuDropDown)sender;
             _resetResultType = true;
             _resultDropLastValue = _resulttypeDrop.Value;
+            setModelProps();
+        }
+
+        private void _memberForcesCheck__valueChanged(object sender, EventArgs e)
+        {
+            _ = ((MenuCheckBox)sender).Active;
+            _resetLC = true; // Get results
+            setModelProps();
+        }
+
+        private void _surfaceForcesCheck__valueChanged(object sender, EventArgs e)
+        {
+            _ = ((MenuCheckBox)sender).Active;
+            _resetLC = true; // Get results
+            setModelProps();
+        }
+
+        private void _nodalReactionsCheck__valueChanged(object sender, EventArgs e)
+        {
+            _ = ((MenuCheckBox)sender).Active;
+            _resetLC = true; // Get results
             setModelProps();
         }
 
@@ -284,6 +329,7 @@ namespace Parametric_FEM_Toolbox.GUI
             // Assign GH Input
             bool run = false;
             var scale = 0.0;
+            string iLoadCase = "";
             DA.GetData(0, ref run);
             DA.GetData(1, ref scale);
 
@@ -292,7 +338,7 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                 msg = new List<string>();
 
-                if (!DA.GetData(5, ref modelName))
+                if (!DA.GetData(4, ref modelName))
                 {
                     Component_GetData.ConnectRFEM(ref model, ref data);
                 }
@@ -308,8 +354,12 @@ namespace Parametric_FEM_Toolbox.GUI
                     // Get loads
                     Component_GetData.GetLoadsFromRFEM(model, ref loads);
                     // Update load cases and combos to display in dropdown menu
-                    var newLoadCasesAndCombos = loads.GetLoadCasesAndCombos(ref _countCases, ref _countCombos, ref _countRcombos);
-                    if(_lCasesAndCombos == null || _lCasesAndCombos.Count == 0 || !_lCasesAndCombos.All(newLoadCasesAndCombos.Contains))
+                    _results = model.GetCalculation();
+
+                    // Get load cases and combos to 
+                    var newLoadCasesAndCombos = new List<string>();
+                    newLoadCasesAndCombos = loads.GetLoadCasesAndCombos(ref _countCases, ref _countCombos, ref _countRcombos);
+                    if (_lCasesAndCombos == null || _lCasesAndCombos.Count == 0 || !_lCasesAndCombos.Equals(newLoadCasesAndCombos))
                     {
                         _lCasesAndCombos = newLoadCasesAndCombos;
                         _loadDropLastValue = 0; // reset dropdown menus if run
@@ -317,39 +367,19 @@ namespace Parametric_FEM_Toolbox.GUI
                         _lastLoadCase = "";
                         _lastType = 0;
                         _restoreDropDown = true;
-                    }                    
-                    // Get calculation results
-                    _rfMembers = Component_GetData.GetRFMembers(data.GetMembers().ToList(), data);
-                    _results = model.GetCalculation();
-<<<<<<< Updated upstream
-                    var errors = _results.CalculateApp(); // This does not calculate rf modules
-                    if (errors != null)
-                    {
-                        msg.AddRange(errors.Select(x => x.Description));
                     }
-                    else
-                    {
-                        // Get Fe Meshes from RFEM -> only if there are no errors
-                        _rfemMesh = _results.GetFeMesh();
-                        _feMeshes = CreateFEMeshes(ref msg);
-                    }                    
-                    // Disconect model
-                    Component_GetData.DisconnectRFEM(ref model, ref data);
-=======
-                    //var errors = _results.CalculateAll();
-                    //if (errors != null)
-                    //{
-                    //    msg.AddRange(errors.Select(x => x.Description));
-                    //}                    
-                    //// Update load cases and combos to display in dropdown menu
-                    //loads.GetLoadCasesAndCombos(ref _lCasesAndCombos, ref _countCases, ref _countCombos, ref _countRcombos);
-                    loads.GetLoadCasesAndCombos(ref _lCasesAndCombos, ref _results, ref msg);
-                    updateDropDownMenu(_lCasesAndCombos);
+                    // Get members
+                    _rfMembers = Component_GetData.GetRFMembers(data.GetMembers().ToList(), data);
                     // Get Fe Meshes from RFEM
                     _rfemMesh = _results.GetFeMesh();
                     _feMeshes = CreateFEMeshes(ref msg);
-                    // _controlPoints = CreateControlPoints(ref msg); -> Obtained with displacements
->>>>>>> Stashed changes
+                 
+                    // Disconnect RFEM
+                    Component_GetData.DisconnectRFEM(ref model, ref data);
+
+                    // Results are displayed just when the button is set to 0
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Set run to false to display results");
+                    return;
                 }
                 catch (Exception ex)
                 {
@@ -373,17 +403,11 @@ namespace Parametric_FEM_Toolbox.GUI
                     throw ex;
                 }
             }
-            if (_lCasesAndCombos.Count == 0)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No results to display");
-                return;
-            }
 
            // do stuff
             if (msg.Count == 0) // if there are no calculation errors
             {
-                // Get Load Case Number and result type
-                string iLoadCase = "";
+                // Get Load Case Number and result type                
                 int result_type = 0;
                 string result_type_name = "";
                 if (DA.GetData(2, ref iLoadCase))
@@ -426,6 +450,11 @@ namespace Parametric_FEM_Toolbox.GUI
                 }
                 else // get values from dropdown menus
                 {
+                    if (_lCasesAndCombos.Count == 0)
+                    {
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No results to display");
+                        return;
+                    }
                     if (_restoreDropDown) // from previous execution when it was overwritten
                     {
                         updateDropDownMenu(_lCasesAndCombos);
@@ -445,7 +474,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     _lastLoadCase = iLoadCase;
                     if (value == -1)
                     {
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"{iLoadCase} not found. Provide valid load case.");
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"{iLoadCase} has no results. Provide valid load case.");
                         return;
                     }
                     if (value < _countCases)
@@ -479,11 +508,12 @@ namespace Parametric_FEM_Toolbox.GUI
                     _meshdisplacementsByType = GetMeshDisplacementsByType(result_type);
                     _memberdisplacementsByType = GetMemberDisplacementsByType(result_type);
                     // Get analysis results
-                    outResults = new RFResults(_lcresults, _saveddata, iLoadCase, (ResultsValueType)result_type);
+                    outResults = new RFResults(_lcresults, _saveddata, iLoadCase, 
+                        _memberForcesCheck.Active, _surfaceForcesCheck.Active, _nodalReactionsCheck.Active);
                     // Set _resetLC to false again
                     _resetLC = false;                    
                 }
-                if(_resetResultType)
+                if(_resetResultType) // when there are changes in drop down menu
                 {
                     if (result_type == 0) // if no value obtaines through overwrite
                     {
@@ -492,7 +522,8 @@ namespace Parametric_FEM_Toolbox.GUI
                     _meshdisplacementsByType = GetMeshDisplacementsByType(result_type);
                     _memberdisplacementsByType = GetMemberDisplacementsByType(result_type);
                     // Get analysis results
-                    outResults = new RFResults(_lcresults, _saveddata, iLoadCase, (ResultsValueType)result_type);
+                    outResults = new RFResults(_lcresults, _saveddata, iLoadCase,
+                        _memberForcesCheck.Active, _surfaceForcesCheck.Active, _nodalReactionsCheck.Active);
                     // Set _resetType to false again
                     _resetResultType = false;
                 }
