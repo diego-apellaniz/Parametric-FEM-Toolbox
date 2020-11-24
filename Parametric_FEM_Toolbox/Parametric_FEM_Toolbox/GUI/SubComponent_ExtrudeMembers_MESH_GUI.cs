@@ -123,6 +123,10 @@ namespace Parametric_FEM_Toolbox.GUI
 
             // Check input
             var cs_indeces = iCroSecs.Select(x => x.No);
+            if (iMember.EndCrossSectionNo == 0) // In case of tension members, etc.
+            {
+                iMember.EndCrossSectionNo = iMember.StartCrossSectionNo;
+            }
             if (!(cs_indeces.Contains(iMember.StartCrossSectionNo)) || (!(cs_indeces.Contains(iMember.EndCrossSectionNo))))
             {
                 level = GH_RuntimeMessageLevel.Warning;

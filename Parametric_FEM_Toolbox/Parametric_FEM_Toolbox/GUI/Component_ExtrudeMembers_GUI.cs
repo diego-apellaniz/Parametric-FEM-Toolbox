@@ -26,7 +26,7 @@ namespace Parametric_FEM_Toolbox.GUI
         public Component_ExtrudeMembers_GUI()
           : base("Extrude Members", "Extrude", "Extrude members using the geometry of the cross sections assigned to them.", "B+G Toolbox", "RFEM")
         {
-            this.Hidden = (true);
+            this.Hidden = (false);
         }
 
         // Define Keywords to search for this Component more easily in Grasshopper
