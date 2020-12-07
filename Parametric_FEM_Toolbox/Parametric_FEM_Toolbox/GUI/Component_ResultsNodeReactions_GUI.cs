@@ -87,7 +87,7 @@ namespace Parametric_FEM_Toolbox.GUI
             var reaction_forces = new DataTree<RFNodalSupportForces>();
             for (int i = 0; i < rfResults.Count; i++)
             {
-                if (!(rfResults[i].MemberForces == null))
+                if (!(rfResults[i].NodalSupportForces == null))
                 {
                     var path = new GH_Path(i);
                     reaction_forces.AddRange(rfResults[i].NodalSupportForces, path);

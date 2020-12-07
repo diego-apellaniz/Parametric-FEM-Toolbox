@@ -1396,6 +1396,9 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             var lastNLNo = 0;
 
             inNLoads = ghNodes.Select(x => new RFNodalLoad((RFNodalLoad)x.Value)).ToList();
+
+            
+
             foreach (var rfLoad in inNLoads)
             {
                 var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
@@ -1426,6 +1429,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     index.Add(data.SetRFNodalLoad(loadcase, rfLoad, ref existingNodes, ref lastNoNo, ref lastNLNo, tol));
                 }
             }
+            
         }
 
         public static void SetRFNodalLoads(this IModelData data, ILoads loads, List<GH_RFEM> ghNodes, ref List<RFNodalLoad> index, ref List<string> errorMsg)
@@ -1437,6 +1441,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             var lastNLNo = 0;
 
             inNLoads = ghNodes.Select(x => new RFNodalLoad((RFNodalLoad)x.Value)).ToList();
+
             foreach (var rfLoad in inNLoads)
             {
                 try
@@ -1444,6 +1449,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
                     if (rfLoad.ToModify)
                     {
+                        loadcase.PrepareModification();
                         var myload = (NodalLoad)rfLoad;
                         //if (rfSup.NewNo > 0)
                         //{
@@ -1451,11 +1457,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                         //}
                         loadcase.GetNodalLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
                         index.Add(rfLoad);
+                        loadcase.FinishModification();
                     }
                     else if (rfLoad.ToDelete)
                     {
+                        loadcase.PrepareModification();
                         loadcase.GetNodalLoad(rfLoad.No, ItemAt.AtNo).Delete();
                         index.Add(rfLoad);
+                        loadcase.FinishModification();
                     }
                     else
                     {
@@ -1475,6 +1484,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     errorMsg.Add($"Import of Nodal Load No.{rfLoad.No} failed! " + ex.Message);
                 }
             }
+
         }
 
         public static RFNodalLoad SetRFNodalLoad(this IModelData data, ILoadCase loadcase, ref RFNodalLoad rfNodalLoad, ref List<RFNode> existingNodes, ref int lastNo, ref int lastNLNo, double tol)
@@ -1528,6 +1538,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
                     if (rfLoad.ToModify)
                     {
+                        loadcase.PrepareModification();
                         var myload = (LineLoad)rfLoad;
                         //if (rfSup.NewNo > 0)
                         //{
@@ -1535,11 +1546,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                         //}
                         loadcase.GetLineLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
                         index.Add(rfLoad);
+                        loadcase.FinishModification();
                     }
                     else if (rfLoad.ToDelete)
                     {
+                        loadcase.PrepareModification();
                         loadcase.GetLineLoad(rfLoad.No, ItemAt.AtNo).Delete();
                         index.Add(rfLoad);
+                        loadcase.FinishModification();
                     }
                     else
                     {
@@ -1609,6 +1623,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
                     if (rfLoad.ToModify)
                     {
+                        loadcase.PrepareModification();
                         var myload = (MemberLoad)rfLoad;
                         //if (rfSup.NewNo > 0)
                         //{
@@ -1616,11 +1631,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                         //}
                         loadcase.GetMemberLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
                         index.Add(rfLoad);
+                        loadcase.FinishModification();
                     }
                     else if (rfLoad.ToDelete)
                     {
+                        loadcase.PrepareModification();
                         loadcase.GetMemberLoad(rfLoad.No, ItemAt.AtNo).Delete();
                         index.Add(rfLoad);
+                        loadcase.FinishModification();
                     }
                     else
                     {
@@ -1674,6 +1692,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
                     if (rfLoad.ToModify)
                     {
+                        loadcase.PrepareModification();
                         var myload = (SurfaceLoad)rfLoad;
                         //if (rfSup.NewNo > 0)
                         //{
@@ -1681,11 +1700,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                         //}
                         loadcase.GetSurfaceLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
                         index.Add(rfLoad);
+                        loadcase.FinishModification();
                     }
                     else if (rfLoad.ToDelete)
                     {
+                        loadcase.PrepareModification();
                         loadcase.GetSurfaceLoad(rfLoad.No, ItemAt.AtNo).Delete();
                         index.Add(rfLoad);
+                        loadcase.FinishModification();
                     }
                     else
                     {
@@ -1740,6 +1762,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
                     if (rfLoad.ToModify)
                     {
+                        loadcase.PrepareModification();
                         var myload = (FreePolygonLoad)rfLoad;
                         //if (rfSup.NewNo > 0)
                         //{
@@ -1747,6 +1770,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                         //}
                         loadcase.GetFreePolygonLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
                         index.Add(rfLoad);
+                        loadcase.FinishModification();
                     }
                     else if (rfLoad.ToDelete)
                     {
@@ -1804,6 +1828,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 {
                     if (rfLoadCase.ToModify)
                     {
+                        loads.PrepareModification();
                         var myloadcase = (LoadCase)rfLoadCase;
                         //if (rfSup.NewNo > 0)
                         //{
@@ -1811,11 +1836,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                         //}
                         loads.GetLoadCase(rfLoadCase.No, ItemAt.AtNo).SetData(ref myloadcase);
                         index.Add(rfLoadCase);
+                        loads.FinishModification();
                     }
                     else if (rfLoadCase.ToDelete)
                     {
+                        loads.PrepareModification();
                         loads.GetLoadCase(rfLoadCase.No, ItemAt.AtNo).Delete();
                         index.Add(rfLoadCase);
+                        loads.FinishModification();
                     }
                     else
                     {
@@ -1868,6 +1896,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 {
                     if (rfLoadCombo.ToModify)
                     {
+                        loads.PrepareModification();
                         var myloadcombo = (LoadCombination)rfLoadCombo;
                         //if (rfSup.NewNo > 0)
                         //{
@@ -1875,11 +1904,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                         //}
                         loads.GetLoadCombination(rfLoadCombo.No, ItemAt.AtNo).SetData(ref myloadcombo);
                         index.Add(rfLoadCombo);
+                        loads.FinishModification();
                     }
                     else if (rfLoadCombo.ToDelete)
                     {
+                        loads.PrepareModification();
                         loads.GetLoadCombination(rfLoadCombo.No, ItemAt.AtNo).Delete();
                         index.Add(rfLoadCombo);
+                        loads.FinishModification();
                     }
                     else
                     {
@@ -1938,6 +1970,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 {
                     if (rfLoadCombo.ToModify)
                     {
+                        loads.PrepareModification();
                         var myloadcombo = (ResultCombination)rfLoadCombo;
                         //if (rfSup.NewNo > 0)
                         //{
@@ -1945,11 +1978,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                         //}
                         loads.GetResultCombination(rfLoadCombo.No, ItemAt.AtNo).SetData(ref myloadcombo);
                         index.Add(rfLoadCombo);
+                        loads.FinishModification();
                     }
                     else if (rfLoadCombo.ToDelete)
                     {
+                        loads.PrepareModification();
                         loads.GetResultCombination(rfLoadCombo.No, ItemAt.AtNo).Delete();
                         index.Add(rfLoadCombo);
+                        loads.FinishModification();
                     }
                     else
                     {

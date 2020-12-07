@@ -197,13 +197,15 @@ namespace Parametric_FEM_Toolbox.GUI
             gH_ExtendableMenu3.AddControl(menuPanel2);
 
             // Advanced
-            evaluationUnit.RegisterInputParam(new Param_String(), "Model Name", "Model Name", "Segment of the name of the RFEM Model to get information from", GH_ParamAccess.item);
+            evaluationUnit.RegisterInputParam(new Param_RFEM(), "Trigger", "Trigger", "Input to trigger the optimization", GH_ParamAccess.tree);
             evaluationUnit.Inputs[3].Parameter.Optional = true;
+            evaluationUnit.RegisterInputParam(new Param_String(), "Model Name", "Model Name", "Segment of the name of the RFEM Model to get information from", GH_ParamAccess.item);
+            evaluationUnit.Inputs[4].Parameter.Optional = true;
             GH_ExtendableMenu gH_ExtendableMenu4 = new GH_ExtendableMenu(4, "Advanced");
             gH_ExtendableMenu4.Name = "Advanced";
             gH_ExtendableMenu4.Collapse();
             evaluationUnit.AddMenu(gH_ExtendableMenu4);
-            for (int i = 3; i < 3 + 1; i++)
+            for (int i = 3; i < 3 + 2; i++)
             {
                 gH_ExtendableMenu4.RegisterInputPlug(evaluationUnit.Inputs[i]);
             }
@@ -338,7 +340,7 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                 msg = new List<string>();
 
-                if (!DA.GetData(4, ref modelName))
+                if (!DA.GetData(5, ref modelName))
                 {
                     Component_GetData.ConnectRFEM(ref model, ref data);
                 }
@@ -377,9 +379,13 @@ namespace Parametric_FEM_Toolbox.GUI
                     // Disconnect RFEM
                     Component_GetData.DisconnectRFEM(ref model, ref data);
 
-                    // Results are displayed just when the button is set to 0
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Set run to false to display results");
-                    return;
+                    // Results are displayed just when the button is set to 0 - if no LC is provided
+                    var dummyLC = "";
+                    if (!DA.GetData(2, ref dummyLC))
+                    {
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Set run to false to display results");
+                        return;
+                    }                        
                 }
                 catch (Exception ex)
                 {
@@ -453,6 +459,8 @@ namespace Parametric_FEM_Toolbox.GUI
                     if (_lCasesAndCombos.Count == 0)
                     {
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No results to display");
+                        _loadDrop.Clear();
+                        _resulttypeDrop.Clear();
                         return;
                     }
                     if (_restoreDropDown) // from previous execution when it was overwritten
@@ -777,7 +785,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("801735dc-9b7c-4e04-a14a-34b865f689a2"); }
+            get { return new Guid("a9cb88ef-e194-445f-876a-298a2dd7ba4f"); }
         }
     }
 }

@@ -143,6 +143,11 @@ namespace Parametric_FEM_Toolbox.RFEM
             {
                 return Value.ToGH_Plane(ref target);
             }
+            // Integer
+            else if (target is GH_Integer)
+            {
+                return Value.ToGH_Integer(ref target);
+            }
             //In any other case return false.
             return false;
         }

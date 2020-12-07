@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_2.cs" />
+    <Compile Include="Deprecated\Component_GetResults_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\Component_RFSupportPProperties_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\Component_RFSupportP_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\Component_RFCroSec_GUI_OBSOLETE.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Deprecated\Component_FilterData_GUI_OBSOLETE_2.cs" />
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_3.cs" />
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_4.cs" />
+    <Compile Include="GUI\Component_Calculate_GUI.cs" />
     <Compile Include="GUI\Component_GetResults_GUI.cs" />
     <Compile Include="GUI\Component_ExtrudeMembers_GUI.cs" />
     <Compile Include="GUI\Component_ResultsNodeReactions_GUI.cs" />
@@ -543,6 +545,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Results_ShellForces.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Calculate.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

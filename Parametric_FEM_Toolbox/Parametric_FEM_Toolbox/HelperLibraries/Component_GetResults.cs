@@ -15,22 +15,33 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
 {
     public static class Component_GetResults
     {
-       
-        public static void GetLoadCasesAndCombos(this ILoads loads, ref List<string> lCases, ref List<string> lCombos , ref List<string> rCombos)
+
+        public static void GetLoadCasesAndCombos(this ILoads loads, ref List<string> lCasesAndCombos, ref int countCases, ref int countCombos, ref int countRcombos)
         {
-            lCases = new List<string>();
-            lCombos = new List<string>();
-            rCombos = new List<string>();
+            var lCases = new List<string>();
+            var lCombos = new List<string>();
+            var rCombos = new List<string>();
 
             lCases = loads.GetLoadCases().Select(x => "LoadCase " + x.Loading.No.ToString()).ToList();
-            lCombos = loads.GetLoadCases().Select(x => "LoadCombo " + x.Loading.No.ToString()).ToList();
-            rCombos = loads.GetLoadCases().Select(x => "ResultCombo " + x.Loading.No.ToString()).ToList();
+            countCases = lCases.Count;
+            lCombos = loads.GetLoadCombinations().Select(x => "LoadCombo " + x.Loading.No.ToString()).ToList();
+            countCombos = lCombos.Count;
+            rCombos = loads.GetResultCombinations().Select(x => "ResultCombo " + x.Loading.No.ToString()).ToList();
+            countRcombos = rCombos.Count;
+
+            lCasesAndCombos = new List<string>();
+            lCasesAndCombos.AddRange(lCases);
+            lCasesAndCombos.AddRange(lCombos);
+            lCasesAndCombos.AddRange(rCombos);
         }
 
         public static List<string> GetLoadCasesAndCombos(this ILoads loads, ref int countCases, ref int countCombos, ref int countRcombos)
         {
             var lCasesAndCombos = new List<string>();
 
+            countCases = 0;
+            countCombos = 0;
+            countRcombos = 0;
             // Load cases
             foreach (var lc in loads.GetLoadCases())
             {
@@ -126,18 +137,18 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
 
         }
 
-        public static void GetResults(ref ICalculation results, string iLoadCase, ref List<string> msg)
+        public static void GetResults(ref ICalculation results, string iLoadCase, ref Vector3d displacement, ref List<string> msg)
         {
             var lc_name_parts = iLoadCase.Split(' ');
             if (lc_name_parts.Length < 2)
             {
-                msg.Add("Provide valid load case.");
+                msg.Add("Provide valid load cases.");
                 return;
             }
             int no = 0;
             if(!int.TryParse(lc_name_parts[1], out no))
             {
-                msg.Add("Provide valid load case.");
+                msg.Add("Provide valid load cases.");
                 return;
             }
             ErrorInfo[] errors;
@@ -145,23 +156,35 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             {
                 case "LoadCase":
                     errors = results.Calculate(LoadingType.LoadCaseType, no);
-                    if (errors != null)
+                    if (errors != null && errors.Length>0 && errors[0].Description != "")
                     {
                         msg.AddRange(errors.Select(x => x.Description));
-                    }            
+                    }else
+                    {
+                        displacement = new Vector3d(results.GetResultsInFeNodes(LoadingType.LoadCaseType, no).GetMaximum().Displacement.ToPoint3d());
+                    }
                     break;
                 case "LoadCombo":
                     errors = results.Calculate(LoadingType.LoadCombinationType, no);
-                    if (errors != null)
+                    if (errors != null && errors.Length > 0 && errors[0].Description != "")
                     {
                         msg.AddRange(errors.Select(x => x.Description));
                     }
+                    else
+                    {
+                        displacement = new Vector3d(results.GetResultsInFeNodes(LoadingType.LoadCombinationType, no).GetMaximum().Displacement.ToPoint3d());
+                    }
                     break;
                 case "ResultCombo":
-                    errors = results.Calculate(LoadingType.LoadCombinationType, no);
-                    if (errors != null)
+                    errors = results.Calculate(LoadingType.ResultCombinationType, no);
+                    if (errors != null && errors.Length > 0 && errors[0].Description != "")
                     {
                         msg.AddRange(errors.Select(x => x.Description));
+                    }
+                    else
+                    {
+                        //displacement = new Vector3d(results.GetResultsInFeNodes(LoadingType.ResultCombinationType, no).GetMaximum().Displacement.ToPoint3d());
+                        displacement = new Vector3d(); // result combinations have no max information
                     }
                     break;
                 default:

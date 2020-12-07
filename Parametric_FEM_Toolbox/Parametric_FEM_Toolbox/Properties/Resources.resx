@@ -178,6 +178,9 @@
   <data name="Assemble_SurfaceLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Assemble_SurfaceLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Calculate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Calculate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Disassemble_CroSec" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Disassemble_CroSec.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
