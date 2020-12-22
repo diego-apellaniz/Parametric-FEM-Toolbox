@@ -1488,6 +1488,107 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
 
         #endregion
 
+        #region MemberHinge
+
+        public static List<MemberHinge> FilterMH(Dlubal.RFEM5.IModelData data, List<RFFilter> filters)
+        {
+            var outHinges = new List<MemberHinge>();
+            foreach (var n in data.GetMemberHinges())
+            {
+                var include = true;
+                foreach (var filter in filters)
+                {
+                    if (!(filter.MHList is null))
+                    {
+                        if (!filter.MHList.Contains(n.No))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MHComment is null))
+                    {
+                        if (!filter.MHComment.Contains(n.Comment))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MHTx is null))
+                    {
+                        var value = ((n.TranslationalConstantX >= 0) ? n.TranslationalConstantX / 1000 : n.TranslationalConstantX);
+                        if (!filter.MHTx.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MHTy is null))
+                    {
+                        var value = ((n.TranslationalConstantY >= 0) ? n.TranslationalConstantY / 1000 : n.TranslationalConstantY);
+                        if (!filter.MHTy.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MHTz is null))
+                    {
+                        var value = ((n.TranslationalConstantZ >= 0) ? n.TranslationalConstantZ / 1000 : n.TranslationalConstantZ);
+                        if (!filter.MHTz.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MHRx is null))
+                    {
+                        var value = ((n.RotationalConstantX >= 0) ? n.RotationalConstantX / 1000 : n.RotationalConstantX);
+                        if (!filter.MHRx.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MHRy is null))
+                    {
+                        var value = ((n.RotationalConstantY >= 0) ? n.RotationalConstantY / 1000 : n.RotationalConstantY);
+                        if (!filter.MHRy.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MHRz is null))
+                    {
+                        var value = ((n.RotationalConstantZ >= 0) ? n.RotationalConstantZ / 1000 : n.RotationalConstantZ);
+                        if (!filter.MHRz.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                }
+                if (!include) continue;
+                outHinges.Add(n);
+            }
+            return outHinges;
+        }
+
+        public static List<RFMemberHinge> GetRFMemberHinges(List<MemberHinge> hinges, IModelData data)
+        {
+            var rfMemberHinges = new List<RFMemberHinge>();
+            // Get Planesss
+            foreach (var item in hinges)
+            {                
+                var rfMemberHinge = new RFMemberHinge(item);
+                rfMemberHinges.Add(rfMemberHinge);
+            }
+            return rfMemberHinges;
+        }
+
+        #endregion
+
         #region Cross Section
 
         public static List<CrossSection> FilterCroSecs(Dlubal.RFEM5.IModelData data, List<RFFilter> filters)
@@ -3367,6 +3468,35 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             rfLoadCombos.Clear();
             rfResultCombos.Clear();
         }
+
+        public static void ClearOutput(ref List<RFNode> rfNodes, ref List<RFLine> rfLines, ref List<RFMember> rfMembers, ref List<RFSurface> rfSurfaces,
+ref List<RFOpening> rfOpenings, ref List<RFSupportP> rfSupportss, ref List<RFSupportL> rfSupportsL, ref List<RFSupportS> rfSupportsS, ref List<RFLineHinge> rfLineHinges,
+ref List<RFCroSec> rfCroSecs, ref List<RFMaterial> rfMats, ref List<RFNodalLoad> rfNLoads, ref List<RFLineLoad> rfLLoads, ref List<RFMemberLoad> rfMLoads,
+ref List<RFSurfaceLoad> rfSLoads, ref List<RFFreePolygonLoad> rfPLoads, ref List<RFLoadCase> rfLoadCases, ref List<RFLoadCombo> rfLoadCombos,
+ref List<RFResultCombo> rfResultCombos, ref List<RFMemberHinge> rfMemberHinges)
+        {
+            rfNodes.Clear();
+            rfLines.Clear();
+            rfMembers.Clear();
+            rfSurfaces.Clear();
+            rfOpenings.Clear();
+            rfSupportss.Clear();
+            rfSupportsL.Clear();
+            rfSupportsS.Clear();
+            rfLineHinges.Clear();
+            rfCroSecs.Clear();
+            rfMats.Clear();
+            rfNLoads.Clear();
+            rfLLoads.Clear();
+            rfMLoads.Clear();
+            rfSLoads.Clear();
+            rfPLoads.Clear();
+            rfLoadCases.Clear();
+            rfLoadCombos.Clear();
+            rfResultCombos.Clear();
+            rfMemberHinges.Clear();
+        }
+
 
         public static void ConnectRFEM(ref IModel model, ref IModelData data)
         {

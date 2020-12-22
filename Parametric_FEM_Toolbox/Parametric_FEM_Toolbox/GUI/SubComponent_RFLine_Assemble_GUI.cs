@@ -108,6 +108,12 @@ namespace Parametric_FEM_Toolbox.GUI
                 level = GH_RuntimeMessageLevel.Warning;
                 return;
             }
+            // Check line length
+            if (rFLine.ToCurve().GetLength() <= 0.001)
+            {
+                level = GH_RuntimeMessageLevel.Warning;
+                msg = "Line is too short. It may cause import errors.";
+            }
             if (DA.GetData(7, ref mod))
             {
                 rFLine.ToModify = mod;

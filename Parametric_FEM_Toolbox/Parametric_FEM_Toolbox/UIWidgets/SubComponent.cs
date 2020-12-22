@@ -15,5 +15,7 @@ namespace Parametric_FEM_Toolbox.UIWidgets
         public virtual void OnComponentLoaded()
         {
         }
+
+        public virtual GH_DocumentObject Parent_Component { get; set; } // To be able to call ExpireSolution() from subcomponents
     }
 }

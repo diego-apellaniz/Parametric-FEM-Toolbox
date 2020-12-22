@@ -9,6 +9,7 @@ using Parametric_FEM_Toolbox.Utilities;
 using Parametric_FEM_Toolbox.HelperLibraries;
 using Dlubal.RFEM5;
 using Parametric_FEM_Toolbox.RFEM;
+using System.Linq;
 
 namespace Parametric_FEM_Toolbox.GUI
 {
@@ -159,7 +160,12 @@ namespace Parametric_FEM_Toolbox.GUI
                         level = GH_RuntimeMessageLevel.Warning;
                         return;
                     }
-                }                
+                }
+                if (rfSrfc.ToBrep().Edges.Select(x => x.GetLength()).Min() <= 0.001)
+                {
+                    level = GH_RuntimeMessageLevel.Warning;
+                    msg = "Boundary lines are too short. It may cause import errors.";
+                }
             }
             else if (DA.GetData(5, ref boundList))
             {

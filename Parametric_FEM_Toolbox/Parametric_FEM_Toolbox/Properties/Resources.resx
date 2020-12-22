@@ -145,6 +145,9 @@
   <data name="Assemble_MemberLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Assemble_MemberLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Assemble_MemberRelease" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Assemble_MemberRelease.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Assemble_NodalLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Assemble_NodalLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -175,6 +178,9 @@
   <data name="Assemble_SurfaceLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Assemble_SurfaceLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Calculate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Calculate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Disassemble_CroSec" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Disassemble_CroSec.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -201,6 +207,9 @@
   </data>
   <data name="Disassemble_MemberLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Disassemble_MemberLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Disassemble_MemberRelease" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Disassemble_MemberRelease.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Disassemble_NodalLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Disassemble_NodalLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -231,6 +240,9 @@
   </data>
   <data name="Disassemble_SurfaceLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Disassemble_SurfaceLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Extrude_Members" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Extrude_Members.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="icon_FilterLine" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_FilterLine.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -283,6 +295,9 @@
   <data name="icon_RFEM_FilterMember" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_RFEM_FilterMember.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="icon_RFEM_FilterMemberRelease" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_RFEM_FilterMemberRelease.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="icon_RFEM_FilterOpening" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_RFEM_FilterOpening.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -318,6 +333,15 @@
   </data>
   <data name="icon_SetData" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_SetData.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Results_MemberForces" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Results_MemberForces.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Results_Reactions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Results_Reactions.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Results_ShellForces" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Results_ShellForces.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="toolbox_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\toolbox_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

@@ -181,6 +181,13 @@ namespace Parametric_FEM_Toolbox.RFEM
                 frame1 = new Plane(baseCrv.PointAtStart, vecX, vecY);
                 frame2 = new Plane(baseCrv.PointAtEnd, vecX, vecY);
             }
+            // Rotate axis?
+            if (RotationAngle != 0)
+            {
+                frame1.Rotate(RotationAngle * Math.PI/180, frame1.Normal);
+                frame2.Rotate(RotationAngle * Math.PI / 180, frame2.Normal);
+            }
+            // Output
             outFrames.Add(frame1);
             outFrames.Add(frame2);
             Frames = outFrames;
