@@ -34,6 +34,13 @@ The process of exporting data from Grasshopper into RFEM revolves around the *"S
 ![alt text](https://m4jmjq.db.files.1drv.com/y4mmAejTyXGwkNPGK45dnLednLBa8Si6Lsil9cGLeFvK_eu98O2Bnv3FBA3RfRcDcXGhzJsVT5sXWUI0Iqr8kKp7p2MeZsqZ9rwwOO2KmCRxjR-wrsS7WPP4dMysCaUS84IhMnbGG2XSgNgaQtAJLh4Wf8T1MuT7pxNHYZ-bk1Q46CNQ7aCYzSbzBhZbWbVOTSaRg8Suotk-wA-3AbazYaSLg?width=773&height=389&cropmode=none "Set Data - GH")
 ![alt text](https://mojmjq.db.files.1drv.com/y4m9c61AZgWTYQnu0oUWVTVLjzODxq2ZFVZ5X6JQWtD3TGBY0RiP9s_tD7MefUE_fFHoqxd0JCCpppdmwg0_LOFOI_0hmiXLImeibVIG-KqrBRn6PPYhKL3XLKAetnojveAwJg_H_1Rg830EAqUKhVlQy8_6z_KlqtthizYBC0BNci7JI8FgPQ1P_XzLTdjYnyRkw4zGjmjQ0RQiZq3IdsnsA?width=843&height=494&cropmode=none "Set Data - REFM")
 
+## Concrete Building
+
+Learn how to export a whole model from Grasshopper to RFEM
+
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Concrete_building_4.png)
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Concrete_building_1.png)
+
 ## Scripting
 
 This Plug-In supports the use of Grasshopper Scripting Components to deal with RF-Objects.
@@ -54,7 +61,22 @@ Some key aspects to take into account:
 ![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example5-GH.png)
 ![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example5-RFEM.png)
 
+## Extrude Members
+
+Get 3d shapes of member elements from RFREM with the new "Extrude Members" component:
+
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example6_ExtrudeMembers_1.png)
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example6_ExtrudeMembers_2.png)
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example6_ExtrudeMembers_3.png)
+
 ## Calculation
+
+The "Get Results" component retrieves the results of the CALCULATED load cases and load combinations from RFEM. The output of the component is the deformed model shape and the calculation results of the selected load case and combo.
+
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Concrete_building_2.png)
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example7-Calculation.png)
+
+## Optimization
 
 Through this example, you will learn to:
 
@@ -63,4 +85,4 @@ Through this example, you will learn to:
 - Run a cross section optimization from grasshopper
 - Combine the cross section optimization with a geometric optimization using Galapagos
 
-![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Example7-RFEM.jpg)
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Optimization_Galapagos.png)
