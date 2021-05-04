@@ -1,6 +1,7 @@
 # Parametric FEM Toolbox
 
 <img src="https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/toolbox_big_Mesh.png" width="300" height="250">
+
 ![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/PluginWorkflow_3.png?raw=true)
 
 This Plug-In enables an interoperability between RFEM and Grasshopper through the RFCOM API. It allows the user to import data from RFEM into Grasshopper and also to define new model data through the Grasshopper interface. It is required to have installed the program Dlubal RFEM with active RFEM and RFCOM licences to use this tool.
