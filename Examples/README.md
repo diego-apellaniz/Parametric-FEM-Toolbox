@@ -86,3 +86,22 @@ Through this example, you will learn to:
 - Combine the cross section optimization with a geometric optimization using Galapagos
 
 ![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Optimization_Galapagos.png)
+
+## NURBS Surfaces
+
+Through this example, you will learn to:
+
+- Model Nurbs Surfaces in Grasshopper so they can be imported into RFEM
+- Import Nurbs Surfaces into RFEM
+- Import Nurbs Surfaces from RFEM into Grasshopper
+
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/NurbsSurfaces.png?raw=true)
+
+## Life-Cycle Assessment
+
+Through this example, you will learn to:
+
+- Prepare the bill of quantities from the RFEM model to serve as input for a LCA
+- Run a LCA with the plugin of One Click LCA with the input from an RFEM model
+
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Optimization_Galapagos.png)
