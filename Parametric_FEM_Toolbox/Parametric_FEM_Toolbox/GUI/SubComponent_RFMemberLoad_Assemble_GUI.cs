@@ -338,6 +338,9 @@ namespace Parametric_FEM_Toolbox.GUI
                         level = GH_RuntimeMessageLevel.Warning;
                         return;
                     }
+                        msg = "Prrestress force must be specified in kN since v1.2. ";
+                        level = GH_RuntimeMessageLevel.Warning;
+                        // not return!
                     break;
                 case LoadType.EndPrestressType:
                     if (!(rfMemberLoad.LoadDirType == LoadDirectionType.LocalXType))
@@ -346,6 +349,9 @@ namespace Parametric_FEM_Toolbox.GUI
                         level = GH_RuntimeMessageLevel.Warning;
                         return;
                     }
+                    msg = "Prrestress force must be specified in kN since v1.2. ";
+                    level = GH_RuntimeMessageLevel.Warning;
+                    // not return!
                     break;
                 case LoadType.DisplacementType:
                     if (rfMemberLoad.LoadDirType == LoadDirectionType.LocalUType || rfMemberLoad.LoadDirType == LoadDirectionType.LocalVType || rfMemberLoad.LoadDirType == LoadDirectionType.UnknownLoadDirectionType || rfMemberLoad.LoadDirType == LoadDirectionType.PerpendicularZType)

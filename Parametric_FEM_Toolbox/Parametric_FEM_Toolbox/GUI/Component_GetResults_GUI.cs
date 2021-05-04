@@ -485,9 +485,11 @@ namespace Parametric_FEM_Toolbox.GUI
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"{iLoadCase} has no results. Provide valid load case.");
                         return;
                     }
+                    var lcresultsraster = _results.GetResultsInRasterPoints(LoadingType.LoadCaseType, no);
                     if (value < _countCases)
                     {
-                        _lcresults = _results.GetResultsInFeNodes(LoadingType.LoadCaseType, no);                        
+                        _lcresults = _results.GetResultsInFeNodes(LoadingType.LoadCaseType, no);     
+                        
                     }
                     else if (value < _countCases + _countCombos)
                     {
@@ -516,7 +518,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     _meshdisplacementsByType = GetMeshDisplacementsByType(result_type);
                     _memberdisplacementsByType = GetMemberDisplacementsByType(result_type);
                     // Get analysis results
-                    outResults = new RFResults(_lcresults, _saveddata, iLoadCase, 
+                    outResults = new RFResults(_lcresults, _saveddata, iLoadCase,
                         _memberForcesCheck.Active, _surfaceForcesCheck.Active, _nodalReactionsCheck.Active);
                     // Set _resetLC to false again
                     _resetLC = false;                    

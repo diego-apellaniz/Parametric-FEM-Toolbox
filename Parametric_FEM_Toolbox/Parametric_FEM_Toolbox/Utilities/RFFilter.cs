@@ -91,6 +91,12 @@ namespace Parametric_FEM_Toolbox.Utilities
         public List<Interval> SupRx { get; set; }
         public List<Interval> SupRy { get; set; }
         public List<Interval> SupRz { get; set; }
+        public List<string> SupNTx { get; set; }
+        public List<string> SupNTy { get; set; }
+        public List<string> SupNTz { get; set; }
+        public List<string> SupNRx { get; set; }
+        public List<string> SupNRy { get; set; }
+        public List<string> SupNRz { get; set; }
         public List<Interval> SupX { get; set; }
         public List<Interval> SupY { get; set; }
         public List<Interval> SupZ { get; set; }
@@ -103,6 +109,9 @@ namespace Parametric_FEM_Toolbox.Utilities
         public List<Interval> SupLRx { get; set; }
         public List<Interval> SupLRy { get; set; }
         public List<Interval> SupLRz { get; set; }
+        public List<string> SupLNTx { get; set; }
+        public List<string> SupLNTy { get; set; }
+        public List<string> SupLNTz { get; set; }
         public List<Interval> SupLX { get; set; }
         public List<Interval> SupLY { get; set; }
         public List<Interval> SupLZ { get; set; }
@@ -115,6 +124,7 @@ namespace Parametric_FEM_Toolbox.Utilities
         public List<Interval> SupSTz { get; set; }
         public List<Interval> SupSVxz { get; set; }
         public List<Interval> SupSVyz { get; set; }
+        public List<string> SupSNTz { get; set; }
         public List<Interval> SupSX { get; set; }
         public List<Interval> SupSY { get; set; }
         public List<Interval> SupSZ { get; set; }        
@@ -267,6 +277,28 @@ namespace Parametric_FEM_Toolbox.Utilities
         public List<Interval> MHRx { get; set; }
         public List<Interval> MHRy { get; set; }
         public List<Interval> MHRz { get; set; }
-
+        public List<int> NRList { get; set; }
+        public List<string> NRComment { get; set; }
+        public List<int> NRNodeNo { get; set; }
+        public List<int> NRReleasedMembersNo { get; set; }
+        public List<int> NRReleasedSurfacesNo { get; set; }
+        public List<int> NRReleasedSolidsNo { get; set; }
+        public List<int> NRHinge { get; set; }
+        public List<int> NRMemberNo { get; set; }
+        public List<int> NRGeneratedNodeNo { get; set; }
+        public List<string> NRAxisSystem { get; set; }
+        public List<string> NRLocation { get; set; }
+        public List<int> FLLList { get; set; }
+        public List<string> FLLComment { get; set; }
+        public List<int> FLLLC { get; set; }
+        public List<int> FLLSfcList { get; set; }
+        public List<Interval> FLLF1 { get; set; }
+        public List<Interval> FLLF2 { get; set; }
+        public List<string> FLLProj { get; set; }
+        public List<string> FLLDir { get; set; }
+        public List<string> FLLDist { get; set; }
+        public List<Interval> FLLX { get; set; }
+        public List<Interval> FLLY { get; set; }
+        public List<Interval> FLLZ { get; set; }
     }
 }

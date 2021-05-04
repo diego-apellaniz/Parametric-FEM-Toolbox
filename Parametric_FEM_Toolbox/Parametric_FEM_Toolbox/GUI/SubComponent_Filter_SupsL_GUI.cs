@@ -55,8 +55,14 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.Inputs[8].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Interval(), "Rotation Dir Z", "Rz", "(-1): Fixed; (0): Free; Other: Stiffness in [kNm/rad]", GH_ParamAccess.list);
             unit.Inputs[9].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_String(), "Reference System Type", "RefSys", "Reference System Type", GH_ParamAccess.list);
+            unit.RegisterInputParam(new Param_String(), "SupportNonlinearityX", "NTx", "Nonlinearity Tpye Displacement Dir X", GH_ParamAccess.list);
             unit.Inputs[10].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_String(), "SupportNonlinearityY", "NTy", "Nonlinearity Tpye Displacement Dir Y", GH_ParamAccess.list);
+            unit.Inputs[11].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_String(), "SupportNonlinearityZ", "NTz", "Nonlinearity Tpye Displacement Dir Z", GH_ParamAccess.list);
+            unit.Inputs[12].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_String(), "Reference System Type", "RefSys", "Reference System Type", GH_ParamAccess.list);
+            unit.Inputs[13].Parameter.Optional = true;
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[0]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[1]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[2]);
@@ -68,6 +74,9 @@ namespace Parametric_FEM_Toolbox.GUI
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[8]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[9]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[10]);
+            gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[11]);
+            gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[12]);
+            gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[13]);
             unit.AddMenu(gH_ExtendableMenu);
         }
         public override void SolveInstance(IGH_DataAccess DA, out string msg, out GH_RuntimeMessageLevel level)
@@ -88,6 +97,9 @@ namespace Parametric_FEM_Toolbox.GUI
             var rx = new List<Interval>();
             var ry = new List<Interval>();
             var rz = new List<Interval>();
+            var ntx = new List<string>();
+            var nty = new List<string>();
+            var ntz = new List<string>();
             var linesList = new List<string>();
             var refSys = new List<string>();
 
@@ -149,7 +161,19 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                 myFilter.SupLRz = rz;
             }
-            if (DA.GetDataList(12, refSys))
+            if (DA.GetDataList(12, ntx))
+            {
+                myFilter.SupLNTx = ntx;
+            }
+            if (DA.GetDataList(13, nty))
+            {
+                myFilter.SupLNTy = nty;
+            }
+            if (DA.GetDataList(14, ntz))
+            {
+                myFilter.SupLNTz = ntz;
+            }
+            if (DA.GetDataList(15, refSys))
             {
                 myFilter.SupLRefSys = refSys;
             }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dlubal.RFEM3;
+using Grasshopper.Kernel.Geometry.SpatialTrees;
 
 namespace Parametric_FEM_Toolbox.HelperLibraries
 {
@@ -20,7 +21,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         public static List<int> ToInt(this string str)
         {
             List<int> output = new List<int>();
-            if (!(str.Length>0))
+            if (!(str.Length > 0))
             {
                 return output;
             }
@@ -90,7 +91,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return output;
         }
 
-        public static bool Includes (this List<Interval> Intervals, double Value)
+        public static bool Includes(this List<Interval> Intervals, double Value)
         {
             foreach (var interval in Intervals)
             {
@@ -102,13 +103,13 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return false;
         }
 
-        public static string DOF (this double parameter, string units)
+        public static string DOF(this double parameter, string units)
         {
-            switch(parameter)
+            switch (parameter)
             {
                 case (-0.001):
                     {
-                        return "Fixed";                        
+                        return "Fixed";
                     }
                 case (0):
                     {
@@ -118,14 +119,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return parameter.ToString("0.00") + units;
         }
 
-        public  static string ToLabelString (this List<Plane> planelist)
+        public static string ToLabelString(this List<Plane> planelist)
         {
             var output = "";
             foreach (var item in planelist)
             {
                 output += "[" + item.ToString() + "],";
             }
-            return output.Substring(0,output.Length-1);
+            return output.Substring(0, output.Length - 1);
         }
 
         public static IEnumerable<string> GetEnumerable(Type type)
@@ -176,20 +177,20 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     {
                         // Node list must be set either clockwise or counterclockwise
                         var newboundarylist = new int[4];
-                        newboundarylist[0]=(line.No);
+                        newboundarylist[0] = (line.No);
                         foreach (var edge in edges)
                         {
                             var nodelist = edge.NodeList.ToInt();
                             if (nodelist.Contains(node))
                             {
-                                if (newboundarylist[1]==0)
+                                if (newboundarylist[1] == 0)
                                 {
                                     newboundarylist[1] = edge.No;
-                                }else
+                                } else
                                 {
                                     newboundarylist[3] = edge.No;
                                 }
-                            }else
+                            } else
                             {
                                 newboundarylist[2] = edge.No;
                             }
@@ -199,7 +200,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     }
                 }
             }
-            return false;            
+            return false;
         }
 
 
@@ -220,7 +221,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             {
                 return Array.ConvertAll(pts, new Converter<Point3D, Point3d>(ToPoint3d));
             }
-            return null;  
+            return null;
         }
         public static Point3d[,] ToPoint3d(this Point3D[,] pts)
         {
@@ -236,7 +237,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 }
                 return myPts;
             }
-            return null;            
+            return null;
         }
         public static Point3d ToPoint3d(this Node n, IModelData data)
         {
@@ -334,7 +335,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     label = label + val.ToString("0.00") + ",";
                     i++;
                 }
-                label = label.Substring(0,label.Length-1)+"]";
+                label = label.Substring(0, label.Length - 1) + "]";
                 return label;
             }
             return "-";
@@ -358,9 +359,9 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
 
         public static Point3d CreateAuxiliaryPoint(Curve edge1, Curve edge2, double distance)
         {
-            var vector1 = new Vector3d (edge1.TangentAtStart);
+            var vector1 = new Vector3d(edge1.TangentAtStart);
             var vector2 = new Vector3d(edge2.TangentAtStart);
-            var basePoint = new Point3d((edge1.PointAt(edge1.Domain.Mid) + edge2.PointAt(edge2.Domain.Mid))/2);
+            var basePoint = new Point3d((edge1.PointAt(edge1.Domain.Mid) + edge2.PointAt(edge2.Domain.Mid)) / 2);
             var traslate = Vector3d.CrossProduct(vector1, vector2);
             traslate.Unitize();
             return basePoint + traslate * distance;
@@ -389,7 +390,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return null;
         }
 
-        public static Point3d ToPoint3d (this Dlubal.RFEM3.IPOINT_2D point2D, bool scale = true)
+        public static Point3d ToPoint3d(this Dlubal.RFEM3.IPOINT_2D point2D, bool scale = true)
         {
             var scaleFactor = Convert.ToDouble(scale) / 1000;
             return new Point3d(point2D.x * scaleFactor, point2D.y * scaleFactor, 0);
@@ -402,14 +403,15 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             {
                 return false;
             }
-            var tol = 0.00328084269363222; // Dlubal criterium
+            //var tol = 0.00328084269363222; // Dlubal criterium
+            var tol = 0.001;
             var start = curve.PointAtStart;
             var end = curve.PointAtEnd;
             if (Math.Abs(start.X - end.X) < tol)
             {
                 return (Math.Abs(start.Y - end.Y) < tol);
             }
-            return false;   
+            return false;
         }
 
         public static bool IsHorizontal(this Curve curve)
@@ -418,12 +420,103 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             {
                 return false;
             }
-            var tol = 0.00328084269363222; // Dlubal criterium
+            //var tol = 0.00328084269363222; // Dlubal criterium
+            var tol = 0.001;
             var start = curve.PointAtStart;
             var end = curve.PointAtEnd;
             return (Math.Abs(start.Z - end.Z) < tol);
         }
 
+        public class PointIndex
+        {
+            public Point3d Point;
+            public int Index;            
+        }
+
+        public static void PointIndexCoordinates(PointIndex pi, out double x, out double y, out double z)
+        {
+            x = pi.Point.X;
+            y = pi.Point.Y;
+            z = pi.Point.Z;
+        }
+
+        public static List<PointIndex> CullClosestPoints(List<Point3d> points, List<RFNode> existingNodes, ref int lastNodeIndex, double tol)
+        {
+            var outPoints = new List<PointIndex>();
+            BoundingBox empty = BoundingBox.Empty;
+
+            // Create PointIndexes
+            var existingPointIndices = new List<PointIndex>(points.Count);
+            for (int i = 0; i < existingNodes.Count; i++)
+            {
+                PointIndex pointIndex = new PointIndex();
+                pointIndex.Index = existingNodes[i].No;
+                pointIndex.Point = existingNodes[i].Location;
+                existingPointIndices.Add(pointIndex);
+                empty.Union(pointIndex.Point);
+            }
+            var list2 = new List<PointIndex>(points.Count);
+            for (int i = 0; i < points.Count; i++)
+            {
+                PointIndex pointIndex = new PointIndex();
+                pointIndex.Index = -1;
+                pointIndex.Point = points[i];
+                list2.Add(pointIndex);
+                empty.Union(pointIndex.Point);
+            }
+
+            
+            empty.Inflate(tol);
+            Node3d<PointIndex> val = new Node3d<PointIndex>((Coordinates3d<PointIndex>)PointIndexCoordinates, empty, 30);
+            int firstItem = 0;
+            if (existingNodes.Count>0)
+            {
+                val.AddRange(existingPointIndices); // list to compare points to
+            }
+            else
+            {
+                var node = list2[0];
+                node.Index = 1;
+                firstItem = 1;
+                lastNodeIndex = 1;
+                val.Add(node); // list to compare points to
+                outPoints.Add(node);
+            }
+            
+            for (int j = firstItem; j <= list2.Count - 1; j++)
+            {
+                PointIndex pointIndex2 = list2[j];
+                while (true)
+                {
+                    Index3d<PointIndex> val2 = val.NearestItem(pointIndex2);
+                    if (val2 == null)
+                    {
+                        lastNodeIndex++;
+                        pointIndex2.Index = lastNodeIndex;
+                        val.Add(pointIndex2);
+                        outPoints.Add(pointIndex2);
+                        
+                        break;
+                    }
+                    PointIndex item = val2.Item;
+                    double num4 = pointIndex2.Point.DistanceTo(item.Point);
+                    if (num4 > tol || double.IsNaN(num4))
+                    {
+                        lastNodeIndex++;
+                        pointIndex2.Index = lastNodeIndex;
+                        val.Add(pointIndex2);
+                        outPoints.Add(pointIndex2);
+                        break;
+                    }
+                    pointIndex2.Point = Point3d.Unset;
+                    pointIndex2.Index = val2.Item.Index;
+                    outPoints.Add(pointIndex2);
+                    break;
+                }
+                List<PointIndex> itemsGlobal = val.ItemsGlobal;
+            }
+            return outPoints;
+        }
 
         #endregion
     }

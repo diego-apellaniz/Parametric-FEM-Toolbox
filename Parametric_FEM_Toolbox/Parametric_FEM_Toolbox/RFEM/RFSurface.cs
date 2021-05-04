@@ -53,6 +53,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         {
             ToModify = other.ToModify;
             ToDelete = other.ToDelete;
+
             var newEdges = new List<RFLine>();
             if (other.Edges != null)
             {
@@ -70,6 +71,17 @@ namespace Parametric_FEM_Toolbox.RFEM
                     }
                     Openings = newOpenings.ToArray();
                 }
+            }
+
+            if (GeometryType == SurfaceGeometryType.NurbsSurfaceType)
+            {
+                ControlPoints = other.ControlPoints;
+                OrderX = other.OrderX;
+                OrderY = other.OrderY;
+                KnotsX = other.KnotsX;
+                KnotsY = other.KnotsY;
+                Nodes = other.Nodes;
+                Weights = other.Weights;
             }
         }
 
@@ -147,7 +159,7 @@ namespace Parametric_FEM_Toolbox.RFEM
                 IntegratedLineList = surface.IntegratedLineList,
                 MaterialNo = surface.MaterialNo,
                 SetIntegratedObjects = surface.SetIntegratedObjects,
-                StiffnessType = surface.StiffnessType
+                StiffnessType = surface.StiffnessType,                
             };
             mySurface.Thickness.Type = surface.ThicknessType;
             mySurface.Thickness.Constant = surface.Thickness;
@@ -156,6 +168,9 @@ namespace Parametric_FEM_Toolbox.RFEM
 
         public static implicit operator Dlubal.RFEM5.NurbsSurface(RFSurface surface)
         {
+            var val  = (Dlubal.RFEM5.Surface)surface;
+            val.GeometryType = SurfaceGeometryType.NurbsSurfaceType;
+            val.StiffnessType = SurfaceStiffnessType.NullStiffnessType;            
             Dlubal.RFEM5.NurbsSurface mySurface = new Dlubal.RFEM5.NurbsSurface
             {
                 General = surface,
@@ -179,6 +194,10 @@ namespace Parametric_FEM_Toolbox.RFEM
             //{
             //    return ToNonPlanarBrep();
             //}
+            if (GeometryType == SurfaceGeometryType.NurbsSurfaceType)
+            {
+                return ToNurbsSurface();
+            }
             var myEdges = new List<Curve>();
             var sEdges = from e in Edges
                          select e.ToCurve();
@@ -212,6 +231,50 @@ namespace Parametric_FEM_Toolbox.RFEM
             return Brep.CreatePlanarBreps(myEdges, 1)[0];
             //return Rhino.Geometry.Brep.CreateEdgeSurface(myEdges).Faces[0].Brep;
         }
+
+        public Brep ToNurbsSurface()
+        {
+
+            var nurbs_surface = Rhino.Geometry.NurbsSurface.Create(
+                    3,
+                    false,
+                    OrderX,
+                    OrderY,
+                    ControlPoints.GetLength(0),
+                    ControlPoints.GetLength(1)
+                    );
+
+            // add the knots
+            for (int u = 1; u < nurbs_surface.KnotsU.Count; u++)
+            {
+                nurbs_surface.KnotsU[u - 1] = (KnotsX[u] - KnotsX[0]) / (KnotsX[nurbs_surface.KnotsU.Count - 1] - KnotsX[0]);
+            }
+            nurbs_surface.KnotsU[nurbs_surface.KnotsU.Count - 1] = nurbs_surface.KnotsU[nurbs_surface.KnotsU.Count - 2];
+            //nurbs_surface.KnotsU[u] = KnotsX[u];
+            for (int v = 1; v < nurbs_surface.KnotsV.Count; v++)
+            {
+                nurbs_surface.KnotsV[v- 1] = (KnotsY[v] - KnotsY[0]) / (KnotsY[nurbs_surface.KnotsV.Count - 1] - KnotsY[0]);
+            }
+            nurbs_surface.KnotsV[nurbs_surface.KnotsV.Count - 1] = nurbs_surface.KnotsV[nurbs_surface.KnotsV.Count - 2];
+            //nurbs_surface.KnotsV[v] = KnotsY[v];
+
+            // add the control points
+            for (int u = 0; u < nurbs_surface.Points.CountU; u++)
+            {
+                for (int v = 0; v < nurbs_surface.Points.CountV; v++)
+                {
+                    nurbs_surface.Points.SetPoint(u, v, ControlPoints[u, v]);
+                }
+            }
+
+            if (nurbs_surface.IsValid)
+            {
+                return nurbs_surface.ToBrep();
+            }
+            return null;
+        }
+
+
         //private Brep ToNonPlanarBrep()
         //{
         //    // Returns a Nurbs Surface of Degree 2

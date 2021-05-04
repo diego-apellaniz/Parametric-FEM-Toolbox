@@ -192,7 +192,83 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     break;
             }
         }
+        //public static Plane GetSurfaceLocalAxis(SurfaceDeformations[] GlobalDeformations, SurfaceDeformations[] LocalDeformations)
+        //{
+        //    //Get euler angles based on a roated vector and then apply then to the global coordinate system
+        //    Plane outPlane = Plane.Unset;
+        //    double heading = 0.00;
+        //    double attitude = 0.00;
+        //    double bank = 0.00;
+        //    var valid_vector = false;
+        //    for (int i = 0; i < GlobalDeformations.Length; i++)
+        //    {
+        //        if (GlobalDeformations[i].LocationNo != LocalDeformations[i].LocationNo)
+        //        {
+        //            continue;
+        //        }
+        //        //We need vector with non-null coordinates
+        //        var global_vector = new Vector3d(GlobalDeformations[i].Displacements.ToPoint3d());// + GlobalDeformations[i].Rotations.ToPoint3d());
+        //        var local_vector = new Vector3d(LocalDeformations[i].Displacements.ToPoint3d());// + LocalDeformations[i].Rotations.ToPoint3d());
+        //        if (Math.Abs(local_vector.X) < 0.00001 || Math.Abs(local_vector.Y) < 0.00001 || Math.Abs(local_vector.Z) < 0.00001)
+        //        {
+        //            continue;
+        //        }
+        //        valid_vector = true;
+        //        // Get rotation angle
+        //        var angle = Math.Acos(Vector3d.Multiply(local_vector, global_vector) / global_vector.Length / local_vector.Length);
+        //        // Get rotation axis
+        //        var axis = Vector3d.CrossProduct(local_vector, global_vector);                
+        //        // Get Euler Angles
+        //        if (axis.Length < 0.001 * global_vector.Length * local_vector.Length) // You have to handle the degenerate case when v = [ 0, 0, 0], that is, when the angle is either 0 or 180 degrees.
+        //        {
+        //            heading = angle;
+        //            attitude = angle;
+        //            break;
+        //        }
+        //        axis.Unitize();
+        //        ToEuler(axis.X, axis.Y, axis.Z, angle, out heading, out attitude, out bank);
+        //        break;
+        //    }
+        //    if (!valid_vector)
+        //    {
+        //        return outPlane;
+        //    }
+        //    outPlane = Plane.WorldXY;
+        //    outPlane.Rotate(heading, Vector3d.YAxis);
+        //    outPlane.Rotate(attitude, Vector3d.ZAxis);
+        //    outPlane.Rotate(bank, Vector3d.XAxis);
+        //    return outPlane;
+        //}
 
+        //public static void ToEuler(double x, double y, double z, double angle, out double heading, out double attitude, out double bank)
+        //{
+        //    double s = Math.Sin(angle);
+        //    double c = Math.Cos(angle);
+        //    double t = 1 - c;
+        //    //  if axis is not already normalised then uncomment this
+        //    // double magnitude = Math.sqrt(x*x + y*y + z*z);
+        //    // if (magnitude==0) throw error;
+        //    // x /= magnitude;
+        //    // y /= magnitude;
+        //    // z /= magnitude;
+        //    if ((x * y * t + z * s) > 0.998)
+        //    { // north pole singularity detected
+        //        heading = 2 * Math.Atan2(x * Math.Sin(angle / 2), Math.Cos(angle / 2));
+        //        attitude = Math.PI / 2;
+        //        bank = 0;
+        //        return;
+        //    }
+        //    if ((x * y * t + z * s) < -0.998)
+        //    { // south pole singularity detected
+        //        heading = -2 * Math.Atan2(x * Math.Sin(angle / 2), Math.Cos(angle / 2));
+        //        attitude = -Math.PI / 2;
+        //        bank = 0;
+        //        return;
+        //    }
+        //    heading = Math.Atan2(y * s - x * z * t, 1 - (y * y + z * z) * t);
+        //    attitude = Math.Asin(x * y * t + z * s);
+        //    bank = Math.Atan2(x * s - y * z * t, 1 - (x * x + z * z) * t);
+        //}
 
     }
 }

@@ -48,6 +48,7 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterOutputParam(new Param_Number(), "Displacement Dir Z", "Tz", "(-1): Fixed; (0): Free; Other: Stiffness in [kN/m]");
             unit.RegisterOutputParam(new Param_Number(), "Shear Constant Dir XZ", "Vxz", "(-1): Fixed; (0): Free; Other: Stiffness in [kN/m³]");
             unit.RegisterOutputParam(new Param_Number(), "Shear Constant Dir YZ", "Vyz", "(-1): Fixed; (0): Free; Other: Stiffness in [kN/m³]");
+            unit.RegisterOutputParam(new Param_String(), "SupportNonlinearityZ", "NTz", "Nonlinearity Tpye Displacement Dir Z");
             unit.RegisterOutputParam(new Param_String(), "Comment", "Comment", "Comment.");
             unit.RegisterOutputParam(new Param_String(), "Surface List", "SrfcList", "List of surfaces the support is attached to");
         }
@@ -75,8 +76,9 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetData(4, ((rfSupport.Tz < 0) ? rfSupport.Tz * 1000 : rfSupport.Tz));
             DA.SetData(5, ((rfSupport.Vxz < 0) ? rfSupport.Vxz * 1000 : rfSupport.Vxz));
             DA.SetData(6, ((rfSupport.Vyz < 0) ? rfSupport.Vyz * 1000 : rfSupport.Vyz));
-            DA.SetData(7, rfSupport.Comment);
-            DA.SetData(8, rfSupport.SurfaceList);
+            DA.SetData(7, rfSupport.NTz);
+            DA.SetData(8, rfSupport.Comment);
+            DA.SetData(9, rfSupport.SurfaceList);
 
         }
     }

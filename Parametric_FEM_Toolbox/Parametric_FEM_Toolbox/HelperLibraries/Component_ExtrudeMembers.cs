@@ -6,6 +6,7 @@ using Rhino.Geometry;
 using Grasshopper.Kernel;
 using System.Linq;
 using Grasshopper.Kernel.Types.Transforms;
+using Parametric_FEM_Toolbox.RFEM;
 
 namespace Parametric_FEM_Toolbox.HelperLibraries
 {
@@ -264,6 +265,138 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 nCroSecsInter = crosecs_original; // So it works for next segment as well
             }
             return croSecs;
+        }
+
+
+        public static List<Brep> ExtrudeMembersToBrep(RFMember iMember, List<RFCroSec> iCroSecs, double length_segment, out string msg)
+        {
+            var outBreps = new List<Brep>();
+            msg = "";
+
+            // Check input
+            var cs_indeces = iCroSecs.Select(x => x.No);
+            if (iMember.EndCrossSectionNo == 0) // In case of tension members, etc.
+            {
+                iMember.EndCrossSectionNo = iMember.StartCrossSectionNo;
+            }
+            if (!(cs_indeces.Contains(iMember.StartCrossSectionNo)) || (!(cs_indeces.Contains(iMember.EndCrossSectionNo))))
+            {
+                msg = $"Provide cross sections for member No {iMember.No}.";
+                return null;
+            }
+
+            // Get base geometry            
+            var crosecs1 = iCroSecs.Where(x => x.No == iMember.StartCrossSectionNo).ToList()[0].Shape;
+            var crosecs2 = iCroSecs.Where(x => x.No == iMember.EndCrossSectionNo).ToList()[0].Shape;
+            var baseline = iMember.BaseLine.ToCurve();
+
+            // Check geometry
+            if ((crosecs1.Sum(x => x.SpanCount) != crosecs2.Sum(x => x.SpanCount)) || (crosecs1.Count != crosecs2.Count))
+            {
+                msg = $"Provide similar cross sections for member No {iMember.No}.";
+                return null;
+            }
+
+            // Generate tween curves - still on the origin!
+            List<Curve> segments;
+            int nCroSecsInter;
+            length_segment = Math.Max(length_segment, 0.05); // Check minimum vlaue
+            if (baseline.Degree <= 1)
+            {
+                nCroSecsInter = 2;
+            }
+            else
+            {
+                nCroSecsInter = Math.Max((int)(baseline.GetLength() / length_segment), 2);
+            }
+            var loft_crvs = Component_ExtrudeMembers.GenerateCroSecs(baseline, crosecs1, crosecs2, nCroSecsInter, 0.001, 0.001, out segments);
+
+            // Orient cross sections
+            loft_crvs = Component_ExtrudeMembers.OrientCroSecs(loft_crvs, segments, nCroSecsInter, iMember.Frames[0], crosecs1.Count);
+
+            // Extrude members
+            for (int i = 0; i < segments.Count; i++)
+            {
+                for (int j = 0; j < crosecs1.Count; j++)
+                {
+                    outBreps.AddRange(Brep.CreateFromLoft(loft_crvs[i][j], Point3d.Unset, Point3d.Unset, LoftType.Normal, false));
+                }
+            }
+            return outBreps;
+        }
+
+        public static List<Mesh> ExtrudeMembersToMesh(List<List<List<Curve>>> loft_crvs, int nFaces, out string msg)
+        {
+            var outmeshes = new List<Mesh>();
+            msg = "";
+
+            for (int i = 0; i < loft_crvs.Count; i++)
+            {
+                for (int j = 0; j < loft_crvs[i].Count; j++)
+                {
+                    var beam_mesh = new Mesh(); // for each of the curves that make one cross section
+                    for (int k = 0; k < loft_crvs[i][j].Count; k++)
+                    {
+                        var exploded_segments = new List<Curve>();
+                        if (loft_crvs[i][j][k].SpanCount > 1)
+                        {
+                            // exploded_segments = loft_crvs[i][j][k].DuplicateSegments().ToList();
+                            var crv = loft_crvs[i][j][k].ToNurbsCurve();
+                            // Get spilt parameters
+                            var split_t = new List<double>();
+                            for (int n = 0; n < crv.SpanCount; n++)
+                            {
+                                split_t.Add(crv.SpanDomain(n).T0);
+                                //split_t.Add(crv.SpanDomain(n).T1);
+                            }
+                            split_t.Add(crv.SpanDomain(crv.SpanCount - 1).T1);
+                            //split_t = split_t.Distinct().ToList();
+                            exploded_segments = crv.Split(split_t).ToList();
+                        }
+                        else
+                        {
+                            exploded_segments.Add(loft_crvs[i][j][k]);
+                        }
+                        //var real_segments = (exploded_segments.Where(x => x.GetLength()>0.001)).ToList();
+                        var real_segments = exploded_segments;
+                        var counter_nodes = loft_crvs[i][j][k].IsClosed ? real_segments.Count * nFaces : real_segments.Count * nFaces + 1;
+                        for (int n = 0; n < real_segments.Count; n++)
+                        {
+                            var domain = real_segments[n].Domain;
+                            for (int m = 0; m < nFaces; m++)
+                            {
+                                // Add vertex
+                                if (!(real_segments[n].IsClosed & m == nFaces - 1 & n == real_segments.Count - 1)) // for closed section shapes ignore last point
+                                {
+                                    var t = (double)m / (double)nFaces * (domain.T1 - domain.T0) + domain.T0;
+                                    var pt = real_segments[n].PointAt(t);
+                                    beam_mesh.Vertices.Add(pt.X, pt.Y, pt.Z);
+                                }
+                                // Add mesh face
+                                if ((m + n) > 0 & k > 0)
+                                {
+                                    int a = (m - 1) + n * nFaces + counter_nodes * (k - 1);
+                                    int b = ((m) + n * nFaces) % counter_nodes + counter_nodes * (k - 1); // get first node in the section if it is closed
+                                    int c = ((m) + n * nFaces) % counter_nodes + counter_nodes * (k);
+                                    int d = (m - 1) + n * nFaces + counter_nodes * (k);
+                                    beam_mesh.Faces.AddFace(new MeshFace(a, b, c, d));
+                                }
+                            }
+                        }
+                        // Add last face
+                        if (k > 0)
+                        {
+                            int a1 = (nFaces * real_segments.Count - 1) + counter_nodes * (k - 1);
+                            int b1 = (nFaces * real_segments.Count) % counter_nodes + counter_nodes * (k - 1);
+                            int c1 = (nFaces * real_segments.Count) % counter_nodes + counter_nodes * (k);
+                            int d1 = (nFaces * real_segments.Count - 1) % counter_nodes + counter_nodes * (k);
+                            beam_mesh.Faces.AddFace(new MeshFace(a1, b1, c1, d1));
+                        }
+                    }
+                    outmeshes.Add(beam_mesh);
+                }
+            }
+            return outmeshes;
         }
     }
 }

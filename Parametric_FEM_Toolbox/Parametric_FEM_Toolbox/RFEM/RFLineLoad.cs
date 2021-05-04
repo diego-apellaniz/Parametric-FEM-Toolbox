@@ -31,7 +31,7 @@ namespace Parametric_FEM_Toolbox.RFEM
                 DistanceA /= 100;
                 DistanceB /= 100;
             }
-                Magnitude1 = load.Magnitude1/1000;
+            Magnitude1 = load.Magnitude1/1000;
             Magnitude2 = load.Magnitude2;
             if (load.Distribution != LoadDistributionType.ConcentratedNxQType && load.Distribution != LoadDistributionType.Concentrated2x2QType)
             {

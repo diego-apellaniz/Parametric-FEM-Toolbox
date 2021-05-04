@@ -56,30 +56,47 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterInputParam(new Param_String(), "Comment", "Comment", "Comment.", GH_ParamAccess.item);
             unit.Inputs[8].Parameter.Optional = true;
 
+            GH_ExtendableMenu gH_ExtendableMenu1 = new GH_ExtendableMenu(0, "nonlinieraity");
+            gH_ExtendableMenu1.Name = "Nonlinearity";
+            gH_ExtendableMenu1.Collapse();
+            unit.RegisterInputParam(new Param_Integer(), "SupportNonlinearityX", "NTx", UtilLibrary.DescriptionRFTypes(typeof(NonlinearityType)), GH_ParamAccess.item);
+            unit.Inputs[9].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
+            unit.Inputs[9].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Integer(), "SupportNonlinearityY", "NTy", UtilLibrary.DescriptionRFTypes(typeof(NonlinearityType)), GH_ParamAccess.item);
+            unit.Inputs[10].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
+            unit.Inputs[10].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Integer(), "SupportNonlinearityZ", "NTz", UtilLibrary.DescriptionRFTypes(typeof(NonlinearityType)), GH_ParamAccess.item);
+            unit.Inputs[11].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
+            unit.Inputs[11].Parameter.Optional = true;
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[9]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[10]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[11]);
+            unit.AddMenu(gH_ExtendableMenu1);
+
             GH_ExtendableMenu gH_ExtendableMenu = new GH_ExtendableMenu(0, "advanced");
             gH_ExtendableMenu.Name = "Advanced";
             gH_ExtendableMenu.Collapse();
             unit.RegisterInputParam(new Param_String(), "Line List", "LineList", "Line List", GH_ParamAccess.item);
-            unit.Inputs[9].Parameter.Optional = true;
+            unit.Inputs[12].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Integer(), "Reference System Type", "RefSys", UtilLibrary.DescriptionRFTypes(typeof(ReferenceSystemType)), GH_ParamAccess.item);
-            unit.Inputs[10].EnumInput = UtilLibrary.ListRFTypes(typeof(ReferenceSystemType));
-            unit.Inputs[10].Parameter.Optional = true;
-            gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[9]);
-            gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[10]);
+            unit.Inputs[13].EnumInput = UtilLibrary.ListRFTypes(typeof(ReferenceSystemType));
+            unit.Inputs[13].Parameter.Optional = true;
+            gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[12]);
+            gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[13]);
             unit.AddMenu(gH_ExtendableMenu);
 
             GH_ExtendableMenu gH_ExtendableMenu2 = new GH_ExtendableMenu(1, "modify");
             gH_ExtendableMenu2.Name = "Modify";
             gH_ExtendableMenu2.Collapse();
             unit.RegisterInputParam(new Param_RFEM(), "RF Line Support", "RF LineSup", "Support object from the RFEM model to modify", GH_ParamAccess.item);
-            unit.Inputs[11].Parameter.Optional = true;
+            unit.Inputs[14].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Boolean(), "Modify", "Modify", "Modify object?", GH_ParamAccess.item);
-            unit.Inputs[12].Parameter.Optional = true;
+            unit.Inputs[15].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Boolean(), "Delete", "Delete", "Delete object?", GH_ParamAccess.item);
-            unit.Inputs[13].Parameter.Optional = true;
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[11]);
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[12]);
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[13]);
+            unit.Inputs[16].Parameter.Optional = true;
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[14]);
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[15]);
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[16]);
             unit.AddMenu(gH_ExtendableMenu2);
 
             unit.RegisterOutputParam(new Param_RFEM(), "RF Line Support", "RF LineSup", "Output RFLineSupport.");
@@ -103,11 +120,14 @@ namespace Parametric_FEM_Toolbox.GUI
             var rx = 0.0;
             var ry = 0.0;
             var rz = 0.0;
+            var ntx = 0;
+            var nty = 0;
+            var ntz = 0;
             var lineList = "";
             var refSys = 0;
 
 
-            if (DA.GetData(11, ref inRFEM))
+            if (DA.GetData(14, ref inRFEM))
             {
                 rfSup = new RFSupportL((RFSupportL)inRFEM.Value);
                 if (DA.GetData(0, ref inCurve))
@@ -125,7 +145,7 @@ namespace Parametric_FEM_Toolbox.GUI
                 var myRFLines = new List<RFLine>() { myRFLine };
                 rfSup = new RFSupportL(new LineSupport(), myRFLines);
             }
-            else if (DA.GetData(9, ref lineList))
+            else if (DA.GetData(12, ref lineList))
             {
                 rfSup = new RFSupportL();
                 rfSup.LineList = lineList;
@@ -136,11 +156,11 @@ namespace Parametric_FEM_Toolbox.GUI
                 level = GH_RuntimeMessageLevel.Warning;
                 return;
             }
-            if (DA.GetData(12, ref mod))
+            if (DA.GetData(15, ref mod))
             {
                 rfSup.ToModify = mod;
             }
-            if (DA.GetData(13, ref del))
+            if (DA.GetData(16, ref del))
             {
                 rfSup.ToDelete = del;
             }
@@ -176,11 +196,59 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                 rfSup.Rz = rz;
             }
-            if (DA.GetData(9, ref lineList))
+            if (DA.GetData(9, ref ntx))
+            {
+                rfSup.NTx = (NonlinearityType)ntx;
+                if ((int)rfSup.NTx == 0 || (int)rfSup.NTx > 5)
+                {
+                    msg = "Nonlinearity Type not supported. ";
+                    level = GH_RuntimeMessageLevel.Warning;
+                    return;
+                }
+                else if (rfSup.Tx == 0.0)
+                {
+                    msg = "Unassigned support in Dir X. ";
+                    level = GH_RuntimeMessageLevel.Warning;
+                    return;
+                }
+            }
+            if (DA.GetData(10, ref nty))
+            {
+                rfSup.NTy = (NonlinearityType)nty;
+                if ((int)rfSup.NTy == 0 || (int)rfSup.NTy > 5)
+                {
+                    msg = "Nonlinearity Type not supported. ";
+                    level = GH_RuntimeMessageLevel.Warning;
+                    return;
+                }
+                else if (rfSup.Ty == 0.0)
+                {
+                    msg = "Unassigned support in Dir Y. ";
+                    level = GH_RuntimeMessageLevel.Warning;
+                    return;
+                }
+            }
+            if (DA.GetData(11, ref ntz))
+            {
+                rfSup.NTz = (NonlinearityType)ntz;
+                if ((int)rfSup.NTz == 0 || (int)rfSup.NTz > 5)
+                {
+                    msg = "Nonlinearity Type not supported. ";
+                    level = GH_RuntimeMessageLevel.Warning;
+                    return;
+                }
+                else if (rfSup.Tz == 0.0)
+                {
+                    msg = "Unassigned support in Dir Z. ";
+                    level = GH_RuntimeMessageLevel.Warning;
+                    return;
+                }
+            }
+            if (DA.GetData(12, ref lineList))
             {
                 rfSup.LineList = lineList;
             }
-            if (DA.GetData(10, ref refSys))
+            if (DA.GetData(13, ref refSys))
             {
                 rfSup.RSType = (ReferenceSystemType)refSys;
                 if (rfSup.RSType == ReferenceSystemType.UnknownReferenceSystemType)

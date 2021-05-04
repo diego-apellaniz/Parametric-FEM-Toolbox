@@ -164,7 +164,14 @@ namespace Parametric_FEM_Toolbox.RFEM
                     }
                 case LineType.ArcType:
                     {
-                        return Curve.CreateInterpolatedCurve(ControlPoints, 3, CurveKnotStyle.Chord);
+                        //return Curve.CreateInterpolatedCurve(ControlPoints, 3, CurveKnotStyle.Chord);
+                        var vector1 = new Vector3d(ControlPoints[1]- ControlPoints[0]);
+                        var vector2 = new Vector3d(ControlPoints[2] - ControlPoints[1]);
+                        if (vector1.IsParallelTo(vector2,0.1)==0)
+                        {
+                            return new Arc(ControlPoints[0], ControlPoints[1], ControlPoints[2]).ToNurbsCurve();
+                        }else
+                        return new LineCurve(ControlPoints[0], ControlPoints[2]);
                     }
                 case LineType.EllipseType:
                     {

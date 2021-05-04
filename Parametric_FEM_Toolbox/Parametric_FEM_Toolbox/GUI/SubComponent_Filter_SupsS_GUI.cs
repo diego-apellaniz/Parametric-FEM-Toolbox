@@ -53,6 +53,8 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.Inputs[7].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Interval(), "Shear Constant Dir YZ", "Vyz", "(-1): Fixed; (0): Free; Other: Stiffness in [kN/m³]", GH_ParamAccess.list);
             unit.Inputs[8].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_String(), "SupportNonlinearityZ", "NTz", "Nonlinearity Tpye Displacement Dir Z", GH_ParamAccess.list);
+            unit.Inputs[9].Parameter.Optional = true;
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[0]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[1]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[2]);
@@ -62,6 +64,7 @@ namespace Parametric_FEM_Toolbox.GUI
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[6]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[7]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[8]);
+            gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[9]);
             unit.AddMenu(gH_ExtendableMenu);
         }
         public override void SolveInstance(IGH_DataAccess DA, out string msg, out GH_RuntimeMessageLevel level)
@@ -81,6 +84,7 @@ namespace Parametric_FEM_Toolbox.GUI
             var tz = new List<Interval>();
             var vxz = new List<Interval>();
             var vyz = new List<Interval>();
+            var ntz = new List<string>();
             var srfcList = new List<string>();
 
             if (DA.GetDataList(0, supList))
@@ -136,6 +140,10 @@ namespace Parametric_FEM_Toolbox.GUI
             if (DA.GetDataList(10, vyz))
             {
                 myFilter.SupSVyz = vyz;
+            }
+            if (DA.GetDataList(11, ntz))
+            {
+                myFilter.SupSNTz = ntz;
             }
             DA.SetData(0, myFilter);
         }

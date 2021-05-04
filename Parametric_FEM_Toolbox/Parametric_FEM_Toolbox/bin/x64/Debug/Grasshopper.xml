@@ -25187,7 +25187,7 @@ Nechť již hříšné saxofony ďáblů rozzvučí síň úděsnými tóny walt
  <param name="matNormal">Material for unselected objects.</param>
  <param name="matSelected">Material for selected objects.</param>
 </member>
-<member name="M:Grasshopper.Kernel.GH_RenderArgs.#ctor(Rhino.RhinoDoc,Rhino.DocObjects.ViewportInfo,Rhino.Render.RenderPrimitiveList,System.Guid)">
+<member name="M:Grasshopper.Kernel.GH_RenderArgs.#ctor(Rhino.RhinoDoc,Rhino.DocObjects.ViewportInfo,Rhino.Render.RenderPrimitiveList,System.Guid,System.Collections.Generic.Dictionary{System.Int32,Rhino.Render.RenderMaterial})">
  <summary>
  Create new render arguments.
  </summary>
@@ -25195,6 +25195,7 @@ Nechť již hříšné saxofony ďáblů rozzvučí síň úděsnými tóny walt
  <param name="vp">Viewport.</param>
  <param name="geometry">Geometry list.</param>
  <param name="id">Render plugin id.</param>
+ <param name="materialCache">Material cache - can be Nothing.</param>
 </member>
 <member name="P:Grasshopper.Kernel.GH_RenderArgs.Document">
  <summary>
@@ -25214,6 +25215,11 @@ Nechť již hříšné saxofony ďáblů rozzvučí síň úděsnými tóny walt
 <member name="P:Grasshopper.Kernel.GH_RenderArgs.PluginId">
  <summary>
  Gets the render plugin id that is about to render this geometry.
+ </summary>
+</member>
+<member name="P:Grasshopper.Kernel.GH_RenderArgs.MaterialCache">
+ <summary>
+ Gets the material cache.
  </summary>
 </member>
 <member name="P:Grasshopper.Kernel.GH_RenderArgs.MaterialNormal">
@@ -28810,7 +28816,7 @@ Nechť již hříšné saxofony ďáblů rozzvučí síň úděsnými tóny walt
  <returns>A preview bitmap on success or null on failure. 
  Caller is responsible for disposing of the image.</returns>
 </member>
-<member name="P:Grasshopper.Kernel.GH_DocumentIO.ShowOverwriteProtection">
+<member name="P:Grasshopper.Kernel.GH_DocumentIO.DisableOverwriteProtection">
  <summary>
  Gets or sets whether the file overwrite protection dialog ought to be
  shown during risky saves.
@@ -28845,9 +28851,7 @@ Nechť již hříšné saxofony ďáblů rozzvučí síň úděsnými tóny walt
 </member>
 <member name="M:Grasshopper.Kernel.GH_DocumentIO.ShowOverwriteWarningIfNeeded(System.String)">
  <summary>
- Show the overwrite warning dialog if the cached file time and the disk file time
- disagree. Also, for this function to do anything at all the <see cref="P:Grasshopper.Kernel.GH_DocumentIO.ShowOverwriteProtection"/>
- property must be set to TRUE.
+ Show the overwrite warning dialog if the cached file time and the disk file time disagree.
  </summary>
 </member>
 <member name="T:Grasshopper.Kernel.GH_DocumentProperties">

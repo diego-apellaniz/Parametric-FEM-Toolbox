@@ -1,4 +1,5 @@
-﻿using Grasshopper.Kernel;
+﻿using System.Linq;
+using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
@@ -74,7 +75,7 @@ namespace Parametric_FEM_Toolbox.GUI
             var rfLineLoad = (RFLineLoad)inGH.Value;
 
             // Output
-            DA.SetDataList(0, rfLineLoad.BaseLines);
+            DA.SetDataList(0, rfLineLoad.BaseLines.Select(x => x.ToCurve()));
             DA.SetData(1, rfLineLoad.No);
             DA.SetData(2, rfLineLoad.LoadCase);
             DA.SetData(3, rfLineLoad.Comment);

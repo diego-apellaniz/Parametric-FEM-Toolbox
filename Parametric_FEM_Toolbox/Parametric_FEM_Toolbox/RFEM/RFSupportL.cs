@@ -30,6 +30,9 @@ namespace Parametric_FEM_Toolbox.RFEM
             Tx = support.SupportConstantX / 1000;
             Ty = support.SupportConstantY / 1000;
             Tz = support.SupportConstantZ / 1000;
+            NTx = support.SupportNonlinearityX;
+            NTy = support.SupportNonlinearityY;
+            NTz = support.SupportNonlinearityZ;
             RSType = support.ReferenceSystem;
             BaseLines = baseLines;
             ToModify = false;
@@ -41,10 +44,13 @@ namespace Parametric_FEM_Toolbox.RFEM
             ToModify = other.ToModify;
             ToDelete = other.ToDelete;
             var newEdges = new List<RFLine>();
-            foreach (var edge in other.BaseLines)
+            if (other.BaseLines != null)
             {
-                newEdges.Add(new RFLine(edge));
-            }
+                foreach (var edge in other.BaseLines)
+                {
+                    newEdges.Add(new RFLine(edge));
+                }
+            }            
             BaseLines = newEdges;
         }
 
@@ -62,6 +68,9 @@ namespace Parametric_FEM_Toolbox.RFEM
         public double Rx { get; set; }
         public double Ry { get; set; }
         public double Rz { get; set; }
+        public NonlinearityType NTx { get; set; }
+        public NonlinearityType NTy { get; set; }
+        public NonlinearityType NTz { get; set; }
         // Additional Properties to the RFEM Struct
         public List<RFLine> BaseLines { get; set; }
         public bool ToModify { get; set; }
@@ -74,6 +83,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         {
             return string.Format($"RFEM-LineSupport;No:{No};Ux:{Tx.DOF("kN/m")};Uy:{Ty.DOF("kN/m")};Uz:{Tz.DOF("kN/m")};" +
                 $"φx:{Rx.DOF("kNm/rad")};φy:{Ry.DOF("kNm/rad")};φz:{Rz.DOF("kNm/rad")};Tag:{((Tag == "") ? "-" : Tag)};" +
+                $"SupportNonlinearityX:{NTx};SupportNonlinearityY:{NTy};SupportNonlinearityZ:{NTz};" +
                 $"LineList:{((LineList == "") ? "-" : LineList)};IsValid:{IsValid};ID:{((ID == "") ? "-" : ID)};ReferenceSystemType:{RSType.ToString()};" +
                 $"ToModify:{ToModify};ToDelete:{ToDelete};Comment:{((Comment == "") ? "-" : Comment)};");
         }           
@@ -95,6 +105,9 @@ namespace Parametric_FEM_Toolbox.RFEM
                 RestraintConstantX = support.Rx * 1000,
                 RestraintConstantY = support.Ry * 1000,
                 RestraintConstantZ = support.Rz * 1000,
+                SupportNonlinearityX = support.NTx,
+                SupportNonlinearityY = support.NTy,
+                SupportNonlinearityZ = support.NTz,
                 ReferenceSystem = support.RSType
              };
             return mySupport;

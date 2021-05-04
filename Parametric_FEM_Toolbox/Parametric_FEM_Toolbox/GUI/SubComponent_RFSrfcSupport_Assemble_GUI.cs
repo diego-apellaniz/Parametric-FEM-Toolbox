@@ -50,29 +50,39 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterInputParam(new Param_String(), "Comment", "Comment", "Comment.", GH_ParamAccess.item);
             unit.Inputs[5].Parameter.Optional = true;
 
-            GH_ExtendableMenu gH_ExtendableMenu = new GH_ExtendableMenu(0, "advanced");
+
+            GH_ExtendableMenu gH_ExtendableMenu1 = new GH_ExtendableMenu(0, "nonlinieraity");
+            gH_ExtendableMenu1.Name = "Nonlinearity";
+            gH_ExtendableMenu1.Collapse();
+            unit.RegisterInputParam(new Param_Integer(), "SupportNonlinearityZ", "NTz", UtilLibrary.DescriptionRFTypes(typeof(NonlinearityType)), GH_ParamAccess.item);
+            unit.Inputs[6].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
+            unit.Inputs[6].Parameter.Optional = true;
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[6]);
+            unit.AddMenu(gH_ExtendableMenu1);
+
+            GH_ExtendableMenu gH_ExtendableMenu = new GH_ExtendableMenu(1, "advanced");
             gH_ExtendableMenu.Name = "Advanced";
             gH_ExtendableMenu.Collapse();
             unit.RegisterInputParam(new Param_Number(), "Shear Constant Dir XZ", "Vxz", "(-1): Fixed; (0): Free; Other: Stiffness in [kN/m³]", GH_ParamAccess.item);
-            unit.Inputs[6].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_Number(), "Shear Constant Dir YZ", "Vyz", "(-1): Fixed; (0): Free; Other: Stiffness in [kN/m³]", GH_ParamAccess.item);
             unit.Inputs[7].Parameter.Optional = true;
-            gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[6]);
+            unit.RegisterInputParam(new Param_Number(), "Shear Constant Dir YZ", "Vyz", "(-1): Fixed; (0): Free; Other: Stiffness in [kN/m³]", GH_ParamAccess.item);
+            unit.Inputs[8].Parameter.Optional = true;
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[7]);
+            gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[8]);
             unit.AddMenu(gH_ExtendableMenu);
 
-            GH_ExtendableMenu gH_ExtendableMenu2 = new GH_ExtendableMenu(1, "modify");
+            GH_ExtendableMenu gH_ExtendableMenu2 = new GH_ExtendableMenu(2, "modify");
             gH_ExtendableMenu2.Name = "Modify";
             gH_ExtendableMenu2.Collapse();
             unit.RegisterInputParam(new Param_RFEM(), "RF Surface Support", "RF SrfcSup", "Support object from the RFEM model to modify", GH_ParamAccess.item);
-            unit.Inputs[8].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_Boolean(), "Modify", "Modify", "Modify object?", GH_ParamAccess.item);
             unit.Inputs[9].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_Boolean(), "Delete", "Delete", "Delete object?", GH_ParamAccess.item);
+            unit.RegisterInputParam(new Param_Boolean(), "Modify", "Modify", "Modify object?", GH_ParamAccess.item);
             unit.Inputs[10].Parameter.Optional = true;
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[8]);
+            unit.RegisterInputParam(new Param_Boolean(), "Delete", "Delete", "Delete object?", GH_ParamAccess.item);
+            unit.Inputs[11].Parameter.Optional = true;
             gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[9]);
             gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[10]);
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[11]);
             unit.AddMenu(gH_ExtendableMenu2);
 
             unit.RegisterOutputParam(new Param_RFEM(), "RF Surface Support", "RF SrfcSup", "Output RFSrfcSupport.");
@@ -95,10 +105,11 @@ namespace Parametric_FEM_Toolbox.GUI
             var tz = 0.0;
             var vxz = 0.0;
             var vyz = 0.0;
+            var ntz = 0;
             var srfcList = "";
 
 
-            if (DA.GetData(8, ref inRFEM))
+            if (DA.GetData(9, ref inRFEM))
             {
                 rfSup = new RFSupportS((RFSupportS)inRFEM.Value);
             }
@@ -113,11 +124,11 @@ namespace Parametric_FEM_Toolbox.GUI
                 level = GH_RuntimeMessageLevel.Warning;
                 return;
             }
-            if (DA.GetData(9, ref mod))
+            if (DA.GetData(10, ref mod))
             {
                 rfSup.ToModify = mod;
             }
-            if (DA.GetData(10, ref del))
+            if (DA.GetData(11, ref del))
             {
                 rfSup.ToDelete = del;
             }
@@ -141,11 +152,27 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                 rfSup.Tz = tz;
             }
-            if (DA.GetData(6, ref vxz))
+            if (DA.GetData(6, ref ntz))
+            {
+                rfSup.NTz = (NonlinearityType)ntz;
+                if ((int)rfSup.NTz == 0 || (int)rfSup.NTz > 3)
+                {
+                    msg = "Nonlinearity Type not supported. ";
+                    level = GH_RuntimeMessageLevel.Warning;
+                    return;
+                }
+                else if (rfSup.Tz == 0.0)
+                {
+                    msg = "Unassigned support in Dir Z. ";
+                    level = GH_RuntimeMessageLevel.Warning;
+                    return;
+                }
+            }
+            if (DA.GetData(7, ref vxz))
             {
                 rfSup.Vxz = vxz;
             }
-            if (DA.GetData(7, ref vyz))
+            if (DA.GetData(8, ref vyz))
             {
                 rfSup.Vyz = vyz;
             }

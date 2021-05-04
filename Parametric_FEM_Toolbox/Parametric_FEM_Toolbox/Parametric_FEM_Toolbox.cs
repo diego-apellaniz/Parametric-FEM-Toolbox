@@ -18,7 +18,7 @@ namespace daqRFEM
             get
             {
                 //Return a 24x24 pixel bitmap to represent this GHA library.
-                return Parametric_FEM_Toolbox.Properties.Resources.toolbox_icon;
+                return Parametric_FEM_Toolbox.Properties.Resources.toolbox_vrey_small_Rainbow;
             }
         }
         public override string Description
@@ -59,7 +59,7 @@ namespace daqRFEM
         {
             get
             {
-                return "v1.1_WIP";
+                return "v1.2";
             }
         }
     }

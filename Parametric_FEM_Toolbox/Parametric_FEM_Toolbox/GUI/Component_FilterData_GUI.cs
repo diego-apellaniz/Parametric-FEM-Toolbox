@@ -96,12 +96,14 @@ namespace Parametric_FEM_Toolbox.GUI
             subcomponents_.Add(new SubComponent_Filter_SupsS_GUI());
             subcomponents_.Add(new SubComponent_Filter_MemberHinges_GUI());
             subcomponents_.Add(new SubComponent_Filter_LineHinges_GUI());
+            subcomponents_.Add(new SubComponent_Filter_NodalReleases_GUI());
             subcomponents_.Add(new SubComponent_Filter_CroSecs_GUI());
             subcomponents_.Add(new SubComponent_Filter_Materials_GUI());
             subcomponents_.Add(new SubComponent_Filter_NodalLoads_GUI());
             subcomponents_.Add(new SubComponent_Filter_LineLoads_GUI());
             subcomponents_.Add(new SubComponent_Filter_MemberLoads_GUI());
             subcomponents_.Add(new SubComponent_Filter_SurfaceLoads_GUI());
+            subcomponents_.Add(new SubComponent_Filter_FreeLineLoads_GUI());            
             subcomponents_.Add(new SubComponent_Filter_FreePolygonLoads_GUI());
             subcomponents_.Add(new SubComponent_Filter_LoadCases_GUI());
             subcomponents_.Add(new SubComponent_Filter_LoadCombos_GUI());
@@ -169,7 +171,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("3013b1f6-6ec1-40bc-a1bc-8f4f10deaaf3"); }
+            get { return new Guid("831c36d5-91fb-4f2e-812d-4c20fcf8f70c"); }
         }
     }
 }

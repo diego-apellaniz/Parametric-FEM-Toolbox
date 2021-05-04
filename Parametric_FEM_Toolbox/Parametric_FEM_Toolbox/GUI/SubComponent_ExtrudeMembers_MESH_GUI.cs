@@ -94,8 +94,6 @@ namespace Parametric_FEM_Toolbox.GUI
             this.Parent_Component.ExpireSolution(true);
         }
 
-
-
         public override void SolveInstance(IGH_DataAccess DA, out string msg, out GH_RuntimeMessageLevel level)
         {
             msg = "";
@@ -156,71 +154,12 @@ namespace Parametric_FEM_Toolbox.GUI
             loft_crvs = Component_ExtrudeMembers.OrientCroSecs(loft_crvs, segments, nCroSecsInter, iMember.Frames[0], crosecs1.Count);
 
             // Extrude members 
-            for (int i = 0; i < loft_crvs.Count; i++)
+            oExtrussion = Component_ExtrudeMembers.ExtrudeMembersToMesh(loft_crvs, nFaces, out msg);
+
+            if (msg != "")
             {
-                for (int j = 0; j < loft_crvs[i].Count; j++)
-                {
-                    var beam_mesh = new Mesh(); // for each of the curves that make one cross section
-                    for (int k = 0; k < loft_crvs[i][j].Count; k++)
-                    {
-                        var exploded_segments = new List<Curve>();
-                        if (loft_crvs[i][j][k].SpanCount>1)
-                        {
-                            // exploded_segments = loft_crvs[i][j][k].DuplicateSegments().ToList();
-                            var crv = loft_crvs[i][j][k].ToNurbsCurve();
-                            // Get spilt parameters
-                            var split_t = new List<double>();
-                            for (int n = 0; n < crv.SpanCount; n++)
-                            {
-                                split_t.Add(crv.SpanDomain(n).T0);
-                                //split_t.Add(crv.SpanDomain(n).T1);
-                            }
-                            split_t.Add(crv.SpanDomain(crv.SpanCount-1).T1);
-                            //split_t = split_t.Distinct().ToList();
-                            exploded_segments = crv.Split(split_t).ToList();
-                        }
-                        else
-                        {
-                            exploded_segments.Add(loft_crvs[i][j][k]);
-                        }
-                        //var real_segments = (exploded_segments.Where(x => x.GetLength()>0.001)).ToList();
-                        var real_segments = exploded_segments;
-                        var counter_nodes = loft_crvs[i][j][k].IsClosed ? real_segments.Count* nFaces : real_segments.Count * nFaces+1;
-                        for (int n = 0; n < real_segments.Count; n++)
-                        {
-                            var domain = real_segments[n].Domain;
-                            for (int m = 0; m < nFaces; m++)
-                            {
-                                // Add vertex
-                                if (!(real_segments[n].IsClosed & m == nFaces-1 & n == real_segments.Count - 1)) // for closed section shapes ignore last point
-                                {
-                                    var t = (double)m / (double)nFaces * (domain.T1 - domain.T0) + domain.T0;
-                                    var pt = real_segments[n].PointAt(t);
-                                    beam_mesh.Vertices.Add(pt.X, pt.Y, pt.Z);
-                                }
-                                // Add mesh face
-                                if ((m+n)>0 & k>0)
-                                {
-                                    int a = (m - 1) + n * nFaces + counter_nodes * (k-1);
-                                    int b = ((m) + n * nFaces) % counter_nodes + counter_nodes * (k - 1); // get first node in the section if it is closed
-                                    int c = ((m) + n * nFaces) % counter_nodes + counter_nodes * (k);
-                                    int d = (m-1) + n * nFaces + counter_nodes * (k);
-                                    beam_mesh.Faces.AddFace(new MeshFace(a,b,c,d));
-                                }
-                            }
-                        }
-                        // Add last face
-                        if ( k > 0)
-                        {
-                            int a1 = (nFaces * real_segments.Count - 1) + counter_nodes * (k - 1);
-                            int b1 = (nFaces * real_segments.Count) % counter_nodes + counter_nodes * (k - 1);
-                            int c1 = (nFaces * real_segments.Count) % counter_nodes + counter_nodes * (k);
-                            int d1 = (nFaces * real_segments.Count -1) % counter_nodes + counter_nodes * (k);
-                            beam_mesh.Faces.AddFace(new MeshFace(a1, b1, c1, d1));
-                        }                            
-                    }
-                    oExtrussion.Add(beam_mesh);
-                }
+                level = GH_RuntimeMessageLevel.Warning;
+                return;
             }
 
             // Assign output

@@ -30,6 +30,12 @@ namespace Parametric_FEM_Toolbox.RFEM
             Tx = support.SupportConstantX / 1000;
             Ty = support.SupportConstantY / 1000;
             Tz = support.SupportConstantZ / 1000;
+            NTx = support.SupportNonlinearityX;
+            NTy = support.SupportNonlinearityY;
+            NTz = support.SupportNonlinearityZ;
+            NRx = support.RestraintNonlinearityX;
+            NRy = support.RestraintNonlinearityY;
+            NRz = support.RestraintNonlinearityZ;
             RSType = support.ReferenceSystem;
             if (support.UserDefinedReferenceSystem.Type == UserDefinedAxisSystemType.RotatedSystemType)
             {
@@ -44,7 +50,11 @@ namespace Parametric_FEM_Toolbox.RFEM
                 Orientation = orientation;
             ToModify = false;
             ToDelete = false;
-            SetOrientation();
+            if (Orientation != null)
+            {
+                SetOrientation();
+            }
+            
         //}
         //public RFSupportP(NodalSupport support, Point3d[] location) : this(support, location, new Plane(Plane.WorldXY))
         //{
@@ -74,17 +84,18 @@ namespace Parametric_FEM_Toolbox.RFEM
         public double RotX { get; set; }
         public double RotY { get; set; }
         public double RotZ { get; set; }
-        // public UserDefinedAxisSystem UDAxisSystem { get; set; }
-        // public UserDefinedAxisSystemType UDAxisSystemType { get; set; }
         public double Tx { get; set; }
         public double Ty { get; set; }
         public double Tz { get; set; }
         public double Rx { get; set; }
         public double Ry { get; set; }
         public double Rz { get; set; }
-        //public RotationSequence RSequence { get; set; }
-        //public Point3D RotationAngles { get; set; }
-
+        public NonlinearityType NTx { get; set; }
+        public NonlinearityType NTy { get; set; }
+        public NonlinearityType NTz { get; set; }
+        public NonlinearityType NRx { get; set; }
+        public NonlinearityType NRy { get; set; }
+        public NonlinearityType NRz { get; set; }
         // Additional Properties to the RFEM Struct
         public List<Plane> Orientation { get; set; }
         public bool ToModify { get; set; }
@@ -98,6 +109,8 @@ namespace Parametric_FEM_Toolbox.RFEM
             return string.Format($"RFEM-NodalSupport;No:{No};Ux:{Tx.DOF("kN/m")};Uy:{Ty.DOF("kN/m")};Uz:{Tz.DOF("kN/m")};" +
                 $"φx:{Rx.DOF("kNm/rad")};φy:{Ry.DOF("kNm/rad")};φz:{Rz.DOF("kNm/rad")};Tag:{((Tag == "") ? "-" : Tag)};" +
                 $"NodeList:{((NodeList == "") ? "-" : NodeList)};IsValid:{IsValid};ID:{((ID == "") ? "-" : ID)};ReferenceSystemType:{RSType.ToString()};" +
+                $"SupportNonlinearityX:{NTx};SupportNonlinearityY:{NTy};SupportNonlinearityZ:{NTz};" +
+                $"RestraintNonlinearityX:{NRx};RestraintNonlinearityY:{NRy};RestraintNonlinearityZ:{NRz};" +
                 $"Orientation:{Orientation.ToLabelString()};RSeq:{RSeq};RotX:{RotX};RotY:{RotY};RotZ:{RotZ};" +
                 $"ToModify:{ToModify};ToDelete:{ToDelete};Comment:{((Comment == "") ? "-" : Comment)};");
         }           
@@ -113,15 +126,21 @@ namespace Parametric_FEM_Toolbox.RFEM
                 No = support.No,
                 Tag = support.Tag,
                 NodeList = support.NodeList,
-                SupportConstantX = support.Tx*1000,
+                SupportConstantX = support.Tx * 1000,
                 SupportConstantY = support.Ty * 1000,
                 SupportConstantZ = support.Tz * 1000,
                 RestraintConstantX = support.Rx * 1000,
                 RestraintConstantY = support.Ry * 1000,
                 RestraintConstantZ = support.Rz * 1000,
-                ReferenceSystem = support.RSType,                
+                ReferenceSystem = support.RSType,
+                SupportNonlinearityX = support.NTx,
+                SupportNonlinearityY = support.NTy,
+                SupportNonlinearityZ = support.NTz,
+                RestraintNonlinearityX = support.NRx,
+                RestraintNonlinearityY = support.NRy,
+                RestraintNonlinearityZ = support.NRz,
                 //UserDefinedReferenceSystem = support.UDAxisSystem
-             };
+            };
             if (support.RSType == ReferenceSystemType.UserDefinedSystemType)
             {
                 var myudaxis = new UserDefinedAxisSystem();

@@ -682,6 +682,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         public static List<RFSurface> GetRFSurfaces(List<Dlubal.RFEM5.Surface> surfaces, IModelData data)
         {
             var rfSurfaces = new List<RFSurface>();
+            List<RFNode> nodes = null;
+
+            if (surfaces.Any(x=> x.GeometryType == SurfaceGeometryType.NurbsSurfaceType))
+            {
+                nodes = GetRFNodes(data.GetNodes().ToList(), data);
+            }
+            
+
             foreach (var s in surfaces)
             {
                 var edges = new List<RFLine>();
@@ -692,7 +700,27 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                                where o.InSurfaceNo == s.No
                                select o;
                 var rfOpenings = GetRFOpenings(openings.ToList(), data);
-                rfSurfaces.Add(new RFSurface(s, edges.ToArray(), rfOpenings.ToArray()));
+                var rfSfc = new RFSurface(s, edges.ToArray(), rfOpenings.ToArray());
+                if (s.GeometryType == SurfaceGeometryType.NurbsSurfaceType)
+                {
+                    var nurbs_surface = data.GetNurbsSurface(s.No, ItemAt.AtNo).GetExtraData();
+                    rfSfc.OrderX = nurbs_surface.OrderX;
+                    rfSfc.OrderY = nurbs_surface.OrderY;                    
+                    rfSfc.KnotsX = nurbs_surface.KnotsX;
+                    rfSfc.KnotsY = nurbs_surface.KnotsY;
+                    rfSfc.Weights = nurbs_surface.Weights;
+                    rfSfc.Nodes = nurbs_surface.Nodes;                    
+                    var ctrl_points = new Point3d[rfSfc.Nodes.GetLength(0), rfSfc.Nodes.GetLength(1)];
+                    for (int i = 0; i < rfSfc.Nodes.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < rfSfc.Nodes.GetLength(1); j++)
+                        {
+                            ctrl_points[i, j] = nodes.Where(x => x.No == rfSfc.Nodes[i, j]).ToArray()[0].Location;
+                        }
+                    }
+                    rfSfc.ControlPoints = ctrl_points;
+                }
+                rfSurfaces.Add(rfSfc);
             }
             return rfSurfaces;
         }
@@ -944,6 +972,54 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                             break;
                         }
                     }
+                    if (!(filter.SupNTx is null))
+                    {
+                        if (!filter.SupNTx.Contains(n.SupportNonlinearityX.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.SupNTy is null))
+                    {
+                        if (!filter.SupNTy.Contains(n.SupportNonlinearityY.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.SupNTz is null))
+                    {
+                        if (!filter.SupNTz.Contains(n.SupportNonlinearityZ.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.SupNRx is null))
+                    {
+                        if (!filter.SupNRx.Contains(n.RestraintNonlinearityX.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.SupNRy is null))
+                    {
+                        if (!filter.SupNRy.Contains(n.RestraintNonlinearityY.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.SupNRz is null))
+                    {
+                        if (!filter.SupNRz.Contains(n.RestraintNonlinearityZ.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
                 }
                 if (!include) continue;
                 outSups.Add(n);
@@ -1125,6 +1201,30 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                             break;
                         }
                     }
+                    if (!(filter.SupLNTx is null))
+                    {
+                        if (!filter.SupLNTx.Contains(n.SupportNonlinearityX.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.SupLNTy is null))
+                    {
+                        if (!filter.SupLNTy.Contains(n.SupportNonlinearityY.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.SupLNTz is null))
+                    {
+                        if (!filter.SupLNTz.Contains(n.SupportNonlinearityZ.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
                 }
                 if (!include) continue;
                 outSups.Add(n);
@@ -1285,6 +1385,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     {
                         var value = ((n.ShearConstantYZ >= 0) ? n.ShearConstantYZ / 1000 : n.ShearConstantYZ);
                         if (!filter.SupSVyz.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.SupSNTz is null))
+                    {
+                        if (!filter.SupSNTz.Contains(n.SupportNonlinearityZ.ToString()))
                         {
                             include = false;
                             break;
@@ -1588,6 +1696,128 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         }
 
         #endregion
+
+        #region Nodal Release
+
+        public static List<NodalRelease> FilterNR(Dlubal.RFEM5.IModelData data, List<RFFilter> filters)
+        {
+            var outReleases = new List<NodalRelease>();
+            foreach (var n in data.GetNodalReleases())
+            {
+                var include = true;
+                foreach (var filter in filters)
+                {
+                    if (!(filter.NRList is null))
+                    {
+                        if (!filter.NRList.Contains(n.No))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.NRComment is null))
+                    {
+                        if (!filter.NRComment.Contains(n.Comment))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.NRNodeNo is null))
+                    {
+                        if (!filter.NRNodeNo.Contains(n.NodeNo))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.NRHinge is null))
+                    {
+                        if (!filter.NRHinge.Contains(n.MemberHingeNo))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.NRReleasedMembersNo is null))
+                    {
+                        var inLinesNo = n.ReleasedMembers.ToInt();
+                        if (!(inLinesNo.Intersect(filter.NRReleasedMembersNo).ToArray().Length > 0))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.NRReleasedSurfacesNo is null))
+                    {
+                        var inLinesNo = n.ReleasedSurfaces.ToInt();
+                        if (!(inLinesNo.Intersect(filter.NRReleasedSurfacesNo).ToArray().Length > 0))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.NRReleasedSolidsNo is null))
+                    {
+                        var inLinesNo = n.ReleasedSolids.ToInt();
+                        if (!(inLinesNo.Intersect(filter.NRReleasedSolidsNo).ToArray().Length > 0))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.NRMemberNo is null))
+                    {
+                        if (!filter.NRMemberNo.Contains(n.AxisSystemFromObjectNo))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.NRGeneratedNodeNo is null))
+                    {
+                        if (!filter.NRGeneratedNodeNo.Contains(n.GeneratedNodeNo))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.NRAxisSystem is null))
+                    {
+                        if (!filter.NRAxisSystem.Contains(n.AxisSystem.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.NRLocation is null))
+                    {
+                        if (!filter.NRLocation.Contains(n.Location.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                }
+                if (!include) continue;
+                outReleases.Add(n);
+            }
+            return outReleases;
+        }
+
+        public static List<RFNodalRelease> GetRFNodalReleases(List<NodalRelease> releases, IModelData data)
+        {
+            var rfNodalReleases = new List<RFNodalRelease>();
+            // Get Planesss
+            foreach (var item in releases)
+            {
+                var rFNodalRelease = new RFNodalRelease(item);
+                rfNodalReleases.Add(rFNodalRelease);
+            }
+            return rfNodalReleases;
+        }
+
+#endregion
 
         #region Cross Section
 
@@ -3143,7 +3373,158 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         }
 
         #endregion
-               
+
+        #region Fre  Line Loads
+
+        public static Dictionary<Tuple<int, int>, FreeLineLoad> FilterFreeLineLoads(Dlubal.RFEM5.IModelData data, ILoads loads, List<RFFilter> filters)
+        {
+            var outDictionaryLoads = new Dictionary<Tuple<int, int>, FreeLineLoad>();
+            // Select load cases
+            var lcAll = loads.GetLoadCases();
+            var lcSelected = new List<int>();
+            foreach (var lc in lcAll)
+            {
+                int lcIndex = lc.Loading.No;
+                bool include = true;
+                foreach (var filter in filters)
+                {
+                    if (!(filter.FLLLC is null))
+                    {
+                        if (!filter.FLLLC.Contains(lc.Loading.No))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                }
+                if (include)
+                {
+                    lcSelected.Add(lcIndex);
+                }
+            }
+            // Select nodal Loads
+            var dicSelected = new Dictionary<Tuple<int, int>, FreeLineLoad>();
+            foreach (var index in lcSelected)
+            {
+                foreach (var load in loads.GetLoadCase(index, ItemAt.AtNo).GetFreeLineLoads())
+                {
+                    var loadTuple = new Tuple<int, int>(load.No, index);
+                    dicSelected.Add(loadTuple, load);
+                }
+            }
+            foreach (var n in (dicSelected))
+            {
+                var include = true;
+                foreach (var filter in filters)
+                {
+                    if (!(filter.FLLList is null))
+                    {
+                        if (!filter.FLLList.Contains(n.Value.No))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.FLLComment is null))
+                    {
+                        if (!filter.FLLComment.Contains(n.Value.Comment))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.FLLSfcList is null))
+                    {
+                        var inLinesNo = n.Value.SurfaceList.ToInt();
+                        if (!(inLinesNo.Intersect(filter.FLLSfcList).ToArray().Length > 0))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.FLLF1 is null))
+                    {
+                        if (!filter.FLLF1.Includes(n.Value.Magnitude1 / 1000))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.FLLF2 is null))
+                    {
+                        if (!filter.FLLF2.Includes(n.Value.Magnitude2 / 1000))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }                    
+                    if (!(filter.FLLDir is null))
+                    {
+                        if (!filter.FLLDir.Contains(n.Value.Direction.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.FLLDist is null))
+                    {
+                        if (!filter.FLLDist.Contains(n.Value.Distribution.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.FLLProj is null))
+                    {
+                        if (!filter.FLLProj.Contains(n.Value.ProjectionPlane.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.FLLX is null))
+                    {                        
+                        if (!filter.FLLX.Includes(n.Value.Position1.X) || !filter.FLLX.Includes(n.Value.Position2.X))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.FLLY is null))
+                    {
+                        if (!filter.FLLY.Includes(n.Value.Position1.Y) || !filter.FLLY.Includes(n.Value.Position2.Y))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.FLLZ is null))
+                    {
+                        if (!filter.FLLZ.Includes(n.Value.Position1.Z) || !filter.FLLZ.Includes(n.Value.Position2.Z))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                }
+                if (!include) continue;
+                outDictionaryLoads.Add(n.Key, n.Value);
+            }
+            return outDictionaryLoads;
+        }
+
+        public static List<RFFreeLineLoad> GetRFFreeLineLoads(Dictionary<Tuple<int, int>, FreeLineLoad> loads, IModelData data)
+        {
+            var rfLineLoadList = new List<RFFreeLineLoad>();
+            // Get Planesss
+            foreach (var item in loads)
+            {
+                var rfLineLoad = new RFFreeLineLoad(item.Value, item.Key.Item2);
+                rfLineLoadList.Add(rfLineLoad);
+            }
+            return rfLineLoadList;
+        }
+        #endregion
 
         #region LoadCase
         public static List<LoadCase> FilterLoadCases(Dlubal.RFEM5.IModelData data, ILoads loads, List<RFFilter> filters)
@@ -3495,6 +3876,36 @@ ref List<RFResultCombo> rfResultCombos, ref List<RFMemberHinge> rfMemberHinges)
             rfLoadCombos.Clear();
             rfResultCombos.Clear();
             rfMemberHinges.Clear();
+        }
+
+        public static void ClearOutput(ref List<RFNode> rfNodes, ref List<RFLine> rfLines, ref List<RFMember> rfMembers, ref List<RFSurface> rfSurfaces,
+ref List<RFOpening> rfOpenings, ref List<RFSupportP> rfSupportss, ref List<RFSupportL> rfSupportsL, ref List<RFSupportS> rfSupportsS, ref List<RFLineHinge> rfLineHinges,
+ref List<RFCroSec> rfCroSecs, ref List<RFMaterial> rfMats, ref List<RFNodalLoad> rfNLoads, ref List<RFLineLoad> rfLLoads, ref List<RFMemberLoad> rfMLoads,
+ref List<RFSurfaceLoad> rfSLoads, ref List<RFFreePolygonLoad> rfPLoads, ref List<RFLoadCase> rfLoadCases, ref List<RFLoadCombo> rfLoadCombos,
+ref List<RFResultCombo> rfResultCombos, ref List<RFMemberHinge> rfMemberHinges, ref List<RFNodalRelease> rfNodalReleases, ref List<RFFreeLineLoad> rfFLLoads)
+        {
+            rfNodes.Clear();
+            rfLines.Clear();
+            rfMembers.Clear();
+            rfSurfaces.Clear();
+            rfOpenings.Clear();
+            rfSupportss.Clear();
+            rfSupportsL.Clear();
+            rfSupportsS.Clear();
+            rfLineHinges.Clear();
+            rfCroSecs.Clear();
+            rfMats.Clear();
+            rfNLoads.Clear();
+            rfLLoads.Clear();
+            rfMLoads.Clear();
+            rfSLoads.Clear();
+            rfPLoads.Clear();
+            rfLoadCases.Clear();
+            rfLoadCombos.Clear();
+            rfResultCombos.Clear();
+            rfMemberHinges.Clear();
+            rfNodalReleases.Clear();
+            rfFLLoads.Clear();
         }
 
 

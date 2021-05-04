@@ -35,6 +35,15 @@ namespace Parametric_FEM_Toolbox.RFEM
             ToDelete = false;
         }
 
+        //Testing
+        //public RFResults(IResults results, IResults results_raster, IModelData data, string loadcase, bool member_forces, bool surface_forces, bool reaction_forces):this(results, data, loadcase, member_forces, surface_forces, reaction_forces)
+        //{
+        //    if (surface_forces)
+        //    {
+        //        SurfaceForces = GetRFSurfaceForces(results, results_raster, data);
+        //    }
+        //}
+
         public List<RFMemberForces> GetRFMemberForces(IResults results, IModelData data)
         {
             var myForces = new List<RFMemberForces>();
@@ -52,7 +61,7 @@ namespace Parametric_FEM_Toolbox.RFEM
 
         public List<RFSurfaceForces> GetRFSurfaceForces(IResults results, IModelData data)
         {
-            var myForces = new List<RFSurfaceForces>();
+            var myForces = new List<RFSurfaceForces>();            
             foreach (var surface in data.GetSurfaces())
             {
                 if (surface.GeometryType == SurfaceGeometryType.UnknownGeometryType)
@@ -60,10 +69,32 @@ namespace Parametric_FEM_Toolbox.RFEM
                     continue;
                 }
                 var forces = results.GetSurfaceInternalForces(surface.No, ItemAt.AtNo);
+                //var globalDeformations = results.GetSurfaceDeformations(surface.No, ItemAt.AtNo,false);
+                //var localDeformations = results.GetSurfaceDeformations(surface.No, ItemAt.AtNo, true);
+                //var local_axis = Component_GetResults.GetSurfaceLocalAxis(globalDeformations, localDeformations);
                 myForces.Add(new RFSurfaceForces(forces));
             }
             return myForces;
         }
+
+        //Test
+        //public List<RFSurfaceForces> GetRFSurfaceForces(IResults results, IResults results_raster, IModelData data)
+        //{
+        //    var myForces = new List<RFSurfaceForces>();
+        //    foreach (var surface in data.GetSurfaces())
+        //    {
+        //        if (surface.GeometryType == SurfaceGeometryType.UnknownGeometryType)
+        //        {
+        //            continue;
+        //        }
+        //        var forces = results.GetSurfaceInternalForces(surface.No, ItemAt.AtNo);
+        //        var globalDeformations = results_raster.GetSurfaceDeformations(surface.No, ItemAt.AtNo, false);
+        //        var localDeformations = results_raster.GetSurfaceDeformations(surface.No, ItemAt.AtNo, true);
+        //        var local_axis = Component_GetResults.GetSurfaceLocalAxis(globalDeformations, localDeformations);
+        //        myForces.Add(new RFSurfaceForces(forces, local_axis));
+        //    }
+        //    return myForces;
+        //}
 
         public List<RFNodalSupportForces> GetRFNodalSupportForces(IResults results, IModelData data)
         {

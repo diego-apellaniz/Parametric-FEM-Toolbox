@@ -101,15 +101,18 @@ namespace Parametric_FEM_Toolbox.GUI
             else if (DA.GetData(0, ref inCurve))
             {
                 Component_RFLine.SetGeometry(inCurve, ref rFLine);
+            }else if (DA.GetData(3, ref nodeList))
+            {
+                rFLine.NodeList = nodeList; 
             }
             else
             {
-                msg = "Insufficient input parameters. Provide either Input Curve or existing RFLine Object. ";
+                msg = "Insufficient input parameters. Provide either Input Curve, node list or existing RFLine Object. ";
                 level = GH_RuntimeMessageLevel.Warning;
                 return;
             }
             // Check line length
-            if (rFLine.ToCurve().GetLength() <= 0.001)
+            if (rFLine.ControlPoints != null && rFLine.ControlPoints.Length >0 && rFLine.ToCurve().GetLength() <= 0.001)
             {
                 level = GH_RuntimeMessageLevel.Warning;
                 msg = "Line is too short. It may cause import errors.";
@@ -137,7 +140,8 @@ namespace Parametric_FEM_Toolbox.GUI
             if (DA.GetData(4, ref lineType))
             {
                 rFLine.Type = (LineType)lineType;
-                if (rFLine.Type == LineType.UnknownLineType)
+                if (rFLine.Type == LineType.UnknownLineType || rFLine.Type == LineType.ParabolaType || rFLine.Type == LineType.TrajectoryType
+                    || rFLine.Type == LineType.OnSurfaceType || (nodeList != "" && rFLine.Type == LineType.NurbSplineType))
                 {
                     msg = "Line Type not supported. ";
                     level = GH_RuntimeMessageLevel.Warning;

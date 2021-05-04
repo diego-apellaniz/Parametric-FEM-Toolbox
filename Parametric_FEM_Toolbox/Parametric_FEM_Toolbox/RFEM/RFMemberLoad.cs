@@ -35,7 +35,7 @@ namespace Parametric_FEM_Toolbox.RFEM
                 DistanceA /= 100;
                 DistanceB /= 100;
             }
-            if (LoadType == LoadType.ForceType || LoadType == LoadType.MomentType)
+            if (LoadType == LoadType.ForceType || LoadType == LoadType.MomentType || LoadType == LoadType.InitialPrestressType || LoadType == LoadType.EndPrestressType)
             {
                 Magnitude1 = load.Magnitude1 / 1000;
                 Magnitude2 = load.Magnitude2;
@@ -136,7 +136,7 @@ namespace Parametric_FEM_Toolbox.RFEM
                 myLoad.DistanceA *= 100;
                 myLoad.DistanceB *= 100;
             }
-            if (load.LoadType == LoadType.ForceType || load.LoadType == LoadType.MomentType)
+            if (load.LoadType == LoadType.ForceType || load.LoadType == LoadType.MomentType || load.LoadType == LoadType.InitialPrestressType || load.LoadType == LoadType.EndPrestressType)
             {
                 myLoad.Magnitude1 = load.Magnitude1 * 1000;
                 if (myLoad.Distribution != LoadDistributionType.ConcentratedNxQType && myLoad.Distribution != LoadDistributionType.Concentrated2x2QType)

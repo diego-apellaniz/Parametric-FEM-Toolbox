@@ -37,7 +37,6 @@ namespace Parametric_FEM_Toolbox.GUI
 
         protected void Setup(EvaluationUnit unit)
         {
-
             unit.RegisterInputParam(new Param_RFEM(), "RF Line Support", "RF LineSup", "Input RFLineSupport.", GH_ParamAccess.item);
             // unit.Inputs[0].Parameter.Optional = true;
 
@@ -50,9 +49,11 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterOutputParam(new Param_Number(), "Rotation Dir Y", "Ry", "(-1): Fixed; (0): Free; Other: Stiffness in [kNm/rad]");
             unit.RegisterOutputParam(new Param_Number(), "Rotation Dir Z", "Rz", "(-1): Fixed; (0): Free; Other: Stiffness in [kNm/rad]");
             unit.RegisterOutputParam(new Param_String(), "Comment", "Comment", "Comment.");
+            unit.RegisterOutputParam(new Param_String(), "SupportNonlinearityX", "NTx", "Nonlinearity Tpye Displacement Dir X");
+            unit.RegisterOutputParam(new Param_String(), "SupportNonlinearityY", "NTy", "Nonlinearity Tpye Displacement Dir Y");
+            unit.RegisterOutputParam(new Param_String(), "SupportNonlinearityZ", "NTz", "Nonlinearity Tpye Displacement Dir Z");
             unit.RegisterOutputParam(new Param_String(), "Line List", "LineList", "List of lines the support is attached to");
             unit.RegisterOutputParam(new Param_String(), "Reference System Type", "RSType", "Reference System Type");
-
         }
 
         public override void SolveInstance(IGH_DataAccess DA, out string msg, out GH_RuntimeMessageLevel level)
@@ -76,10 +77,12 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetData(5, ((rfSupport.Rx < 0) ? rfSupport.Rx * 1000 : rfSupport.Rx));
             DA.SetData(6, ((rfSupport.Ry < 0) ? rfSupport.Ry * 1000 : rfSupport.Ry));
             DA.SetData(7, ((rfSupport.Rz < 0) ? rfSupport.Rz * 1000 : rfSupport.Rz));
-            DA.SetData(8, rfSupport.Comment);
-            DA.SetData(9, rfSupport.LineList);
-            DA.SetData(10, rfSupport.RSType);
-
+            DA.SetData(8, rfSupport.NTx);
+            DA.SetData(9, rfSupport.NTy);
+            DA.SetData(10, rfSupport.NTz);
+            DA.SetData(11, rfSupport.Comment);
+            DA.SetData(12, rfSupport.LineList);
+            DA.SetData(13, rfSupport.RSType);
         }
     }
 }

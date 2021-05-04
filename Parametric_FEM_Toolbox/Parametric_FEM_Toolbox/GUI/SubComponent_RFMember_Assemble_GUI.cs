@@ -36,7 +36,6 @@ namespace Parametric_FEM_Toolbox.GUI
 
         protected void Setup(EvaluationUnit unit)
         {
-
             unit.RegisterInputParam(new Param_Curve(), "Line", "Line", "Line or Curve to assemble the RFLine from.", GH_ParamAccess.item);
             unit.Inputs[0].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Integer(), "Start Cross-Section", "SCroSec", "Number of Start Cross-Section", GH_ParamAccess.item);
@@ -171,7 +170,7 @@ namespace Parametric_FEM_Toolbox.GUI
             return;
             }
             // Check line length
-            if (rFMember.BaseLine.ToCurve().GetLength() <= 0.001)
+            if (rFMember.BaseLine != null && rFMember.BaseLine.ToCurve().GetLength() <= 0.001)
             {
                 level = GH_RuntimeMessageLevel.Warning;
                 msg = "Line is too short. It may cause import errors.";

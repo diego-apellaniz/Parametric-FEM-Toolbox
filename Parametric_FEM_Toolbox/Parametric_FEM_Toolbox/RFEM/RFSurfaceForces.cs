@@ -90,9 +90,15 @@ namespace Parametric_FEM_Toolbox.RFEM
                 ShearForceVy.Add(surface_forces[i].ShearForceVy / 1000);
             }
 
+            //Axis = Plane.Unset;
             ToModify = false;
             ToDelete = false;
         }
+
+        //public RFSurfaceForces(SurfaceInternalForces[] surface_forces, Plane local_axis) : this(surface_forces)
+        //{
+        //    Axis = local_axis;
+        //}
 
         //public RFMemberForces(RFMemberForces other) : this(other)
         //{
@@ -138,6 +144,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         public List<double> ShearForceVy { get; set; }
 
         // Additional Properties to the RFEM Struct
+        // public Plane Axis { get; set; }
         public bool ToModify { get; set; }
         public bool ToDelete { get; set; }
         //public int NewNo { get; set; }

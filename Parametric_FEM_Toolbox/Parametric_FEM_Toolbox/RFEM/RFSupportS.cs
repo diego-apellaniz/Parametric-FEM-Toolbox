@@ -29,6 +29,7 @@ namespace Parametric_FEM_Toolbox.RFEM
             Tx = support.SupportConstantX / 1000;
             Ty = support.SupportConstantY / 1000;
             Tz = support.SupportConstantZ / 1000;
+            NTz = support.SupportNonlinearityZ;
             BaseSrfcs = baseSrfcs;
             ToModify = false;
             ToDelete = false;
@@ -61,6 +62,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         public double Tz { get; set; }
         public double Vxz { get; set; }
         public double Vyz { get; set; }
+        public NonlinearityType NTz { get; set; }
         // Additional Properties to the RFEM Struct
         public List<RFSurface> BaseSrfcs { get; set; }
         public bool ToModify { get; set; }
@@ -73,6 +75,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         {
             return string.Format($"RFEM-SrfcSupport;No:{No};Ux:{Tx.DOF("kN/m")};Uy:{Ty.DOF("kN/m")};Uz:{Tz.DOF("kN/m")};" +
                 $"Vxz:{Vxz.DOF("kNm/rad")};Vyz:{Vyz.DOF("kNm/rad")};Tag:{((Tag == "") ? "-" : Tag)};" +
+                $"SupportNonlinearityZ:{NTz};" +
                 $"SurfaceList:{((SurfaceList == "") ? "-" : SurfaceList)};IsValid:{IsValid};ID:{((ID == "") ? "-" : ID)};" +
                 $"ToModify:{ToModify};ToDelete:{ToDelete};Comment:{((Comment == "") ? "-" : Comment)};");
         }           
@@ -93,7 +96,8 @@ namespace Parametric_FEM_Toolbox.RFEM
                 SupportConstantZ = support.Tz * 1000,
                 ShearConstantXZ = support.Vxz * 1000,
                 ShearConstantYZ = support.Vyz * 1000,
-             };
+                SupportNonlinearityZ = support.NTz,
+            };
             return mySupport;
         }
 

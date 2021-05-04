@@ -103,56 +103,11 @@ namespace Parametric_FEM_Toolbox.GUI
                 iCroSecs.Add((RFCroSec)cs.Value);
             }
 
-            // Check input
-            var cs_indeces = iCroSecs.Select(x => x.No);
-            if (iMember.EndCrossSectionNo == 0) // In case of tension members, etc.
-            {
-                iMember.EndCrossSectionNo = iMember.StartCrossSectionNo;
-            }
-                if (!(cs_indeces.Contains(iMember.StartCrossSectionNo)) || (!(cs_indeces.Contains(iMember.EndCrossSectionNo))))
+            oExtrussion = Component_ExtrudeMembers.ExtrudeMembersToBrep(iMember, iCroSecs, length_segment, out msg);
+            if (msg != "")
             {
                 level = GH_RuntimeMessageLevel.Warning;
-                msg = $"Provide cross sections for member No {iMember.No}.";
                 return;
-            }
-
-            // Get base geometry            
-            var crosecs1 = iCroSecs.Where(x => x.No == iMember.StartCrossSectionNo).ToList()[0].Shape;
-            var crosecs2 = iCroSecs.Where(x => x.No == iMember.EndCrossSectionNo).ToList()[0].Shape;
-            var baseline = iMember.BaseLine.ToCurve();
-
-            // Check geometry
-            if ((crosecs1.Sum(x => x.SpanCount) != crosecs2.Sum(x => x.SpanCount)) || (crosecs1.Count != crosecs2.Count))
-            {
-                level = GH_RuntimeMessageLevel.Warning;
-                msg = $"Provide similar cross sections for member No {iMember.No}.";
-                return;
-            }
-
-            // Generate tween curves - still on the origin!
-            List<Curve> segments;
-            int nCroSecsInter;
-            length_segment = Math.Max(length_segment, 0.05); // Check minimum vlaue
-            if (baseline.Degree<=1)
-            {
-                nCroSecsInter = 2;
-            }
-            else
-            {
-                nCroSecsInter = Math.Max((int)(baseline.GetLength() / length_segment), 2);
-            }            
-            var loft_crvs = Component_ExtrudeMembers.GenerateCroSecs(baseline, crosecs1, crosecs2, nCroSecsInter, 0.001, 0.001, out segments);
-
-            // Orient cross sections
-            loft_crvs = Component_ExtrudeMembers.OrientCroSecs(loft_crvs, segments, nCroSecsInter, iMember.Frames[0], crosecs1.Count);
-
-            // Extrude members
-            for (int i = 0; i < segments.Count; i++)
-            {
-                for (int j = 0; j < crosecs1.Count; j++)
-                {
-                    oExtrussion.AddRange(Brep.CreateFromLoft(loft_crvs[i][j], Point3d.Unset, Point3d.Unset, LoftType.Normal, false));
-                }
             }
 
             // Assign output

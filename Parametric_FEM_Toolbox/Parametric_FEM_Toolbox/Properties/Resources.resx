@@ -121,6 +121,9 @@
   <data name="Assemble_CroSec" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Assemble_CroSec.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Assemble_FreeLineLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Assemble_FreeLineLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Assemble_Line" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Assemble_Line.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -150,6 +153,9 @@
   </data>
   <data name="Assemble_NodalLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Assemble_NodalLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Assemble_NodalRelease" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Assemble_NodalRelease.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Assemble_Node" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Assemble_Node.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -184,6 +190,9 @@
   <data name="Disassemble_CroSec" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Disassemble_CroSec.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Disassemble_FreeLineLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Disassemble_FreeLineLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Disassemble_Line" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Disassemble_Line.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -214,6 +223,9 @@
   <data name="Disassemble_NodalLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Disassemble_NodalLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Disassemble_NodalRelease" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Disassemble_NodalRelease.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Disassemble_Node" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Disassemble_Node.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -243,6 +255,12 @@
   </data>
   <data name="Extrude_Members" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Extrude_Members.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Filter_NodalRelease" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Filter_NodalRelease.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_FilterFreeLineLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_FilterFreeLineLoad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="icon_FilterLine" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_FilterLine.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -343,7 +361,13 @@
   <data name="Results_ShellForces" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Results_ShellForces.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="RFEM_LCA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RFEM_LCA.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="toolbox_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\toolbox_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="toolbox_vrey_small_Rainbow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\toolbox_vrey_small_Rainbow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -73,6 +73,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Assemble_FreeLineLoad {
+            get {
+                object obj = ResourceManager.GetObject("Assemble_FreeLineLoad", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Assemble_Line {
             get {
                 object obj = ResourceManager.GetObject("Assemble_Line", resourceCulture);
@@ -166,6 +176,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         internal static System.Drawing.Bitmap Assemble_NodalLoad {
             get {
                 object obj = ResourceManager.GetObject("Assemble_NodalLoad", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Assemble_NodalRelease {
+            get {
+                object obj = ResourceManager.GetObject("Assemble_NodalRelease", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -283,6 +303,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Disassemble_FreeLineLoad {
+            get {
+                object obj = ResourceManager.GetObject("Disassemble_FreeLineLoad", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Disassemble_Line {
             get {
                 object obj = ResourceManager.GetObject("Disassemble_Line", resourceCulture);
@@ -383,6 +413,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Disassemble_NodalRelease {
+            get {
+                object obj = ResourceManager.GetObject("Disassemble_NodalRelease", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Disassemble_Node {
             get {
                 object obj = ResourceManager.GetObject("Disassemble_Node", resourceCulture);
@@ -476,6 +516,26 @@ namespace Parametric_FEM_Toolbox.Properties {
         internal static System.Drawing.Bitmap Extrude_Members {
             get {
                 object obj = ResourceManager.GetObject("Extrude_Members", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Filter_NodalRelease {
+            get {
+                object obj = ResourceManager.GetObject("Filter_NodalRelease", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_FilterFreeLineLoad {
+            get {
+                object obj = ResourceManager.GetObject("icon_FilterFreeLineLoad", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -813,9 +873,29 @@ namespace Parametric_FEM_Toolbox.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap RFEM_LCA {
+            get {
+                object obj = ResourceManager.GetObject("RFEM_LCA", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap toolbox_icon {
             get {
                 object obj = ResourceManager.GetObject("toolbox_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap toolbox_vrey_small_Rainbow {
+            get {
+                object obj = ResourceManager.GetObject("toolbox_vrey_small_Rainbow", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

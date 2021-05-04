@@ -112,6 +112,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     return node;
                 }
             }
+
             // Set node with a provided index number
             if (!(rfNode.No == 0))
             {
@@ -126,6 +127,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             existingNodes.Add(rfNode);
             return rfNode;
         }
+
         public static void SetRFLines(this IModelData data, List<GH_RFEM> ghLines, ref List<RFLine> index)
         {
             var newData = false;
@@ -164,6 +166,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 }
             }
         }
+
         public static void SetRFLines(this IModelData data, List<GH_RFEM> ghLines, ref List<RFLine> index, ref List<string> errorMsg)
         {
             var newData = false;
@@ -210,22 +213,132 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 }
             }
         }
+
+
+        public static void SetRFLines2(this IModelData data, List<GH_RFEM> ghLines, ref List<RFLine> index, ref List<string> errorMsg)
+        {
+            //var newData = false;
+            var inLines = new List<RFLine>();
+            var existingNodes = new List<RFNode>();
+            var existingLines = new List<RFLine>();
+            var lastNoNo = 0;
+            var lastLineNo = 0;
+            var counter_lines = 0;
+            var counter_control_points = 0;
+            var ctrl_pts = new List<Point3d>();
+
+            inLines = ghLines.Select(x => new RFLine((RFLine)x.Value)).ToList();
+
+            // Create dictionary of control points to remove duoklicate points
+            var dict_crtlpoints = new Dictionary<int, List<int>>();
+            if (inLines.Any(x => x.ToDelete == false && x.ToModify == false))
+            {
+                existingNodes = Component_GetData.GetRFNodes(data.GetNodes().ToList(), data);
+                existingLines = Component_GetData.GetRFLines(data.GetLines().ToList(), data);
+                lastNoNo = data.GetLastObjectNo(ModelObjectType.NodeObject);
+                lastLineNo = data.GetLastObjectNo(ModelObjectType.LineObject);
+                //newData = true;
+            }
+
+            int i = 0;
+            try
+            {
+
+                foreach (var rfLine in inLines)
+                {
+                    if (rfLine.ToModify)
+                    {
+                        var myLine = (Dlubal.RFEM5.Line)rfLine;
+                        var myNo = rfLine.No;
+                        data.GetLine(myNo, ItemAt.AtNo).SetData(ref myLine);
+                        index.Add(rfLine);
+                        inLines.Remove(rfLine);
+                    }
+                    else if (rfLine.ToDelete)
+                    {
+                        data.GetLine(rfLine.No, ItemAt.AtNo).Delete();
+                        index.Add(rfLine);
+                        inLines.Remove(rfLine);
+                    }
+                    else
+                    {
+                        var ctrl_pts_index = new List<int>();
+                        foreach (var pt in rfLine.ControlPoints)
+                        {
+                            ctrl_pts.Add(pt);
+                            ctrl_pts_index.Add(counter_control_points);
+                            counter_control_points++;
+                        }
+                        dict_crtlpoints.Add(counter_lines, ctrl_pts_index);
+                        counter_lines++;
+                    }
+                }
+
+                // Set new nodes und set indices of control points
+                var control_points = UtilLibrary.CullClosestPoints(ctrl_pts, existingNodes, ref lastNoNo, tol);
+                foreach (var pt in control_points)
+                {
+                    if (!(pt.Point == Point3d.Unset))
+                    {
+                        var node = new Node();
+                        node.No = pt.Index;
+                        node.X = pt.Point.X;
+                        node.Y = pt.Point.Y;
+                        node.Z = pt.Point.Z;
+                        data.SetNode(node);
+                    }
+                }
+                
+                // Set lines
+                for (i = 0; i < inLines.Count; i++)
+                {
+                    var line_indices = dict_crtlpoints[i];
+                    var linepts = "";
+                    foreach (var node_in in line_indices)
+                    {
+                        linepts += control_points[node_in].Index.ToString();
+                        linepts += ",";
+                    }
+                    linepts = linepts.Substring(0, linepts.Length - 1);
+                    inLines[i].NodeList = linepts;
+                    index.Add(data.SetRFLine(inLines[i], ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo));
+                }
+            }            
+            catch (Exception ex)
+            {
+                index.Add(null);
+                errorMsg.Add($"Import of Line No.{i} failed! " + ex.Message);
+            }
+            
+            // Remove duplicate points
+        }
+
+
+
+
         public static RFLine SetRFLine(this IModelData data, ref RFLine rfLine, ref List<RFNode> existingNodes, ref List<RFLine> existingLines, ref int lastNoNo, ref int lastLineNo)
         {
-            // Get NodeList
-            var nodeList = "";
             var newNodes = false;
-            foreach (var point in rfLine.ControlPoints)
+            var inputNodeList = true;
+            if (rfLine.NodeList == "" || rfLine.NodeList == null)
             {
-                var prevLastNoNo = lastNoNo;
-                var index = data.SetRFNode(new RFNode(new Node(), point), ref existingNodes, ref lastNoNo, tol).No;
-                nodeList += index.ToString() + ",";
-                if (!(prevLastNoNo - lastNoNo == 0))
+                inputNodeList = false;
+                // Get NodeList
+                var nodeList = "";                
+                foreach (var point in rfLine.ControlPoints)
                 {
-                    newNodes = true;
+                    var prevLastNoNo = lastNoNo;
+                    var index = data.SetRFNode(new RFNode(new Node(), point), ref existingNodes, ref lastNoNo, tol).No;
+                    nodeList += index.ToString() + ",";
+                    if (!(prevLastNoNo - lastNoNo == 0))
+                    {
+                        newNodes = true;
+                    }
                 }
+                rfLine.NodeList = nodeList.Substring(0, nodeList.Length - 1);
             }
-            rfLine.NodeList = nodeList.Substring(0, nodeList.Length - 1);
+            
+            
             // Check if line already exists in RFEM
             if (!newNodes)
             {
@@ -244,7 +357,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 lastLineNo += 1;
                 rfLine.No = lastLineNo;
             }
-            if (rfLine.Type == LineType.PolylineType)
+            if (inputNodeList ||  rfLine.Type == LineType.PolylineType)
             {
                 data.SetLine(rfLine);
             }
@@ -446,6 +559,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             var lastSfcNo = 0;
             var lastOpNo = 0;
 
+            var auxSfcs = (RFSurface)ghsfcs[0].Value;
             inSfcs = ghsfcs.Select(x => new RFSurface((RFSurface)x.Value)).ToList();
             foreach (var rfSfc in inSfcs)
             {
@@ -500,8 +614,10 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         }
         public static RFSurface SetRFSfc(this IModelData data, ref RFSurface rfSfc, ref List<RFNode> existingNodes, ref List<RFLine> existingLines, ref int lastNoNo, ref int lastLineNo, ref int lastSfcNo)
         {
+            var inputLineList = true;
             if (rfSfc.BoundaryLineList == "" || rfSfc.BoundaryLineList == null)
             {
+                inputLineList = false;
                 // Get boundaries
                 var boundList = "";
                 foreach (var edge in rfSfc.Edges)
@@ -526,6 +642,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     }
                 }
             }
+
             // Set element with a provided index number or without
             if (rfSfc.No == 0)
             {
@@ -534,10 +651,9 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             }
             if (rfSfc.GeometryType == SurfaceGeometryType.NurbsSurfaceType)
             {
-                // data.SetNurbsSurface(rfSfc);
-                data.SetSurface(rfSfc);
+                data.SetNurbsSurface(rfSfc);                    
             }
-            else if (rfSfc.GeometryType == SurfaceGeometryType.QuadrangleSurfaceType)
+            else if (rfSfc.GeometryType == SurfaceGeometryType.QuadrangleSurfaceType && !inputLineList)
             {
                 // If surface has 3 boundary lines, a fourth null line has to be created
                 if (rfSfc.Edges.Length == 3)
@@ -1199,6 +1315,67 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return rfMH;
         }
 
+        public static void SetRFNodalReleases(this IModelData data, List<GH_RFEM> ghHinges, ref List<RFNodalRelease> index, ref List<string> errorMsg)
+        {
+            var newData = false;
+            var inReleases = new List<RFNodalRelease>();
+            var lastReleaseNo = 0;
+
+            inReleases = ghHinges.Select(x => new RFNodalRelease((RFNodalRelease)x.Value)).ToList();
+            foreach (var rfRelease in inReleases)
+            {
+                try
+                {
+                    if (rfRelease.ToModify)
+                    {
+                        var myRelease = (NodalRelease)rfRelease;
+                        var myNo = myRelease.No;
+                        //if (rfSup.NewNo > 0)
+                        //{
+                        //    myNo = rfSup.NewNo;
+                        //}
+                        data.GetNodalRelease(myNo, ItemAt.AtNo).SetData(ref myRelease);
+                        index.Add(rfRelease);
+                    }
+                    else if (rfRelease.ToDelete)
+                    {
+                        data.GetNodalRelease(rfRelease.No, ItemAt.AtNo).Delete();
+                        index.Add(rfRelease);
+                    }
+                    else
+                    {
+                        if (newData == false)
+                        {
+                            lastReleaseNo = data.GetLastObjectNo(ModelObjectType.NodalReleaseObject);
+                            newData = true;
+                        }
+                        index.Add(data.SetRFNodalRelease(rfRelease, ref lastReleaseNo));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    index.Add(null);
+                    errorMsg.Add($"Import of Member Hinge No.{rfRelease.No} failed! " + ex.Message);
+                }
+            }
+        }
+
+        public static RFNodalRelease SetRFNodalRelease(this IModelData data, ref RFNodalRelease rfNR, ref int lastNRNo)
+        {
+
+            // Set support with a provided index number
+            if (!(rfNR.No == 0))
+            {
+                data.SetNodalRelease(rfNR);
+                return rfNR;
+            }
+            // Set node without provided index number
+            lastNRNo += 1;
+            rfNR.No = lastNRNo;
+            data.SetNodalRelease(rfNR);
+            return rfNR;
+        }
+
         public static void SetRFCroSecs(this IModelData data, List<GH_RFEM> ghCSecs, ref List<RFCroSec> index)
         {
             var newData = false;
@@ -1815,6 +1992,77 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return rfPolyLoad;
         }
 
+        public static void SetRFFreeLineLoads(this IModelData data, ILoads loads, List<GH_RFEM> ghLLoads, ref List<RFFreeLineLoad> index, ref List<string> errorMsg)
+        {
+            var newData = false;
+            var inLLoads = new List<RFFreeLineLoad>();
+            var existingNodes = new List<RFNode>();
+            var existingLines = new List<RFLine>();
+            var lastLLNo = 0;
+
+            inLLoads = ghLLoads.Select(x => new RFFreeLineLoad((RFFreeLineLoad)x.Value)).ToList();
+            foreach (var rfLoad in inLLoads)
+            {
+                try
+                {
+                    var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+                    if (rfLoad.ToModify)
+                    {
+                        loadcase.PrepareModification();
+                        var myload = (FreeLineLoad)rfLoad;
+                        //if (rfSup.NewNo > 0)
+                        //{
+                        //    myNo = rfSup.NewNo;
+                        //}
+                        loadcase.GetFreeLineLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+                        index.Add(rfLoad);
+                        loadcase.FinishModification();
+                    }
+                    else if (rfLoad.ToDelete)
+                    {
+                        loadcase.PrepareModification();
+                        loadcase.GetFreeLineLoad(rfLoad.No, ItemAt.AtNo).Delete();
+                        index.Add(rfLoad);
+                        loadcase.FinishModification();
+                    }
+                    else
+                    {
+                        if (newData == false)
+                        {
+                            lastLLNo = loadcase.GetLastObjectNo(LoadObjectType.FreeLineLoadObject);
+                            newData = true;
+                        }
+                        index.Add(data.SetRFFreeLineLoad(loadcase, rfLoad, ref lastLLNo, tol));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    index.Add(null);
+                    errorMsg.Add($"Import of Line Load No.{rfLoad.No} failed! " + ex.Message);
+                }
+            }
+        }
+
+        public static RFFreeLineLoad SetRFFreeLineLoad(this IModelData data, ILoadCase loadcase, ref RFFreeLineLoad rfLineLoad, ref int lastLLNo, double tol)
+        {
+
+            // Set support with a provided index number
+            if (!(rfLineLoad.No == 0))
+            {
+                loadcase.PrepareModification();
+                loadcase.SetFreeLineLoad(rfLineLoad);
+                loadcase.FinishModification();
+                return rfLineLoad;
+            }
+            // Set node without provided index number
+            lastLLNo += 1;
+            rfLineLoad.No = lastLLNo;
+            loadcase.PrepareModification();
+            loadcase.SetFreeLineLoad(rfLineLoad);
+            loadcase.FinishModification();
+            return rfLineLoad;
+        }
+
         public static void SetRFLoadCases(this IModelData data, ILoads loads, List<GH_RFEM> ghLoadCases, ref List<RFLoadCase> index, ref List<string> errorMsg)
         {
             var newData = false;
@@ -2127,6 +2375,38 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             loadCaseList.Clear();
             loadComboList.Clear();
             resultComboList.Clear();
+        }
+
+        public static void ClearOutput(ref List<RFNode> nodelist, ref List<RFLine> linelist, ref List<RFMember> memberlist,
+        ref List<RFSurface> srfclist, ref List<RFOpening> oplist, ref List<RFSupportP> supPlist, ref List<RFSupportL> supLlist,
+        ref List<RFSupportS> supSlist, ref List<RFMemberHinge> memberHingelist, ref List<RFLineHinge> lineHingelist, ref List<RFNodalRelease> nodalReleaselist,
+        ref List<RFCroSec> croSeclist, ref List<RFMaterial> matlist,
+        ref List<RFNodalLoad> nodalLoadList, ref List<RFLineLoad> lineLoadList, ref List<RFMemberLoad> memberLoadList,
+        ref List<RFSurfaceLoad> surfaceLoadList, ref List<RFFreeLineLoad> freeLineLoadList, ref List<RFFreePolygonLoad> polyLoadList, ref List<RFLoadCase> loadCaseList,
+        ref List<RFLoadCombo> loadComboList, ref List<RFResultCombo> resultComboList)
+        {
+            nodelist.Clear();
+            linelist.Clear();
+            memberlist.Clear();
+            srfclist.Clear();
+            oplist.Clear();
+            supPlist.Clear();
+            supLlist.Clear();
+            supSlist.Clear();
+            memberHingelist.Clear();
+            lineHingelist.Clear();
+            nodalReleaselist.Clear();
+            croSeclist.Clear();
+            matlist.Clear();
+            nodalLoadList.Clear();
+            lineLoadList.Clear();
+            memberLoadList.Clear();
+            surfaceLoadList.Clear();
+            polyLoadList.Clear();
+            loadCaseList.Clear();
+            loadComboList.Clear();
+            resultComboList.Clear();
+            freeLineLoadList.Clear();
         }
     }
 }

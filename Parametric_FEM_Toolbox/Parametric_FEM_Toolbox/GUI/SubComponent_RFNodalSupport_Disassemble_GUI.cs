@@ -48,6 +48,12 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterOutputParam(new Param_Number(), "Rotation Dir X", "Rx", "(-1): Fixed; (0): Free; Other: Stiffness in [kNm/rad]");
             unit.RegisterOutputParam(new Param_Number(), "Rotation Dir Y", "Ry", "(-1): Fixed; (0): Free; Other: Stiffness in [kNm/rad]");
             unit.RegisterOutputParam(new Param_Number(), "Rotation Dir Z", "Rz", "(-1): Fixed; (0): Free; Other: Stiffness in [kNm/rad]");
+            unit.RegisterOutputParam(new Param_String(), "SupportNonlinearityX", "NTx", "Nonlinearity Tpye Displacement Dir X");
+            unit.RegisterOutputParam(new Param_String(), "SupportNonlinearityY", "NTy", "Nonlinearity Tpye Displacement Dir Y");
+            unit.RegisterOutputParam(new Param_String(), "SupportNonlinearityZ", "NTz", "Nonlinearity Tpye Displacement Dir Z");
+            unit.RegisterOutputParam(new Param_String(), "RestraintNonlinearityX", "NRx", "Nonlinearity Tpye Rotation Dir X");
+            unit.RegisterOutputParam(new Param_String(), "RestraintNonlinearityY", "NRy", "Nonlinearity Tpye Rotation Dir Y");
+            unit.RegisterOutputParam(new Param_String(), "RestraintNonlinearityZ", "NRz", "Nonlinearity Tpye Rotation Dir Z");
             unit.RegisterOutputParam(new Param_String(), "Comment", "Comment", "Comment.");
             unit.RegisterOutputParam(new Param_String(), "Node List", "NodeList", "List of nodes the support is attached to");
             unit.RegisterOutputParam(new Param_String(), "Reference System Type", "RSType", "Reference System Type");
@@ -77,11 +83,17 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetData(5, ((rfSupport.Rx < 0) ? rfSupport.Rx * 1000 : rfSupport.Rx));
             DA.SetData(6, ((rfSupport.Ry < 0) ? rfSupport.Ry * 1000 : rfSupport.Ry));
             DA.SetData(7, ((rfSupport.Rz < 0) ? rfSupport.Rz * 1000 : rfSupport.Rz));
-            DA.SetData(8, rfSupport.Comment);
-            DA.SetData(9, rfSupport.NodeList);
-            DA.SetData(10, rfSupport.RSType);
-            DA.SetData(11, rfSupport.RSeq);
-            DA.SetData(12, new Vector3d(rfSupport.RotX.ToDegrees(),
+            DA.SetData(8, rfSupport.NTx);
+            DA.SetData(9, rfSupport.NTy);
+            DA.SetData(10, rfSupport.NTz);
+            DA.SetData(11, rfSupport.NRx);
+            DA.SetData(12, rfSupport.NRy);
+            DA.SetData(13, rfSupport.NRz);
+            DA.SetData(14, rfSupport.Comment);
+            DA.SetData(15, rfSupport.NodeList);
+            DA.SetData(16, rfSupport.RSType);
+            DA.SetData(17, rfSupport.RSeq);
+            DA.SetData(18, new Vector3d(rfSupport.RotX.ToDegrees(),
                 rfSupport.RotY.ToDegrees(), rfSupport.RotZ.ToDegrees()));
 
         }

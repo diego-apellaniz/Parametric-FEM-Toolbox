@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Grasshopper.Kernel;
 using Rhino.Geometry;
-
 using Parametric_FEM_Toolbox.RFEM;
 using Parametric_FEM_Toolbox.Utilities;
 using Dlubal.RFEM5;
@@ -148,7 +146,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("0e3b2375-5fd6-494f-a21c-07824a988984"); }
+            get { return new Guid("84d967d3-98ff-48c4-a102-1b6dbd252262"); }
         }
     }
 }
