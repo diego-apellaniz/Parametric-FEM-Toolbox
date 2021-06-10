@@ -104,4 +104,4 @@ Through this example, you will learn to:
 - Prepare the bill of quantities from the RFEM model to serve as input for a LCA
 - Run a LCA with the plugin of One Click LCA with the input from an RFEM model
 
-![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/Optimization_Galapagos.png)
+![alt text](https://github.com/diego-apellaniz/Parametric-FEM-Toolbox/blob/master/Images/RFEM_OneClickLCA.png?raw=true)
