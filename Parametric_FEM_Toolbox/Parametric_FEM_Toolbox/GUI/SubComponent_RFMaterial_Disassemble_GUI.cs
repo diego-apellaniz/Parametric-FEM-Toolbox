@@ -43,15 +43,38 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterOutputParam(new Param_String(), "Description", "Desc", "Name or Description of Cross Section.");
             unit.RegisterOutputParam(new Param_Integer(), "Material Number", "No", "Index number of the RFEM object.");
             unit.RegisterOutputParam(new Param_String(), "Comment", "Comment", "Comment.");
-            unit.RegisterOutputParam(new Param_Number(), "Elasticity Modulus [N/m²]", "E", "Elasticity Modulus [N/m²]");
+            unit.RegisterOutputParam(new Param_Number(), "Elasticity Modulus [kN/cm²]", "E", "Elasticity Modulus [kN/cm²]");
             unit.RegisterOutputParam(new Param_Number(), "Poisson Ratio", "Mu", "Poisson Ratio");
-            unit.RegisterOutputParam(new Param_Number(), "Shear Modulus [N/m²]", "G", "Shear Modulus [N/m²]");
+            unit.RegisterOutputParam(new Param_Number(), "Shear Modulus [kN/cm²]", "G", "Shear Modulus [kN/cm²]");
             unit.RegisterOutputParam(new Param_Number(), "Specific Weight [N/m³]", "W", "Specific Weight [N/m³]");
             unit.RegisterOutputParam(new Param_Number(), "Thermal Expansion [1/°]", "Alpha", "Thermal Expansion [1/°]");
             unit.RegisterOutputParam(new Param_Number(), "Partial Safety Factor", "Gamma", "Partial Safety Factor");
             unit.RegisterOutputParam(new Param_String(), "Material Model Type", "Type", "Material Model Type.");
             unit.RegisterOutputParam(new Param_String(), "TextID", "TextID", "TextID.");
             unit.RegisterOutputParam(new Param_Boolean(), "User Defined", "User", "User Defined.");
+
+            GH_ExtendableMenu gH_ExtendableMenu = new GH_ExtendableMenu(0, "ortho_elastic");
+            gH_ExtendableMenu.Name = "Ortho Elastic";
+            gH_ExtendableMenu.Collapse();
+            unit.RegisterOutputParam(new Param_Number(), "ElasticityModulusX [kN/cm²]", "Ex", "ElasticityModulusX [kN/cm²]");
+            unit.RegisterOutputParam(new Param_Number(), "ElasticityModulusY [kN/cm²]", "Ey", "ElasticityModulusY [kN/cm²]");
+            unit.RegisterOutputParam(new Param_Number(), "ElasticityModulusZ [kN/cm²]", "Ez", "ElasticityModulusZ [kN/cm²]");
+            unit.RegisterOutputParam(new Param_Number(), "Poisson Ratio XY", "Vxy", "Poisson Ratio XY");
+            unit.RegisterOutputParam(new Param_Number(), "Poisson Ratio XZ", "Vxz", "Poisson Ratio XZ");
+            unit.RegisterOutputParam(new Param_Number(), "Poisson Ratio YZ", "Vyz", "Poisson Ratio YZ");
+            unit.RegisterOutputParam(new Param_Number(), "Shear Modulus XY [kN/cm²]", "Gxy", "Shear Modulus XY [kN/cm²]");
+            unit.RegisterOutputParam(new Param_Number(), "Shear Modulus XZ [kN/cm²]", "Gxz", "Shear Modulus XZ [kN/cm²]");
+            unit.RegisterOutputParam(new Param_Number(), "Shear Modulus YZ [kN/cm²]", "Gyz", "Shear Modulus YZ [kN/cm²]");
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[12]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[13]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[14]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[15]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[16]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[17]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[18]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[19]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[20]);
+            unit.AddMenu(gH_ExtendableMenu);
         }
 
         public override void SolveInstance(IGH_DataAccess DA, out string msg, out GH_RuntimeMessageLevel level)
@@ -79,6 +102,15 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetData(9, rfMat.ModelType);
             DA.SetData(10, rfMat.TextID);
             DA.SetData(11, rfMat.UserDefined);
+            DA.SetData(12, rfMat.ElasticityModulusX);
+            DA.SetData(13, rfMat.ElasticityModulusY);
+            DA.SetData(14, rfMat.ElasticityModulusZ);
+            DA.SetData(15, rfMat.PoissonRatioXY);
+            DA.SetData(16, rfMat.PoissonRatioXZ);
+            DA.SetData(17, rfMat.PoissonRatioYZ);
+            DA.SetData(18, rfMat.ShearModulusXY);
+            DA.SetData(19, rfMat.ShearModulusXZ);
+            DA.SetData(20, rfMat.ShearModulusYZ);
         }
     }
 }

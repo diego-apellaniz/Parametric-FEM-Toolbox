@@ -720,6 +720,12 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     }
                     rfSfc.ControlPoints = ctrl_points;
                 }
+                // Get Surface Input and Result Axes
+                var sufaceaxes = data.GetSurface(s.No, ItemAt.AtNo).GetInputAxes();
+                rfSfc.SurfaceAxes = new RFEM.SurfaceAxes(sufaceaxes);
+                // Get surface axes
+                rfSfc.GetAxes(data);
+                // Output
                 rfSurfaces.Add(rfSfc);
             }
             return rfSurfaces;
@@ -2095,12 +2101,21 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
 
         public static List<RFMaterial> GetRFMaterials(List<Material> mats, IModelData data)
         {
-            var rfMat = new List<RFMaterial>();
+            var rfMats = new List<RFMaterial>();
             foreach (var mat in mats)
             {
-                rfMat.Add(new RFMaterial(mat));
+                var rfMat = new RFMaterial(mat);
+                if (rfMat.ModelType == MaterialModelType.OrthotropicElastic2DType)
+                {
+                    var modelOrthoElastic = data.GetMaterial(rfMat.No, ItemAt.AtNo).GetModel() as IMaterialOrthotropicElasticModel;
+                    if (modelOrthoElastic != null)
+                    {
+                        rfMat.SetElasticOrthotropic(modelOrthoElastic.GetData());
+                    }                    
+                }
+                rfMats.Add(rfMat);
             }
-            return rfMat;
+            return rfMats;
         }
 
         #endregion

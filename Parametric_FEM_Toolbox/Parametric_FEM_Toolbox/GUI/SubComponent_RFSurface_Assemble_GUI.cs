@@ -37,7 +37,6 @@ namespace Parametric_FEM_Toolbox.GUI
 
         protected void Setup(EvaluationUnit unit)
         {
-
             unit.RegisterInputParam(new Param_Surface(), "Surface", "Srfc", "Surface to assemble the RFSurface from.", GH_ParamAccess.item);
             unit.Inputs[0].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Integer(), "Surface Number", "No", "Optional index number to assign to the RFEM object.", GH_ParamAccess.item);
@@ -71,18 +70,33 @@ namespace Parametric_FEM_Toolbox.GUI
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[8]);
             unit.AddMenu(gH_ExtendableMenu);
 
-            GH_ExtendableMenu gH_ExtendableMenu2 = new GH_ExtendableMenu(1, "modify");
+            GH_ExtendableMenu gH_ExtendableMenu1 = new GH_ExtendableMenu(1, "surface axes");
+            gH_ExtendableMenu1.Name = "Surface Axes";
+            gH_ExtendableMenu1.Collapse();
+            unit.RegisterInputParam(new Param_Integer(), "Direction", "Dir", UtilLibrary.DescriptionRFTypes(typeof(SurfaceAxesDirection)), GH_ParamAccess.item);
+            unit.Inputs[9].EnumInput = UtilLibrary.ListRFTypes(typeof(SurfaceAxesDirection));
+            unit.Inputs[9].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Integer(), "Line Index", "Line", "Line Index", GH_ParamAccess.item);
+            unit.Inputs[10].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Number(), "Rotation [rad]", "Rot", "Angular rotation [rad]", GH_ParamAccess.item);
+            unit.Inputs[11].Parameter.Optional = true;
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[9]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[10]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[11]);
+            unit.AddMenu(gH_ExtendableMenu1);
+
+            GH_ExtendableMenu gH_ExtendableMenu2 = new GH_ExtendableMenu(2, "modify");
             gH_ExtendableMenu2.Name = "Modify";
             gH_ExtendableMenu2.Collapse();
             unit.RegisterInputParam(new Param_RFEM(), "RF Surface", "RF Surface", "Surface object from the RFEM model to modify", GH_ParamAccess.item);
-            unit.Inputs[9].Parameter.Optional = true;
+            unit.Inputs[12].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Boolean(), "Modify", "Modify", "Modify object?", GH_ParamAccess.item);
-            unit.Inputs[10].Parameter.Optional = true;
+            unit.Inputs[13].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Boolean(), "Delete", "Delete", "Delete object?", GH_ParamAccess.item);
-            unit.Inputs[11].Parameter.Optional = true;
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[9]);
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[10]);
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[11]);
+            unit.Inputs[14].Parameter.Optional = true;
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[12]);
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[13]);
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[14]);
             unit.AddMenu(gH_ExtendableMenu2);
 
             unit.RegisterOutputParam(new Param_RFEM(), "RF Surface", "RF Surface", "Output RFSurface.");
@@ -109,8 +123,15 @@ namespace Parametric_FEM_Toolbox.GUI
             var mat = 0;
             //int intPoints = 4;
             //int newNo = 0;
+            RFEM.SurfaceAxes axes = new RFEM.SurfaceAxes();
+            var axesDirType = 0;
+            var axesLines = 0;
+            Point3d pt1 = new Point3d();
+            Point3d pt2 = new Point3d();
+            int csNo = 0;
+            var rot = 0.0;
 
-            if (DA.GetData(9, ref inRFEM))
+            if (DA.GetData(12, ref inRFEM))
             {
                 rfSrfc = new RFSurface((RFSurface)inRFEM.Value);                
                 if (DA.GetData(0, ref inSrfc))
@@ -212,11 +233,11 @@ namespace Parametric_FEM_Toolbox.GUI
                 level = GH_RuntimeMessageLevel.Warning;
                 return;
             }
-            if (DA.GetData(10, ref mod))
+            if (DA.GetData(13, ref mod))
             {
                 rfSrfc.ToModify = mod;
             }
-            if (DA.GetData(11, ref del))
+            if (DA.GetData(14, ref del))
             {
                 rfSrfc.ToDelete = del;
             }
@@ -251,6 +272,73 @@ namespace Parametric_FEM_Toolbox.GUI
                     level = GH_RuntimeMessageLevel.Warning;
                     return;
                 }
+            }
+            if (DA.GetData(9, ref axesDirType))
+            {
+                
+                axes.SurfaceAxesDirection = (SurfaceAxesDirection)axesDirType;
+                switch(axes.SurfaceAxesDirection)
+                {
+                    case SurfaceAxesDirection.UnknownSurfaceAxesDirection:
+                        msg = "Axes direction not supported.";
+                        level = GH_RuntimeMessageLevel.Warning;
+                        return;
+                    case SurfaceAxesDirection.StandardSurfaceAxesDirection:
+                        break;
+                    case SurfaceAxesDirection.IdenticalToAxesForInput:
+                        msg = "Axes are always paralell to axes for input.";
+                        level = GH_RuntimeMessageLevel.Warning;
+                        break;
+                    case SurfaceAxesDirection.SurfaceAxesParallelToGlobalCS:
+                        msg = "Axes direction not supported.";
+                        level = GH_RuntimeMessageLevel.Warning;
+                        return;
+                    case SurfaceAxesDirection.SurfaceAxesParallelToUserCS:
+                        msg = "Axes direction not supported.";
+                        level = GH_RuntimeMessageLevel.Warning;
+                        return;
+                    case SurfaceAxesDirection.SurfaceAngularRotation:
+                        if (!(DA.GetData(11, ref rot))) 
+                        {
+                            msg = "Insufficient input parameters. Provide Angular rotation.";
+                            level = GH_RuntimeMessageLevel.Warning;
+                            return;
+                        }
+                        axes.Rotation = rot;
+                        break;
+                    case SurfaceAxesDirection.SurfaceAxisXDirectToPoint:
+                        msg = "Axes direction not supported.";
+                        level = GH_RuntimeMessageLevel.Warning;
+                        return;
+                    case SurfaceAxesDirection.SurfaceAxisYDirectToPoint:
+                        msg = "Axes direction not supported.";
+                        level = GH_RuntimeMessageLevel.Warning;
+                        return;
+                    case SurfaceAxesDirection.SurfaceAxisXParallelToLine:
+                        if (!DA.GetData(10, ref axesLines))
+                        {
+                            msg = "Insufficient input parameters. Provide Line.";
+                            level = GH_RuntimeMessageLevel.Warning;
+                            return;
+                        }
+                        axes.AxesLineList = axesLines.ToString();
+                        break;
+                    case SurfaceAxesDirection.SurfaceAxisYParallelToLine:
+                        if (!DA.GetData(10, ref axesLines))
+                        {
+                            msg = "Insufficient input parameters. Provide Line.";
+                            level = GH_RuntimeMessageLevel.Warning;
+                            return;
+                        }
+                        axes.AxesLineList = axesLines.ToString();
+                        break;
+                }
+                rfSrfc.SurfaceAxes = axes;
+            }else if(DA.GetData(11, ref rot) || DA.GetData(10, ref axesLines))
+            {
+                msg = "Insufficient input parameters. Provide Axes Direction.";
+                level = GH_RuntimeMessageLevel.Warning;
+                return;
             }
             DA.SetData(0, rfSrfc);
         }

@@ -30,8 +30,8 @@ namespace Parametric_FEM_Toolbox.RFEM
             Type = new List<string>();
             for (int i = 0; i < member_forces.Length; i++)
             {
-                Forces.Add(new Vector3d(member_forces[i].Forces.ToPoint3d()));
-                Moments.Add(new Vector3d(member_forces[i].Moments.ToPoint3d()));
+                Forces.Add(new Vector3d(member_forces[i].Forces.ToPoint3d() / 1000));
+                Moments.Add(new Vector3d(member_forces[i].Moments.ToPoint3d() / 1000));
                 Location.Add(member_forces[i].Location);
                 Type.Add(member_forces[i].Type.ToString());
             }

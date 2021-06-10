@@ -35,6 +35,29 @@ namespace Parametric_FEM_Toolbox.RFEM
             ToDelete = false;
         }
 
+        public RFResults(IResults results, IModelData data, string loadcase, bool member_forces, bool surface_forces, bool reaction_forces, bool line_reaction_forces) // rfem object as array because they are related to the same member
+        {
+            LoadCase = loadcase;
+            if (member_forces)
+            {
+                MemberForces = GetRFMemberForces(results, data);
+            }
+            if (surface_forces)
+            {
+                SurfaceForces = GetRFSurfaceForces(results, data);
+            }
+            if (reaction_forces)
+            {
+                NodalSupportForces = GetRFNodalSupportForces(results, data);
+            }
+            if (line_reaction_forces)
+            {
+               LineSupportForces = GetRFLineSupportForces(results, data);
+            }
+            ToModify = false;
+            ToDelete = false;
+        }
+
         //Testing
         //public RFResults(IResults results, IResults results_raster, IModelData data, string loadcase, bool member_forces, bool surface_forces, bool reaction_forces):this(results, data, loadcase, member_forces, surface_forces, reaction_forces)
         //{
@@ -106,11 +129,26 @@ namespace Parametric_FEM_Toolbox.RFEM
             return myForces;
         }
 
+        public List<RFLineSupportForces> GetRFLineSupportForces(IResults results, IModelData data)
+        {
+            var myForces = new List<RFLineSupportForces>();
+            foreach (var linesupport in data.GetLineSupports())
+            {
+                foreach (var line in linesupport.LineList.ToInt())
+                {
+                    var forces = results.GetLineSupportForces(line, ItemAt.AtNo, false);
+                    myForces.Add(new RFLineSupportForces(forces));
+                }                
+            }
+            return myForces;
+        }
+
         // Properties to Wrap Fields from RFEM Struct
         public string LoadCase { get; set; }
         public List<RFMemberForces> MemberForces { get; set; }
         public List<RFSurfaceForces> SurfaceForces { get; set; }
         public List<RFNodalSupportForces> NodalSupportForces { get; set; }
+        public List<RFLineSupportForces> LineSupportForces { get; set; }
 
         // Additional Properties to the RFEM Struct
         public bool ToModify { get; set; }
@@ -124,7 +162,8 @@ namespace Parametric_FEM_Toolbox.RFEM
             var outString = string.Format($"RFEM-Results: {LoadCase}; Available Results:" +
                 $"{((MemberForces == null) ? "" : " Member Forces,")}" +
                 $"{((SurfaceForces == null) ? "" : " Surface Forces,")}" +
-                $"{((NodalSupportForces == null) ? "" : " Nodal Support Forces,")}");
+                $"{((NodalSupportForces == null) ? "" : " Nodal Support Forces,")}" +
+                $"{((LineSupportForces == null) ? "" : " Line Support Forces,")}");
             outString = outString.Substring(0, outString.Length - 1) + ";";
             return outString;
         }

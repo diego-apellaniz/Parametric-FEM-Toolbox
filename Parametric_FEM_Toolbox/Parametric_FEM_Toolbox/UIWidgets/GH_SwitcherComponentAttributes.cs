@@ -472,6 +472,8 @@ namespace Parametric_FEM_Toolbox.UIWidgets
             this.Bounds = (LayoutExtBounds(base.m_innerBounds, inputs, outputs));
             FixLayout(outputs);
             LayoutMenu();
+
+
         }
 
         public RectangleF LayoutExtBounds(RectangleF bounds, List<ExtendedPlug> ins, List<ExtendedPlug> outs)

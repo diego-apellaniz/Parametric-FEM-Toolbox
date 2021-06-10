@@ -49,7 +49,12 @@ namespace Parametric_FEM_Toolbox.RFEM
         {
         }
 
-        public RFSurface(RFSurface other) : this(other, null, null)
+        public RFSurface(Dlubal.RFEM5.Surface surface, RFLine[] edges, RFOpening[] openings, Dlubal.RFEM5.SurfaceAxes axes) : this(surface, edges, openings)
+        {
+            SurfaceAxes = new SurfaceAxes(axes);
+        }
+
+        public RFSurface(RFSurface other) : this(other, null, null, other.SurfaceAxes) // Attention casting
         {
             ToModify = other.ToModify;
             ToDelete = other.ToDelete;
@@ -112,10 +117,13 @@ namespace Parametric_FEM_Toolbox.RFEM
         public bool SetIntegratedObjects { get; set; }
         public SurfaceStiffnessType StiffnessType { get; set; }
         public SurfaceThicknessType ThicknessType { get; set; }
-        public double Thickness { get; set; }
+        public double Thickness { get; set; }       
+        
         // Additional Properties to the RFEM Struct
         public RFLine[] Edges { get; set; }
         public RFOpening[] Openings { get; set; }
+        public SurfaceAxes SurfaceAxes { get; set; }
+        public Plane Axes { get; set; }
         public bool ToModify { get; set; }
         public bool ToDelete { get; set; }
         //public int NewNo { get; set; }
@@ -125,7 +133,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         public override string ToString()
         {
             return string.Format($"RFEM-Surface;No:{No};Area:{Area}[m2];MaterialNo:{MaterialNo};" +
-                $"Thickness:{Thickness}[m];Type:{GeometryType};ThicknessType:{ThicknessType};StiffnessType:{StiffnessType};BoundaryLineCount:{BoundaryLineCount};" +
+                $"Thickness:{Thickness}[m];Type:{GeometryType};ThicknessType:{ThicknessType};StiffnessType:{StiffnessType};BoundaryLineCount:{BoundaryLineCount};SurfaceAxesDirection:{SurfaceAxes.SurfaceAxesDirection};" +
                 $"BoundaryLineList:{((BoundaryLineList == "") ? "-" : BoundaryLineList)};Eccentricity:{Eccentricity};" +
                 $"IntegratedLineCount:{IntegratedLineCount};IntegratedLineList:{((IntegratedLineList == "") ? "-" : IntegratedLineList)};" +
                 $"IntegratedNodeCount:{IntegratedNodeCount};IntegratedNodeList:{((IntegratedNodeList == "") ? "-" : IntegratedNodeList)};" +
@@ -234,7 +242,6 @@ namespace Parametric_FEM_Toolbox.RFEM
 
         public Brep ToNurbsSurface()
         {
-
             var nurbs_surface = Rhino.Geometry.NurbsSurface.Create(
                     3,
                     false,
@@ -243,7 +250,6 @@ namespace Parametric_FEM_Toolbox.RFEM
                     ControlPoints.GetLength(0),
                     ControlPoints.GetLength(1)
                     );
-
             // add the knots
             for (int u = 1; u < nurbs_surface.KnotsU.Count; u++)
             {
@@ -282,6 +288,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         //    // return srfc.ToBrep();
         //    return Rhino.Geometry.Brep.CreateEdgeSurface(Edges.Select(x => x.ToCurve())).Faces[0].Brep;            
         //}
+
         public Boolean IsPlanar()
         {
             if(Brep.CreatePlanarBreps(Edges.Select(x=>x.ToCurve()), 0.0005)!=null)
@@ -291,6 +298,39 @@ namespace Parametric_FEM_Toolbox.RFEM
             return false;
             
         }
+
+        public void GetAxes(IModelData data)
+        {
+            Point3D pt = new Point3D();
+            pt.X = 0.0;
+            pt.Y = 0.0;
+            pt.Z = 0.0;
+            var cSys = data.GetSurface(No, ItemAt.AtNo).GetLocalCoordinateSystem(pt).GetData();
+            var origin = Edges[0].ToCurve().PointAtStart;
+            var xAxis = new Vector3d(cSys.AxisX.X, cSys.AxisX.Y, cSys.AxisX.Z);
+            var yAxis = new Vector3d(cSys.AxisY.X, cSys.AxisY.Y, cSys.AxisY.Z);
+            var axes = new Plane(origin, xAxis, yAxis);
+            if (SurfaceAxes != null && SurfaceAxes.SurfaceAxesDirection == SurfaceAxesDirection.SurfaceAngularRotation)
+            {
+                axes.Rotate(SurfaceAxes.Rotation, axes.ZAxis);
+            }else if (SurfaceAxes != null && SurfaceAxes.SurfaceAxesDirection == SurfaceAxesDirection.SurfaceAxisXParallelToLine)
+            {
+                var line = data.GetLine(SurfaceAxes.AxesLineList.ToInt()[0], ItemAt.AtNo).GetData();
+                var crv = Component_GetData.GetRFLines(new List<Dlubal.RFEM5.Line> {line}, data)[0].ToCurve();
+                var xAxis2 = new Vector3d(crv.PointAtEnd - crv.PointAtStart);
+                var yAxis2 = Vector3d.CrossProduct(axes.ZAxis, xAxis2);
+                axes = new Plane(origin, xAxis2, yAxis2);
+            }else if (SurfaceAxes != null && SurfaceAxes.SurfaceAxesDirection == SurfaceAxesDirection.SurfaceAxisYParallelToLine)
+            {
+                var line = data.GetLine(SurfaceAxes.AxesLineList.ToInt()[0], ItemAt.AtNo).GetData();
+                var crv = Component_GetData.GetRFLines(new List<Dlubal.RFEM5.Line> { line }, data)[0].ToCurve();
+                var yAxis2 = new Vector3d(crv.PointAtEnd - crv.PointAtStart);
+                var xAxis2 = Vector3d.CrossProduct(yAxis2, axes.ZAxis);
+                axes = new Plane(origin, xAxis2, yAxis2);
+            }
+            Axes = axes;
+        }
+
         // Convert RFEM Object into Rhino Geometry.
         // These methods are later implemented by the class GH_RFEM.
         public bool ToGH_Integer<T>(ref T target)
@@ -325,7 +365,59 @@ namespace Parametric_FEM_Toolbox.RFEM
         }
         public bool ToGH_Plane<T>(ref T target)
         {
-            return false;
+            if (Axes != null)
+            {
+                object obj = new GH_Plane(Axes);
+                target = (T)obj;
+            }            
+            return true;
+        }
+    }
+
+    public class SurfaceAxes
+    {
+        // SUrface Axes
+        public SurfaceAxesDirection SurfaceAxesDirection { get; set; }
+        public int SfcNo { get; set; }
+        public string AxesLineList { get; set; }
+        public Point3d Point1 { get; set; }
+        public Point3d Point2 { get; set; }
+        public double Rotation { get; set; }
+        public int UserCSNo { get; set; }
+
+        public SurfaceAxes(Dlubal.RFEM5.SurfaceAxes axes)
+        {
+            SurfaceAxesDirection = axes.Direction;
+            AxesLineList = axes.LineList;
+            Point1 = axes.Point1.ToPoint3d();
+            Point2 = axes.Point2.ToPoint3d();
+            Rotation = axes.Rotation;
+            UserCSNo = axes.UserCSNo;
+            SfcNo = axes.No;
+        }
+
+        public SurfaceAxes()
+        {            
+        }
+
+        public static implicit operator Dlubal.RFEM5.SurfaceAxes(SurfaceAxes axes)
+        {
+            if (axes == null)
+            {
+                var rfaxes = new Dlubal.RFEM5.SurfaceAxes();
+                rfaxes.Direction = SurfaceAxesDirection.StandardSurfaceAxesDirection;
+                return rfaxes;
+            }
+            Dlubal.RFEM5.SurfaceAxes myAxes = new Dlubal.RFEM5.SurfaceAxes
+            {
+                Direction = axes.SurfaceAxesDirection,
+                LineList = axes.AxesLineList,
+                Point1 = axes.Point1.ToPoint3D(),
+                Point2 = axes.Point2.ToPoint3D(),
+                Rotation = axes.Rotation,
+                UserCSNo = axes.UserCSNo
+            };
+            return myAxes;
         }
     }
 }

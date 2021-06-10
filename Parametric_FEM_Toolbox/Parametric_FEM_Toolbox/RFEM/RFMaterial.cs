@@ -24,12 +24,12 @@ namespace Parametric_FEM_Toolbox.RFEM
             Tag = material.Tag;
             Description = material.Description;
             UserDefined = material.UserDefined;
-            E = material.ElasticityModulus;
+            E = material.ElasticityModulus / 10000000;
             Gamma = material.PartialSafetyFactor;
             Mu = material.PoissonRatio;
             W = material.SpecificWeight;
             Alpha = material.ThermalExpansion;
-            G = material.ShearModulus;
+            G = material.ShearModulus / 10000000;
             ModelType = material.ModelType;
             TextID = material.TextID;
             ToModify = false;
@@ -38,6 +38,18 @@ namespace Parametric_FEM_Toolbox.RFEM
 
         public RFMaterial(RFMaterial other) : this((Material)other)
         {
+            if (other.ModelType == MaterialModelType.OrthotropicElastic2DType)
+            {
+                ElasticityModulusX = other.ElasticityModulusX;
+                ElasticityModulusY = other.ElasticityModulusY;
+                ElasticityModulusZ = other.ElasticityModulusZ;
+                PoissonRatioXY = other.PoissonRatioXY;
+                PoissonRatioXZ = other.PoissonRatioXZ;
+                PoissonRatioYZ = other.PoissonRatioYZ;
+                ShearModulusXY = other.ShearModulusXY;
+                ShearModulusXZ = other.ShearModulusXZ;
+                ShearModulusYZ = other.ShearModulusYZ;
+            }
             ToModify = other.ToModify;
             ToDelete = other.ToDelete;
         }
@@ -58,6 +70,17 @@ namespace Parametric_FEM_Toolbox.RFEM
         public MaterialModelType ModelType { get; set; }
         public bool UserDefined { get; set; }
         public string TextID { get; set; }
+        // Orthotropic elastic material
+        public double ElasticityModulusX { get; set;}
+        public double ElasticityModulusY { get; set; }
+        public double ElasticityModulusZ { get; set; }
+        public double PoissonRatioXY { get; set; }
+        public double PoissonRatioXZ { get; set; }
+        public double PoissonRatioYZ { get; set; }
+        public double ShearModulusXY { get; set; }
+        public double ShearModulusXZ { get; set; }
+        public double ShearModulusYZ { get; set; }
+
         // Additional Properties to the RFEM Struct
         public bool ToModify { get; set; }
         public bool ToDelete { get; set; }
@@ -67,7 +90,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         // Parameters are separated by ";". The component split text can be used to break the string down into a list.
         public override string ToString()
         {
-            return string.Format($"RFEM-Material;No:{No};Description:{((Description == "") ? "-" : Description)};" +
+            return string.Format($"RFEM-Material;No:{No};Description:{((Description == "") ? "-" : Description)};ModelType:{ModelType.ToString()};" +
                 $"ElasticityModulus:{E}[N/m²];PartialSafetyFactor:{Gamma};PoissonRatio:{Mu};" + 
                 $"SpecificWeight:{W}[N/m³];ThermalExpansion:{Alpha}[1/°];ShearModulus:{G}[N/m²];" +
                 $"IsValid:{IsValid};ID:{((ID == "") ? "-" : ID)};TextID:{((TextID == "") ? "-" : TextID)};" +
@@ -89,14 +112,46 @@ namespace Parametric_FEM_Toolbox.RFEM
             myMat.Description = material.Description;
             myMat.UserDefined = material.UserDefined;
             myMat.TextID = material.TextID;
-            myMat.ElasticityModulus = material.E;
+            myMat.ElasticityModulus = material.E * 10000000;
             myMat.PartialSafetyFactor = material.Gamma;
             myMat.PoissonRatio = material.Mu;
             myMat.SpecificWeight = material.W;
             myMat.ThermalExpansion = material.Alpha;
-            myMat.ShearModulus = material.G;
+            myMat.ShearModulus = material.G * 10000000;
             myMat.ModelType = material.ModelType;
             return myMat;
+        }
+
+        public static implicit operator MaterialOrthotropicElasticModel(RFMaterial material)
+        {
+            var myMat = new MaterialOrthotropicElasticModel
+            {
+                ElasticityModulusX = material.ElasticityModulusX * 10000000,
+                ElasticityModulusY = material.ElasticityModulusY * 10000000,
+                ElasticityModulusZ = material.ElasticityModulusZ * 10000000,
+                No = material.No,
+                PoissonRatioXY = material.PoissonRatioXY,
+                PoissonRatioXZ = material.PoissonRatioXZ,
+                PoissonRatioYZ = material.PoissonRatioYZ,
+                ShearModulusXY = material.ShearModulusXY * 10000000,
+                ShearModulusXZ = material.ShearModulusXZ * 10000000,
+                ShearModulusYZ = material.ShearModulusYZ * 10000000,
+            };           
+            return myMat;
+        }
+
+        //Additional methods
+        public void SetElasticOrthotropic(MaterialOrthotropicElasticModel  model)
+        {
+            ElasticityModulusX = model.ElasticityModulusX / 10000000;
+            ElasticityModulusY = model.ElasticityModulusY / 10000000;
+            ElasticityModulusZ = model.ElasticityModulusZ / 10000000;
+            PoissonRatioXY = model.PoissonRatioXY;
+            PoissonRatioXZ = model.PoissonRatioXZ;
+            PoissonRatioYZ = model.PoissonRatioYZ;
+            ShearModulusXY = model.ShearModulusXY / 10000000;
+            ShearModulusXZ = model.ShearModulusXZ / 10000000;
+            ShearModulusYZ = model.ShearModulusYZ / 10000000;
         }
 
         // Convert RFEM Object into Rhino Geometry.

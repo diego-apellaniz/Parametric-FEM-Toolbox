@@ -843,6 +843,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Results_LineReactions {
+            get {
+                object obj = ResourceManager.GetObject("Results_LineReactions", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Results_MemberForces {
             get {
                 object obj = ResourceManager.GetObject("Results_MemberForces", resourceCulture);

@@ -51,6 +51,18 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterOutputParam(new Param_String(), "Stiffness Type", "SType", "Stiffness Type");
             unit.RegisterOutputParam(new Param_Number(), "Area [m²]", "A", "Surface area");
 
+            GH_ExtendableMenu gH_ExtendableMenu = new GH_ExtendableMenu(0, "advanced");
+            gH_ExtendableMenu.Name = "Surface Axes";
+            gH_ExtendableMenu.Collapse();
+            unit.RegisterOutputParam(new Param_Plane(), "Axes", "Axes", "Axes Coordinate System");
+            unit.RegisterOutputParam(new Param_String(), "Direction", "Dir", "Axes Direction");
+            unit.RegisterOutputParam(new Param_String(), "Line Index", "Line", "Line Index");
+            unit.RegisterOutputParam(new Param_Number(), "Rotation [rad]", "Rot", "Angular rotation [rad]");
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[10]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[11]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[12]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[13]);
+            unit.AddMenu(gH_ExtendableMenu);
         }
 
         public override void SolveInstance(IGH_DataAccess DA, out string msg, out GH_RuntimeMessageLevel level)
@@ -76,7 +88,13 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetData(7, rfSurface.ThicknessType);
             DA.SetData(8, rfSurface.StiffnessType);
             DA.SetData(9, rfSurface.Area);
-
+            if (rfSurface.SurfaceAxes != null)
+            {
+                DA.SetData(10, rfSurface.Axes);
+                DA.SetData(11, rfSurface.SurfaceAxes.SurfaceAxesDirection.ToString());
+                DA.SetData(12, rfSurface.SurfaceAxes.AxesLineList);
+                DA.SetData(13, rfSurface.SurfaceAxes.Rotation);
+            }
         }
     }
 }

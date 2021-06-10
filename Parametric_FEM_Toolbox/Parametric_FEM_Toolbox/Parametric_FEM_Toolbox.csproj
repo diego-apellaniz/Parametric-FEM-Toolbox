@@ -71,18 +71,18 @@
     <Reference Include="Eto">
       <HintPath>C:\Users\diego\.nuget\packages\eto.forms\2.4.1\lib\netstandard1.0\Eto.dll</HintPath>
     </Reference>
-    <Reference Include="GH_IO, Version=6.34.21034.7001, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
+    <Reference Include="GH_IO, Version=7.6.21127.19001, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Rhino 7\Plug-ins\Grasshopper\GH_IO.dll</HintPath>
+      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\GH_IO.dll</HintPath>
     </Reference>
-    <Reference Include="Grasshopper, Version=6.34.21034.7001, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
+    <Reference Include="Grasshopper, Version=7.6.21127.19001, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Rhino 7\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
+      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="RhinoCommon, Version=6.34.21034.7001, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
+    <Reference Include="RhinoCommon, Version=7.6.21127.19001, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Rhino 7\System\RhinoCommon.dll</HintPath>
+      <HintPath>C:\Program Files\Rhino 7\System\RhinoCommon.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -108,14 +108,18 @@
     <Compile Include="GUI\Component_Calculate_GUI.cs" />
     <Compile Include="Deprecated\Component_FilterData_GUI_OBSOLETE_3.cs" />
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_5.cs" />
+    <Compile Include="Deprecated\Component_GetResults_GUI_OBSOLETE_2.cs" />
     <Compile Include="GUI\Component_GetResults_GUI.cs" />
     <Compile Include="GUI\Component_ExtrudeMembers_GUI.cs" />
     <Compile Include="GUI\Component_LCA_GUI.cs" />
+    <Compile Include="GUI\Component_ResultsLineReactions_GUI.cs" />
+    <Compile Include="Deprecated\Component_ResultsMemberForces_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\Component_ResultsNodeReactions_GUI.cs" />
     <Compile Include="GUI\Component_ResultsSurfaceForces_GUI.cs" />
     <Compile Include="GUI\Component_ResultsMemberForces_GUI.cs" />
     <Compile Include="Deprecated\Component_RFLineSupport_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\Component_RFFreeLineLoad_GUI.cs" />
+    <Compile Include="Deprecated\Component_RFMaterial_GUI_OBSOLETE_2.cs" />
     <Compile Include="GUI\Component_RFNodalRelease_GUI.cs" />
     <Compile Include="GUI\Component_RFMemberHinge_GUI.cs" />
     <Compile Include="Deprecated\Component_RFNodalSupport_GUI_OBSOLETE.cs" />
@@ -135,6 +139,7 @@
     <Compile Include="GUI\Component_RFLineLoad_GUI.cs" />
     <Compile Include="GUI\Component_RFNodalSupport_GUI.cs" />
     <Compile Include="GUI\Component_RFOpening_GUI.cs" />
+    <Compile Include="Deprecated\Component_RFSurface_GUI_OBSOLETE_2.cs" />
     <Compile Include="GUI\Component_RFSurface_GUI.cs" />
     <Compile Include="GUI\Component_RFMember_GUI.cs" />
     <Compile Include="GUI\Component_RFLine_GUI.cs" />
@@ -194,6 +199,8 @@
     <Compile Include="Deprecated\SubComponent_RFLineSupport_Disassemble_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\SubComponent_RFFreeLineLoad_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFFreeLineLoad_Disassemble_GUI.cs" />
+    <Compile Include="Deprecated\SubComponent_RFMaterial_Assemble_GUI_OBSOLETE.cs" />
+    <Compile Include="Deprecated\SubComponent_RFMaterial_Disassemble_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\SubComponent_RFNodalRelease_Disassemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFNodalRelease_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFMemberHinge_Disassemble_GUI.cs" />
@@ -230,6 +237,9 @@
     <Compile Include="GUI\SubComponent_RFOpening_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFNodalSupport_Disassemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFOpening_Disassemble_GUI.cs" />
+    <Compile Include="Deprecated\SubComponent_RFSurface_Assemble_GUI_OBSOLETE.cs" />
+    <Compile Include="Deprecated\SubComponent_RFSurface_Assemble_GUI_OBSOLETE_2.cs" />
+    <Compile Include="Deprecated\SubComponent_RFSurface_Disassemble_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\SubComponent_RFSurface_Disassemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFSurface_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFMember_Disassemble_GUI.cs" />
@@ -254,6 +264,7 @@
     <Compile Include="HelperLibraries\Component_SetData.cs" />
     <Compile Include="HelperLibraries\Component_GetData.cs" />
     <Compile Include="RFEM\RFFreeLineLoad.cs" />
+    <Compile Include="RFEM\RFLineSupportForces.cs" />
     <Compile Include="RFEM\RFNodalRelease.cs" />
     <Compile Include="RFEM\RFNodalSupportForces.cs" />
     <Compile Include="RFEM\RFSurfaceForces.cs" />
@@ -596,6 +607,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\toolbox_vrey_small_Rainbow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Results_LineReactions.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

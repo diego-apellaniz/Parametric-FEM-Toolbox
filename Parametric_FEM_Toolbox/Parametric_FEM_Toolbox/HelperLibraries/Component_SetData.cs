@@ -611,6 +611,24 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     errorMsg.Add($"Import of Surface No.{rfSfc.No} failed! " + ex.Message);
                 }
             }
+            // Get generated CSys in Grasshopper - at the end to call PrepareModification just once
+            data.FinishModification();
+            data.PrepareModification();            
+            foreach (var rfSfc in index)
+            {
+                try
+                {
+                    if (rfSfc == null)
+                    {
+                        continue;
+                    }
+                    rfSfc.GetAxes(data);
+                }
+                catch (Exception ex)
+                {
+                    errorMsg.Add($"CSys of Surface No.{rfSfc.No} caused an error! " + ex.Message);
+                }
+            }            
         }
         public static RFSurface SetRFSfc(this IModelData data, ref RFSurface rfSfc, ref List<RFNode> existingNodes, ref List<RFLine> existingLines, ref int lastNoNo, ref int lastLineNo, ref int lastSfcNo)
         {
@@ -723,6 +741,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             {
                 data.SetSurface(rfSfc);
             }
+            // Set input axes in case not default option
+            if (rfSfc.SurfaceAxes != null && rfSfc.SurfaceAxes.SurfaceAxesDirection != SurfaceAxesDirection.UnknownSurfaceAxesDirection
+                && rfSfc.SurfaceAxes.SurfaceAxesDirection != SurfaceAxesDirection.StandardSurfaceAxesDirection)
+            {
+                data.GetSurface(rfSfc.No, ItemAt.AtNo).SetInputAxes(rfSfc.SurfaceAxes);
+            }
+            
+            // Return RFSfc
             return rfSfc;
         }
 
@@ -1555,12 +1581,28 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             if (!(rFMat.No == 0))
             {
                 data.SetMaterial(rFMat);
+                if (rFMat.ModelType == MaterialModelType.OrthotropicElastic2DType)
+                {
+                    var modelOrthoElastic = data.GetMaterial(rFMat.No, ItemAt.AtNo).GetModel() as IMaterialOrthotropicElasticModel;
+                    if (modelOrthoElastic != null)
+                    {
+                        modelOrthoElastic.SetData(rFMat);
+                    }                    
+                }
                 return rFMat;
             }
             // Set node without provided index number
             lastNo += 1;
             rFMat.No = lastNo;
             data.SetMaterial(rFMat);
+            if (rFMat.ModelType == MaterialModelType.OrthotropicElastic2DType)
+            {
+                var modelOrthoElastic = data.GetMaterial(rFMat.No, ItemAt.AtNo).GetModel() as IMaterialOrthotropicElasticModel;
+                if (modelOrthoElastic != null)
+                {
+                    modelOrthoElastic.SetData(rFMat);
+                }
+            }
             return rFMat;
         }
 

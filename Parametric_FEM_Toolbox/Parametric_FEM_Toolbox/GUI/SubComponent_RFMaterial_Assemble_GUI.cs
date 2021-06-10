@@ -46,11 +46,11 @@ namespace Parametric_FEM_Toolbox.GUI
             GH_ExtendableMenu gH_ExtendableMenu = new GH_ExtendableMenu(0, "advanced");
             gH_ExtendableMenu.Name = "Advanced";
             gH_ExtendableMenu.Collapse();
-            unit.RegisterInputParam(new Param_Number(), "Elasticity Modulus [N/m²]", "E", "Elasticity Modulus [N/m²]", GH_ParamAccess.item);
+            unit.RegisterInputParam(new Param_Number(), "Elasticity Modulus [kN/cm²]", "E", "Elasticity Modulus [kN/cm²]", GH_ParamAccess.item);
             unit.Inputs[3].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Number(), "Poisson Ratio", "Mu", "Poisson Ratio", GH_ParamAccess.item);
             unit.Inputs[4].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_Number(), "Shear Modulus [N/m²]", "G", "Shear Modulus [N/m²]", GH_ParamAccess.item);
+            unit.RegisterInputParam(new Param_Number(), "Shear Modulus [kN/cm²]", "G", "Shear Modulus [kN/cm²]", GH_ParamAccess.item);
             unit.Inputs[5].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Number(), "Specific Weight [N/m³]", "W", "Specific Weight [N/m³]", GH_ParamAccess.item);
             unit.Inputs[6].Parameter.Optional = true;
@@ -66,18 +66,50 @@ namespace Parametric_FEM_Toolbox.GUI
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[8]);
             unit.AddMenu(gH_ExtendableMenu);
 
-            GH_ExtendableMenu gH_ExtendableMenu2 = new GH_ExtendableMenu(1, "modify");
+            GH_ExtendableMenu gH_ExtendableMenu1 = new GH_ExtendableMenu(1, "ortho_elastic");
+            gH_ExtendableMenu1.Name = "Ortho Elastic";
+            gH_ExtendableMenu1.Collapse();
+            unit.RegisterInputParam(new Param_Number(), "ElasticityModulusX [kN/cm²]", "Ex", "ElasticityModulusX [kN/cm²]", GH_ParamAccess.item);
+            unit.Inputs[9].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Number(), "ElasticityModulusY [kN/cm²]", "Ey", "ElasticityModulusY [kN/cm²]", GH_ParamAccess.item);
+            unit.Inputs[10].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Number(), "ElasticityModulusZ [kN/cm²]", "Ez", "ElasticityModulusZ [kN/cm²]", GH_ParamAccess.item);
+            unit.Inputs[11].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Number(), "Poisson Ratio XY", "Vxy", "Poisson Ratio XY", GH_ParamAccess.item);
+            unit.Inputs[12].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Number(), "Poisson Ratio XZ", "Vxz", "Poisson Ratio XZ", GH_ParamAccess.item);
+            unit.Inputs[13].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Number(), "Poisson Ratio YZ", "Vyz", "Poisson Ratio YZ", GH_ParamAccess.item);
+            unit.Inputs[14].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Number(), "Shear Modulus XY [kN/cm²]", "Gxy", "Shear Modulus XY [kN/cm²]", GH_ParamAccess.item);
+            unit.Inputs[15].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Number(), "Shear Modulus XZ [kN/cm²]", "Gxz", "Shear Modulus XZ [kN/cm²]", GH_ParamAccess.item);
+            unit.Inputs[16].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Number(), "Shear Modulus YZ [kN/cm²]", "Gyz", "Shear Modulus YZ [kN/cm²]", GH_ParamAccess.item);
+            unit.Inputs[17].Parameter.Optional = true;
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[9]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[10]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[11]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[12]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[13]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[14]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[15]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[16]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[17]);
+            unit.AddMenu(gH_ExtendableMenu1);
+
+            GH_ExtendableMenu gH_ExtendableMenu2 = new GH_ExtendableMenu(2, "modify");
             gH_ExtendableMenu2.Name = "Modify";
             gH_ExtendableMenu2.Collapse();
             unit.RegisterInputParam(new Param_RFEM(), "RF Material", "RF Mat", "Material object from the RFEM model to modify", GH_ParamAccess.item);
-            unit.Inputs[9].Parameter.Optional = true;
+            unit.Inputs[18].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Boolean(), "Modify", "Modify", "Modify object?", GH_ParamAccess.item);
-            unit.Inputs[10].Parameter.Optional = true;
+            unit.Inputs[19].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Boolean(), "Delete", "Delete", "Delete object?", GH_ParamAccess.item);
-            unit.Inputs[11].Parameter.Optional = true;
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[9]);
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[10]);
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[11]);
+            unit.Inputs[20].Parameter.Optional = true;
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[18]);
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[19]);
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[20]);
             unit.AddMenu(gH_ExtendableMenu2);
 
             unit.RegisterOutputParam(new Param_RFEM(), "RF Material", "RF Mat", "Output RFMaterial.");
@@ -101,9 +133,19 @@ namespace Parametric_FEM_Toolbox.GUI
             var Mu = 0.0;
             var G = 0.0;
             var Gamma = 0.0;
+            // Orthotropic Elastic
+            var ex = 0.0;
+            var ey = 0.0;
+            var ez = 0.0;
+            var vxy = 0.0;
+            var vxz = 0.0;
+            var vyz = 0.0;
+            var gxy = 0.0;
+            var gxz = 0.0;
+            var gyz = 0.0;
 
 
-            if (DA.GetData(9, ref inRFEM))
+            if (DA.GetData(18, ref inRFEM))
             {
                 rfMaterial = new RFMaterial((RFMaterial)inRFEM.Value);
                 if (DA.GetData(0, ref description))
@@ -114,6 +156,7 @@ namespace Parametric_FEM_Toolbox.GUI
             else if (DA.GetData(0, ref description))
             {
                 rfMaterial.Description = description;
+                rfMaterial.ModelType = MaterialModelType.IsotropicLinearElasticType;
             }
             else
             {
@@ -121,11 +164,11 @@ namespace Parametric_FEM_Toolbox.GUI
                 level = GH_RuntimeMessageLevel.Warning;
                 return;
             }
-            if (DA.GetData(10, ref mod))
+            if (DA.GetData(19, ref mod))
             {
                 rfMaterial.ToModify = mod;
             }
-            if (DA.GetData(11, ref del))
+            if (DA.GetData(20, ref del))
             {
                 rfMaterial.ToDelete = del;
             }
@@ -161,7 +204,23 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                 rfMaterial.Gamma = Gamma;
             }
-            DA.SetData(0, rfMaterial);
+            // Orthotropic
+            if (DA.GetData(9, ref ex) | DA.GetData(10, ref ey) | DA.GetData(11, ref ez) |
+                DA.GetData(12, ref vxy) | DA.GetData(13, ref vxz) | DA.GetData(14, ref vyz) |
+                DA.GetData(15, ref gxy) | DA.GetData(16, ref gxz) | DA.GetData(17, ref gyz) )
+            {
+                rfMaterial.ModelType = MaterialModelType.OrthotropicElastic2DType;
+                rfMaterial.ElasticityModulusX = ex;
+                rfMaterial.ElasticityModulusY = ey;
+                rfMaterial.ElasticityModulusZ = ez;
+                rfMaterial.PoissonRatioXY = vxy;
+                rfMaterial.PoissonRatioYZ = vyz;
+                rfMaterial.PoissonRatioXZ = vxz;
+                rfMaterial.ShearModulusXY = gxy;
+                rfMaterial.ShearModulusXZ = gxz;
+                rfMaterial.ShearModulusYZ = gyz;
+            }
+                DA.SetData(0, rfMaterial);
         }
     }
 }

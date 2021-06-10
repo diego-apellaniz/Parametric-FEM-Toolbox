@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace Parametric_FEM_Toolbox.UIWidgets
 {
@@ -55,7 +56,9 @@ namespace Parametric_FEM_Toolbox.UIWidgets
             {
                 if (_expanded)
                 {
-                    int num = Math.Max(inputs.Count, outputs.Count) * 20;
+                    int num = Math.Max(inputs.Count, outputs.Count) * 20; 
+
+                    
                     if (num > 0)
                     {
                         num += 5;
@@ -89,6 +92,7 @@ namespace Parametric_FEM_Toolbox.UIWidgets
             if (!_expanded)
             {
                 _expanded = true;
+
             }
         }
         public void Collapse()
@@ -96,6 +100,7 @@ namespace Parametric_FEM_Toolbox.UIWidgets
             if (_expanded)
             {
                 _expanded = false;
+
             }
         }
         public void AddControl(GH_Attr_Widget control)
@@ -142,6 +147,9 @@ namespace Parametric_FEM_Toolbox.UIWidgets
                     _activeControl = null;
                 }
                 _expanded = !_expanded;
+
+                Layout();  //daq =)
+
                 return GH_ObjectResponse.Handled;
             }
             if (_expanded)

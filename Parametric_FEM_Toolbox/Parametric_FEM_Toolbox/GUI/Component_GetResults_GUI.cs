@@ -68,6 +68,7 @@ namespace Parametric_FEM_Toolbox.GUI
         private MenuCheckBox _memberForcesCheck;
         private MenuCheckBox _surfaceForcesCheck;
         private MenuCheckBox _nodalReactionsCheck;
+        private MenuCheckBox _lineReactionsCheck;
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -191,9 +192,14 @@ namespace Parametric_FEM_Toolbox.GUI
             _nodalReactionsCheck.ValueChanged += _nodalReactionsCheck__valueChanged;
             _nodalReactionsCheck.Active = true;
             _nodalReactionsCheck.Header = "Add nodal reactions to output results.";
+            _lineReactionsCheck = new MenuCheckBox(3, "check line reactions", "Line Reactions");
+            _lineReactionsCheck.ValueChanged += _lineReactionsCheck__valueChanged;
+            _lineReactionsCheck.Active = true;
+            _lineReactionsCheck.Header = "Add line reactions to output results.";
             menuPanel2.AddControl(_memberForcesCheck);
             menuPanel2.AddControl(_surfaceForcesCheck);
             menuPanel2.AddControl(_nodalReactionsCheck);
+            menuPanel2.AddControl(_lineReactionsCheck);
             gH_ExtendableMenu3.AddControl(menuPanel2);
 
             // Advanced
@@ -256,6 +262,13 @@ namespace Parametric_FEM_Toolbox.GUI
         }
 
         private void _nodalReactionsCheck__valueChanged(object sender, EventArgs e)
+        {
+            _ = ((MenuCheckBox)sender).Active;
+            _resetLC = true; // Get results
+            setModelProps();
+        }
+
+        private void _lineReactionsCheck__valueChanged(object sender, EventArgs e)
         {
             _ = ((MenuCheckBox)sender).Active;
             _resetLC = true; // Get results
@@ -519,7 +532,8 @@ namespace Parametric_FEM_Toolbox.GUI
                     _memberdisplacementsByType = GetMemberDisplacementsByType(result_type);
                     // Get analysis results
                     outResults = new RFResults(_lcresults, _saveddata, iLoadCase,
-                        _memberForcesCheck.Active, _surfaceForcesCheck.Active, _nodalReactionsCheck.Active);
+                        _memberForcesCheck.Active, _surfaceForcesCheck.Active, _nodalReactionsCheck.Active,
+                        _lineReactionsCheck.Active);
                     // Set _resetLC to false again
                     _resetLC = false;                    
                 }
@@ -533,7 +547,8 @@ namespace Parametric_FEM_Toolbox.GUI
                     _memberdisplacementsByType = GetMemberDisplacementsByType(result_type);
                     // Get analysis results
                     outResults = new RFResults(_lcresults, _saveddata, iLoadCase,
-                        _memberForcesCheck.Active, _surfaceForcesCheck.Active, _nodalReactionsCheck.Active);
+                        _memberForcesCheck.Active, _surfaceForcesCheck.Active, _nodalReactionsCheck.Active,
+                        _lineReactionsCheck.Active);
                     // Set _resetType to false again
                     _resetResultType = false;
                 }
@@ -787,7 +802,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("a9cb88ef-e194-445f-876a-298a2dd7ba4f"); }
+            get { return new Guid("a9a23955-8876-4572-9e12-6ea6c2b9913d"); }
         }
     }
 }
