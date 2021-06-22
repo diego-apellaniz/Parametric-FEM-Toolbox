@@ -49,7 +49,6 @@ namespace Parametric_FEM_Toolbox.GUI
             pManager.AddVectorParameter("Forces", "F", "Member Forces [kN]", GH_ParamAccess.tree);
             pManager.AddVectorParameter("Moments", "M", "Member Moments [kNm]", GH_ParamAccess.tree);
             pManager.AddTextParameter("Results Flag", "Flag", "Results Flag", GH_ParamAccess.tree);            
-            pManager.AddTextParameter("Results Type", "Type", "Results Value Type", GH_ParamAccess.list);
 
             // Sometimes you want to hide a specific parameter from the Rhino preview.
             // You can use the HideParameter() method as a quick way:
@@ -109,10 +108,16 @@ namespace Parametric_FEM_Toolbox.GUI
                     var path1 = new GH_Path(i,j);
                     var path2 = new GH_Path(i);
                     treeNo.Add(member_forces.Branch(i)[j].MemberNo, path2);
-                    treeLoc.AddRange(member_forces.Branch(i)[j].Location, path1);
-                    treeF.AddRange(member_forces.Branch(i)[j].Forces, path1);
-                    treeM.AddRange(member_forces.Branch(i)[j].Moments, path1);                    
-                    treeType.AddRange(member_forces.Branch(i)[j].Type, path1);
+                    for (int k = 0; k < member_forces.Branch(i)[j].Location.Count; k++)
+                    {
+                        if(member_forces.Branch(i)[j].Type[k] == rfResults[i].ResultType)
+                        {
+
+                        }
+                        treeLoc.Add(member_forces.Branch(i)[j].Location[k], path1);
+                        treeF.Add(member_forces.Branch(i)[j].Forces[k], path1);
+                        treeM.Add(member_forces.Branch(i)[j].Moments[k], path1);
+                    }
                     treeFlag.Add(member_forces.Branch(i)[j].Flag.ToString(), path2);
                 }                
             }
@@ -123,7 +128,6 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetDataTree(2, treeF);
             DA.SetDataTree(3, treeM);
             DA.SetDataTree(4, treeFlag);
-            DA.SetDataTree(5, treeType);
         }
 
         /// <summary>

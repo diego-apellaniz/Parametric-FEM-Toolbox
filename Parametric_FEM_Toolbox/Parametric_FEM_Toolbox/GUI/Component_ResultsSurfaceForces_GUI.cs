@@ -49,8 +49,7 @@ namespace Parametric_FEM_Toolbox.GUI
 
             pManager.AddIntegerParameter("Surface Number", "No", "Index of the RFEM Surface", GH_ParamAccess.tree);
             pManager.AddPointParameter("Coordinates", "Pt", "Coordinates of results", GH_ParamAccess.tree);
-            pManager.AddIntegerParameter("Location", "Loc", "Location of results", GH_ParamAccess.tree);
-            pManager.AddTextParameter("Type", "Type", "Results Type", GH_ParamAccess.tree);
+            pManager.AddIntegerParameter("Location", "Loc", "Location of results", GH_ParamAccess.tree);            
             pManager.AddNumberParameter("AxialForceAlphaM", "αm", "Axial force αm [kN/m]", GH_ParamAccess.tree);
             pManager.AddNumberParameter("AxialForceN1", "n1", "Axial force n1 [kN/m]", GH_ParamAccess.tree);
             pManager.AddNumberParameter("AxialForceN2", "n2", "Axial force n2 [kN/m]", GH_ParamAccess.tree);
@@ -163,36 +162,42 @@ namespace Parametric_FEM_Toolbox.GUI
                     var path = new GH_Path(i, j);
                     var path2 = new GH_Path(i);
                     treeNo.Add(sfc_forces.Branch(i)[j].SurfaceNo, path2);
-                    treeCoor.AddRange(sfc_forces.Branch(i)[j].Location, path);
-                    treeLoc.AddRange(sfc_forces.Branch(i)[j].LocationNo, path);
-                    treeType.AddRange(sfc_forces.Branch(i)[j].Type, path);
-                    axialForceAlphaM.AddRange(sfc_forces.Branch(i)[j].AxialForceAlphaM, path);
-                    axialForceN1.AddRange(sfc_forces.Branch(i)[j].AxialForceN1, path);
-                    axialForceN2.AddRange(sfc_forces.Branch(i)[j].AxialForceN2, path);
-                    axialForceNcD.AddRange(sfc_forces.Branch(i)[j].AxialForceNcD, path);
-                    axialForceNx.AddRange(sfc_forces.Branch(i)[j].AxialForceNx, path);
-                    axialForceNxD.AddRange(sfc_forces.Branch(i)[j].AxialForceNxD, path);
-                    axialForceNxy.AddRange(sfc_forces.Branch(i)[j].AxialForceNxy, path);
-                    axialForceNy.AddRange(sfc_forces.Branch(i)[j].AxialForceNy, path);
-                    axialForceNyD.AddRange(sfc_forces.Branch(i)[j].AxialForceNyD, path);
-                    axialForceVMaxM.AddRange(sfc_forces.Branch(i)[j].AxialForceVMaxM, path);
-                    momentAlphaB.AddRange(sfc_forces.Branch(i)[j].MomentAlphaB, path);
-                    momentM1.AddRange(sfc_forces.Branch(i)[j].MomentM1, path);
-                    momentM2.AddRange(sfc_forces.Branch(i)[j].MomentM2, path);
-                    momentMcDNegative.AddRange(sfc_forces.Branch(i)[j].MomentMcDNegative, path);
-                    momentMcDPositive.AddRange(sfc_forces.Branch(i)[j].MomentMcDPositive, path);
-                    momentMx.AddRange(sfc_forces.Branch(i)[j].MomentMx, path);
-                    momentMxDNegative.AddRange(sfc_forces.Branch(i)[j].MomentMxDNegative, path);
-                    momentMxDPositive.AddRange(sfc_forces.Branch(i)[j].MomentMxDPositive, path);
-                    momentMxy.AddRange(sfc_forces.Branch(i)[j].MomentMxy, path);
-                    momentMy.AddRange(sfc_forces.Branch(i)[j].MomentMy, path);
-                    momentMyDNegative.AddRange(sfc_forces.Branch(i)[j].MomentMyDNegative, path);
-                    momentMyDPositive.AddRange(sfc_forces.Branch(i)[j].MomentMyDPositive, path);
-                    momentTMaxB.AddRange(sfc_forces.Branch(i)[j].MomentTMaxB, path);
-                    shearForceBetaB.AddRange(sfc_forces.Branch(i)[j].ShearForceBetaB, path);
-                    shearForceVMaxB.AddRange(sfc_forces.Branch(i)[j].ShearForceVMaxB, path);
-                    shearForceVx.AddRange(sfc_forces.Branch(i)[j].ShearForceVx, path);
-                    shearForceVy.AddRange(sfc_forces.Branch(i)[j].ShearForceVy, path);
+                    for (int k = 0; k < sfc_forces.Branch(i)[j].Location.Count; k++)
+                    {
+                        if (sfc_forces.Branch(i)[j].Type[k] == rfResults[i].ResultType)
+                        {
+                            treeCoor.Add(sfc_forces.Branch(i)[j].Location[k], path);
+                            treeLoc.Add(sfc_forces.Branch(i)[j].LocationNo[k], path);
+                            treeType.Add(sfc_forces.Branch(i)[j].Type[k], path);
+                            axialForceAlphaM.Add(sfc_forces.Branch(i)[j].AxialForceAlphaM[k], path);
+                            axialForceN1.Add(sfc_forces.Branch(i)[j].AxialForceN1[k], path);
+                            axialForceN2.Add(sfc_forces.Branch(i)[j].AxialForceN2[k], path);
+                            axialForceNcD.Add(sfc_forces.Branch(i)[j].AxialForceNcD[k], path);
+                            axialForceNx.Add(sfc_forces.Branch(i)[j].AxialForceNx[k], path);
+                            axialForceNxD.Add(sfc_forces.Branch(i)[j].AxialForceNxD[k], path);
+                            axialForceNxy.Add(sfc_forces.Branch(i)[j].AxialForceNxy[k], path);
+                            axialForceNy.Add(sfc_forces.Branch(i)[j].AxialForceNy[k], path);
+                            axialForceNyD.Add(sfc_forces.Branch(i)[j].AxialForceNyD[k], path);
+                            axialForceVMaxM.Add(sfc_forces.Branch(i)[j].AxialForceVMaxM[k], path);
+                            momentAlphaB.Add(sfc_forces.Branch(i)[j].MomentAlphaB[k], path);
+                            momentM1.Add(sfc_forces.Branch(i)[j].MomentM1[k], path);
+                            momentM2.Add(sfc_forces.Branch(i)[j].MomentM2[k], path);
+                            momentMcDNegative.Add(sfc_forces.Branch(i)[j].MomentMcDNegative[k], path);
+                            momentMcDPositive.Add(sfc_forces.Branch(i)[j].MomentMcDPositive[k], path);
+                            momentMx.Add(sfc_forces.Branch(i)[j].MomentMx[k], path);
+                            momentMxDNegative.Add(sfc_forces.Branch(i)[j].MomentMxDNegative[k], path);
+                            momentMxDPositive.Add(sfc_forces.Branch(i)[j].MomentMxDPositive[k], path);
+                            momentMxy.Add(sfc_forces.Branch(i)[j].MomentMxy[k], path);
+                            momentMy.Add(sfc_forces.Branch(i)[j].MomentMy[k], path);
+                            momentMyDNegative.Add(sfc_forces.Branch(i)[j].MomentMyDNegative[k], path);
+                            momentMyDPositive.Add(sfc_forces.Branch(i)[j].MomentMyDPositive[k], path);
+                            momentTMaxB.Add(sfc_forces.Branch(i)[j].MomentTMaxB[k], path);
+                            shearForceBetaB.Add(sfc_forces.Branch(i)[j].ShearForceBetaB[k], path);
+                            shearForceVMaxB.Add(sfc_forces.Branch(i)[j].ShearForceVMaxB[k], path);
+                            shearForceVx.Add(sfc_forces.Branch(i)[j].ShearForceVx[k], path);
+                            shearForceVy.Add(sfc_forces.Branch(i)[j].ShearForceVy[k], path);
+                        }
+                    }
                 }
             }
 
@@ -200,34 +205,33 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetDataTree(0, treeNo);
             DA.SetDataTree(1, treeCoor);
             DA.SetDataTree(2, treeLoc);
-            DA.SetDataTree(3, treeType);
-            DA.SetDataTree(4, axialForceAlphaM);
-            DA.SetDataTree(5, axialForceN1);
-            DA.SetDataTree(6, axialForceN2);
-            DA.SetDataTree(7, axialForceNcD);
-            DA.SetDataTree(8, axialForceNx);
-            DA.SetDataTree(9, axialForceNxD);
-            DA.SetDataTree(10, axialForceNxy);
-            DA.SetDataTree(11, axialForceNy);
-            DA.SetDataTree(12, axialForceNyD);
-            DA.SetDataTree(13, axialForceVMaxM);
-            DA.SetDataTree(14, momentAlphaB);
-            DA.SetDataTree(15, momentM1);
-            DA.SetDataTree(16, momentM2);
-            DA.SetDataTree(17, momentMcDNegative);
-            DA.SetDataTree(18, momentMcDPositive);
-            DA.SetDataTree(19, momentMx);
-            DA.SetDataTree(20, momentMxDNegative);
-            DA.SetDataTree(21, momentMxDPositive);
-            DA.SetDataTree(22, momentMxy);
-            DA.SetDataTree(23, momentMy);
-            DA.SetDataTree(24, momentMyDNegative);
-            DA.SetDataTree(25, momentMyDPositive);
-            DA.SetDataTree(26, momentTMaxB);
-            DA.SetDataTree(27, shearForceBetaB);
-            DA.SetDataTree(28, shearForceVMaxB);
-            DA.SetDataTree(29, shearForceVx);
-            DA.SetDataTree(30, shearForceVy);
+            DA.SetDataTree(3, axialForceAlphaM);
+            DA.SetDataTree(4, axialForceN1);
+            DA.SetDataTree(5, axialForceN2);
+            DA.SetDataTree(6, axialForceNcD);
+            DA.SetDataTree(7, axialForceNx);
+            DA.SetDataTree(8, axialForceNxD);
+            DA.SetDataTree(9, axialForceNxy);
+            DA.SetDataTree(10, axialForceNy);
+            DA.SetDataTree(11, axialForceNyD);
+            DA.SetDataTree(12, axialForceVMaxM);
+            DA.SetDataTree(13, momentAlphaB);
+            DA.SetDataTree(14, momentM1);
+            DA.SetDataTree(15, momentM2);
+            DA.SetDataTree(16, momentMcDNegative);
+            DA.SetDataTree(17, momentMcDPositive);
+            DA.SetDataTree(18, momentMx);
+            DA.SetDataTree(19, momentMxDNegative);
+            DA.SetDataTree(20, momentMxDPositive);
+            DA.SetDataTree(21, momentMxy);
+            DA.SetDataTree(22, momentMy);
+            DA.SetDataTree(23, momentMyDNegative);
+            DA.SetDataTree(24, momentMyDPositive);
+            DA.SetDataTree(25, momentTMaxB);
+            DA.SetDataTree(26, shearForceBetaB);
+            DA.SetDataTree(27, shearForceVMaxB);
+            DA.SetDataTree(28, shearForceVx);
+            DA.SetDataTree(29, shearForceVy);
         }
 
         /// <summary>
@@ -261,7 +265,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("df9e7012-2731-47d4-987c-6e3ae4c6fb52"); }
+            get { return new Guid("f9304ed3-1dad-4671-a8eb-909a4b586856"); }
         }
     }
 }

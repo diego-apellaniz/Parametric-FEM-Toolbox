@@ -33,6 +33,7 @@ namespace Parametric_FEM_Toolbox.GUI
         DataTree<Vector3d> _memberdisplacementsByType = new DataTree<Vector3d>();
         List<Curve> _deformedMembers = new List<Curve>();
         List<int> _memberNo = new List<int>();
+        bool _deformation_results = false;
 
         //private List<string> _loadCases = new List<string>();
         //private List<string> _loadCombos = new List<string>();
@@ -43,7 +44,7 @@ namespace Parametric_FEM_Toolbox.GUI
         private int _countCases = 0;
         private int _countCombos = 0;
         private int _countRcombos = 0;
-        private List<ResultsValueType> _resultTypes = new List<ResultsValueType>();
+        private HashSet<ResultsValueType> _resultTypes = new HashSet<ResultsValueType>();
         ICalculation _results = null;
         IFeMesh _rfemMesh = null;
         IResults _lcresults = null;
@@ -65,6 +66,7 @@ namespace Parametric_FEM_Toolbox.GUI
         private string _lastLoadCase;
         private int _lastType;
         private bool _restoreDropDown;
+        private MenuCheckBox _deformationsCheck;
         private MenuCheckBox _memberForcesCheck;
         private MenuCheckBox _surfaceForcesCheck;
         private MenuCheckBox _nodalReactionsCheck;
@@ -177,25 +179,32 @@ namespace Parametric_FEM_Toolbox.GUI
             // Select results
             GH_ExtendableMenu gH_ExtendableMenu3 = new GH_ExtendableMenu(3, "Select Results");
             gH_ExtendableMenu3.Name = "Select Results";
+            gH_ExtendableMenu3.Expand();
             evaluationUnit.AddMenu(gH_ExtendableMenu3);
             MenuPanel menuPanel2 = new MenuPanel(2, "panel_results");
             menuPanel2.Header = "Select output results.\n";
-            _memberForcesCheck = new MenuCheckBox(0, "check member forces", "Member Forces");
+
+            _deformationsCheck = new MenuCheckBox(0, "deformations", "Deformation");
+            _deformationsCheck.ValueChanged += _deformationsCheck__valueChanged;
+            _deformationsCheck.Active = true;
+            _deformationsCheck.Header = "Display deformed shape.";
+            _memberForcesCheck = new MenuCheckBox(1, "check member forces", "Member Forces");
             _memberForcesCheck.ValueChanged += _memberForcesCheck__valueChanged;
             _memberForcesCheck.Active = true;
             _memberForcesCheck.Header = "Add member forces to output results.";
-            _surfaceForcesCheck = new MenuCheckBox(1, "check surface forces", "Surface Forces");
+            _surfaceForcesCheck = new MenuCheckBox(2, "check surface forces", "Surface Forces");
             _surfaceForcesCheck.ValueChanged += _surfaceForcesCheck__valueChanged;
             _surfaceForcesCheck.Active = true;
             _surfaceForcesCheck.Header = "Add surface forces to output results.";
-            _nodalReactionsCheck = new MenuCheckBox(2, "check nodal reactions", "Nodal Reactions");
+            _nodalReactionsCheck = new MenuCheckBox(3, "check nodal reactions", "Nodal Reactions");
             _nodalReactionsCheck.ValueChanged += _nodalReactionsCheck__valueChanged;
             _nodalReactionsCheck.Active = true;
             _nodalReactionsCheck.Header = "Add nodal reactions to output results.";
-            _lineReactionsCheck = new MenuCheckBox(3, "check line reactions", "Line Reactions");
+            _lineReactionsCheck = new MenuCheckBox(4, "check line reactions", "Line Reactions");
             _lineReactionsCheck.ValueChanged += _lineReactionsCheck__valueChanged;
             _lineReactionsCheck.Active = true;
             _lineReactionsCheck.Header = "Add line reactions to output results.";
+            menuPanel2.AddControl(_deformationsCheck);
             menuPanel2.AddControl(_memberForcesCheck);
             menuPanel2.AddControl(_surfaceForcesCheck);
             menuPanel2.AddControl(_nodalReactionsCheck);
@@ -244,6 +253,28 @@ namespace Parametric_FEM_Toolbox.GUI
             _ = (MenuDropDown)sender;
             _resetResultType = true;
             _resultDropLastValue = _resulttypeDrop.Value;
+            setModelProps();
+        }
+
+        private void _deformationsCheck__valueChanged(object sender, EventArgs e)
+        {
+            var box_state = ((MenuCheckBox)sender).Active;
+            if (!box_state)
+            {
+                _resulttypeDrop.Clear();
+                _feMeshes.Clear();
+                _meshdisplacements.Clear();
+                _meshdisplacementsByType.Clear();
+                _deformedMeshes.Clear();
+                _controlPoints.Clear();
+                _memberdisplacements.Clear();
+                _memberdisplacementsByType.Clear();
+                _deformedMembers.Clear();
+                _sfcNo.Clear();
+                _memberNo.Clear();
+            }
+            _resetLC = true; // Get results
+
             setModelProps();
         }
 
@@ -304,28 +335,29 @@ namespace Parametric_FEM_Toolbox.GUI
             _loadDrop.Value = _loadDropLastValue;
         }
 
-        private void updateDropDownMenu2(List<ResultsValueType> _results, ref int result_type)
+        private void updateDropDownMenu2(List<ResultsValueType> resulttypes, ref int result_type)
         {
-            _resulttypeDrop.VisibleItemCount = Math.Min(10, _results.Count); // Maximum visible items = 10
+            _resulttypeDrop.VisibleItemCount = Math.Min(10, resulttypes.Count); // Maximum visible items = 10
             //int value = 0;
             //if (_results.Count == _resulttypeDrop.Items.Count)
             //{
             //    value = _resulttypeDrop.Value;
             //}
             _resulttypeDrop.Clear();
-            if (_results.Count > 0)
+            if (resulttypes.Count > 0)
             {
-                for (int i = 0; i < _results.Count; i++)
+                for (int i = 0; i < resulttypes.Count; i++)
                 {
-                    _resulttypeDrop.AddItem(((int)_results[i]).ToString(), _results[i].ToString());
+                    _resulttypeDrop.AddItem(((int)resulttypes[i]).ToString(), resulttypes[i].ToString());
                 }
                 //if (_resulttypeDrop.Items.Count > value)
                 //{
                 //    _resulttypeDrop.Value = value;
                 //}
+                _resulttypeDrop.Value = _resultDropLastValue;
+                result_type = Int32.Parse(_resulttypeDrop.Items[_resulttypeDrop.Value].name);
             }
-            _resulttypeDrop.Value = _resultDropLastValue;
-            result_type = Int32.Parse(_resulttypeDrop.Items[_resulttypeDrop.Value].name);
+            
         }
 
         /// <summary>
@@ -383,11 +415,19 @@ namespace Parametric_FEM_Toolbox.GUI
                         _lastType = 0;
                         _restoreDropDown = true;
                     }
-                    // Get members
-                    _rfMembers = Component_GetData.GetRFMembers(data.GetMembers().ToList(), data);
-                    // Get Fe Meshes from RFEM
-                    _rfemMesh = _results.GetFeMesh();
-                    _feMeshes = CreateFEMeshes(ref msg);
+                    // Get deformed shape?
+                    if (_deformationsCheck.Active)
+                    {
+                        _deformation_results = true;
+                        // Get members
+                        _rfMembers = Component_GetData.GetRFMembers(data.GetMembers().ToList(), data);
+                        // Get Fe Meshes from RFEM
+                        _rfemMesh = _results.GetFeMesh();
+                        _feMeshes = CreateFEMeshes(ref msg);
+                    }else
+                    {
+                        _deformation_results = false;
+                    }
                  
                     // Disconnect RFEM
                     Component_GetData.DisconnectRFEM(ref model, ref data);
@@ -419,6 +459,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     _deformedMembers.Clear();
                     _sfcNo.Clear();
                     _memberNo.Clear();
+                    _deformation_results = false;
                     throw ex;
                 }
             }
@@ -441,7 +482,7 @@ namespace Parametric_FEM_Toolbox.GUI
                             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Provide Valid Result Type.");
                             return;
                         }
-                        result_type_name = Enum.GetName(typeof(ResultsValueType), result_type);
+                        result_type_name = Enum.GetName(typeof(ResultsValueType), result_type);                        
                         if (_lastLoadCase != iLoadCase || _lastType != result_type) // otherwise execution comes from change in scale and no need to reset load case
                         {
                             _resetLC = true;
@@ -498,7 +539,6 @@ namespace Parametric_FEM_Toolbox.GUI
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"{iLoadCase} has no results. Provide valid load case.");
                         return;
                     }
-                    var lcresultsraster = _results.GetResultsInRasterPoints(LoadingType.LoadCaseType, no);
                     if (value < _countCases)
                     {
                         _lcresults = _results.GetResultsInFeNodes(LoadingType.LoadCaseType, no);     
@@ -517,25 +557,35 @@ namespace Parametric_FEM_Toolbox.GUI
                         msg.Add("Load case or combo not found");
                         return;
                     }
-                    // Update drop down menu of result types
-                    _resultTypes = new List<ResultsValueType>();                    
+                    // Get analysis results
+                    _resultTypes = new HashSet<ResultsValueType>();
+                    outResults = new RFResults(_lcresults, _saveddata, ref _resultTypes, iLoadCase,
+                        _memberForcesCheck.Active, _surfaceForcesCheck.Active, _nodalReactionsCheck.Active,
+                        _lineReactionsCheck.Active);                    
                     // Get deformations
-                    _meshdisplacements = GetMeshDisplacements(ref _sfcNo, ref msg);
-                    _memberdisplacements = GetMemberDisplacements(ref _memberNo, ref msg);
-                    //Get results by type
+                    if (_deformationsCheck.Active)
+                    {
+                        if (!_deformation_results)
+                        {
+                            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Run component again to get deformation results.");
+                        }
+                        else
+                        {
+                            _meshdisplacements = GetMeshDisplacements(ref _sfcNo, ref msg);
+                            _memberdisplacements = GetMemberDisplacements(ref _memberNo, ref msg);
+                            _meshdisplacementsByType = GetMeshDisplacementsByType(result_type);
+                            _memberdisplacementsByType = GetMemberDisplacementsByType(result_type);
+                        }
+                    }
+                    // Update drop down menu of result types                    
                     if (result_type == 0) // if no value obtaines through overwrite
                     {
                         _resultDropLastValue = 0;
-                        updateDropDownMenu2(_resultTypes.Distinct().ToList(), ref result_type);
+                        updateDropDownMenu2(_resultTypes.ToList(), ref result_type);
                     }
-                    _meshdisplacementsByType = GetMeshDisplacementsByType(result_type);
-                    _memberdisplacementsByType = GetMemberDisplacementsByType(result_type);
-                    // Get analysis results
-                    outResults = new RFResults(_lcresults, _saveddata, iLoadCase,
-                        _memberForcesCheck.Active, _surfaceForcesCheck.Active, _nodalReactionsCheck.Active,
-                        _lineReactionsCheck.Active);
                     // Set _resetLC to false again
-                    _resetLC = false;                    
+                    _resetLC = false;
+                    _resetResultType = true;
                 }
                 if(_resetResultType) // when there are changes in drop down menu
                 {
@@ -543,12 +593,16 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         result_type = Int32.Parse(_resulttypeDrop.Items[_resulttypeDrop.Value].name);
                     }
-                    _meshdisplacementsByType = GetMeshDisplacementsByType(result_type);
-                    _memberdisplacementsByType = GetMemberDisplacementsByType(result_type);
+                    if (_deformationsCheck.Active)
+                    {                                          
+                        _meshdisplacementsByType = GetMeshDisplacementsByType(result_type);
+                        _memberdisplacementsByType = GetMemberDisplacementsByType(result_type);
+                    }
                     // Get analysis results
-                    outResults = new RFResults(_lcresults, _saveddata, iLoadCase,
-                        _memberForcesCheck.Active, _surfaceForcesCheck.Active, _nodalReactionsCheck.Active,
-                        _lineReactionsCheck.Active);
+                    if(result_type>0)
+                    {
+                        outResults.ResultType = ((ResultsValueType)result_type).ToString();
+                    }
                     // Set _resetType to false again
                     _resetResultType = false;
                 }
@@ -640,7 +694,10 @@ namespace Parametric_FEM_Toolbox.GUI
             sfcNo = new List<int>();
             // Save defoirmation vectors into a tree
             var surfaceResults = _lcresults.GetSurfacesDeformations(false).OrderBy(o => o.LocationNo); // Sort according to nodes so there are no errors when applying displacements
-            _resultTypes.AddRange(surfaceResults.Select(x => x.Type));
+            foreach (var resulttype in surfaceResults.Select(x => x.Type).Distinct())
+            {
+                _resultTypes.Add(resulttype);
+            }            
             foreach (var result in surfaceResults) // GET RESULT TYPES!!!
             {
                 var gh_path = new GH_Path(result.SurfaceNo, (int)result.Type);
@@ -712,8 +769,11 @@ namespace Parametric_FEM_Toolbox.GUI
                 _controlPoints.EnsurePath(pts_path);
                 var baseline = member.BaseLine.ToCurve(); 
                 // Get deformations
-                var memberResults = _lcresults.GetMemberDeformations(member.No, ItemAt.AtNo, MemberAxesType.GlobalAxes); // We can't sort this list      
-                _resultTypes.AddRange(memberResults.Select(x => x.Type));
+                var memberResults = _lcresults.GetMemberDeformations(member.No, ItemAt.AtNo, MemberAxesType.GlobalAxes); // We can't sort this list    
+                foreach (var resulttype in memberResults.Select(x => x.Type).Distinct())
+                {
+                    _resultTypes.Add(resulttype);
+                }
                 var valueType = memberResults[0].Type; // Get deformation types to avoid duplicate control points 
                 memberNo.Add(member.No);
                 foreach (var result in memberResults)

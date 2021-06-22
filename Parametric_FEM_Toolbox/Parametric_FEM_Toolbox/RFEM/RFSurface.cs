@@ -115,6 +115,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         public string IntegratedNodeList { get; set; }
         public int MaterialNo { get; set; }
         public bool SetIntegratedObjects { get; set; }
+
         public SurfaceStiffnessType StiffnessType { get; set; }
         public SurfaceThicknessType ThicknessType { get; set; }
         public double Thickness { get; set; }       
@@ -133,15 +134,15 @@ namespace Parametric_FEM_Toolbox.RFEM
         public override string ToString()
         {
             return string.Format($"RFEM-Surface;No:{No};Area:{Area}[m2];MaterialNo:{MaterialNo};" +
-                $"Thickness:{Thickness}[m];Type:{GeometryType};ThicknessType:{ThicknessType};StiffnessType:{StiffnessType};BoundaryLineCount:{BoundaryLineCount};SurfaceAxesDirection:{SurfaceAxes.SurfaceAxesDirection};" +
-                $"BoundaryLineList:{((BoundaryLineList == "") ? "-" : BoundaryLineList)};Eccentricity:{Eccentricity};" +
-                $"IntegratedLineCount:{IntegratedLineCount};IntegratedLineList:{((IntegratedLineList == "") ? "-" : IntegratedLineList)};" +
-                $"IntegratedNodeCount:{IntegratedNodeCount};IntegratedNodeList:{((IntegratedNodeList == "") ? "-" : IntegratedNodeList)};" +
-                $"SetIntegratedObjects:{SetIntegratedObjects};ControlPoints:{ControlPoints.ToLabelString()};Tag:{((Tag == "") ? "-" : Tag)};" +
+                $"Thickness:{Thickness}[m];Type:{GeometryType};ThicknessType:{ThicknessType};StiffnessType:{StiffnessType};BoundaryLineCount:{BoundaryLineCount};" +
+                $"BoundaryLineList:{((String.IsNullOrEmpty(BoundaryLineList)) ? "-" : BoundaryLineList.EmptyIfNull())};Eccentricity:{Eccentricity};" +
+                $"IntegratedLineCount:{IntegratedLineCount};IntegratedLineList:{((String.IsNullOrEmpty(IntegratedLineList)) ? "-" : IntegratedLineList.EmptyIfNull())};" +
+                $"IntegratedNodeCount:{IntegratedNodeCount};IntegratedNodeList:{((String.IsNullOrEmpty(IntegratedNodeList)) ? "-" : IntegratedNodeList.EmptyIfNull())};" +
+                $"SetIntegratedObjects:{SetIntegratedObjects};ControlPoints:{((ControlPoints == null) ? "-" : ControlPoints.ToLabelString())};Tag:{((String.IsNullOrEmpty(Tag)) ? "-" : Tag)};" +
                 //$"Weights:{(Weights.ToString())};KnotsX:{(KnotsX.ToLabelString())};KnotsY:{(KnotsY.ToLabelString())};" +
                 //$"OrderU:{(OrderX.ToString())};OrderV:{(OrderY.ToString())};" +
-                $"IsValid:{IsValid};IsGenerated:{IsGenerated};ID:{((ID == "") ? "-" : ID)};" +
-                $"ToModify:{ToModify};ToDelete:{ToDelete};Comment:{((Comment == "") ? "-" : Comment)};");
+                $"IsValid:{IsValid};IsGenerated:{IsGenerated};ID:{((String.IsNullOrEmpty(ID)) ? "-" : ID)};" +
+                $"ToModify:{ToModify};ToDelete:{ToDelete};Comment:{((String.IsNullOrEmpty(Comment)) ? "-" : Comment.EmptyIfNull())};");
         }
 
         //Operator to retrieve a Line from an rfLine.

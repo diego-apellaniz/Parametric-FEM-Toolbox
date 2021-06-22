@@ -1703,7 +1703,6 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     errorMsg.Add($"Import of Nodal Load No.{rfLoad.No} failed! " + ex.Message);
                 }
             }
-
         }
 
         public static RFNodalLoad SetRFNodalLoad(this IModelData data, ILoadCase loadcase, ref RFNodalLoad rfNodalLoad, ref List<RFNode> existingNodes, ref int lastNo, ref int lastNLNo, double tol)

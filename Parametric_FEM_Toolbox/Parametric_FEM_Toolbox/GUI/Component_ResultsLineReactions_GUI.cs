@@ -1,6 +1,7 @@
 ﻿using Grasshopper;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
+using Parametric_FEM_Toolbox.GUI;
 using Parametric_FEM_Toolbox.RFEM;
 using Rhino.Geometry;
 using System;
@@ -49,7 +50,6 @@ namespace Parametric_FEM_Toolbox.GUI
             pManager.AddVectorParameter("Forces", "F", "Reaction Forces [kN]", GH_ParamAccess.tree);
             pManager.AddVectorParameter("Moments", "M", "Reaction Moments [kNm]", GH_ParamAccess.tree);
             pManager.AddTextParameter("Results Flag", "Flag", "Results Flag", GH_ParamAccess.tree);            
-            pManager.AddTextParameter("Results Type", "Type", "Results Value Type", GH_ParamAccess.list);
 
             // Sometimes you want to hide a specific parameter from the Rhino preview.
             // You can use the HideParameter() method as a quick way:
@@ -109,10 +109,15 @@ namespace Parametric_FEM_Toolbox.GUI
                     var path1 = new GH_Path(i,j);
                     var path2 = new GH_Path(i);
                     treeNo.Add(support_forces.Branch(i)[j].LineNo, path2);
-                    treeLoc.AddRange(support_forces.Branch(i)[j].Location, path1);
-                    treeF.AddRange(support_forces.Branch(i)[j].Forces, path1);
-                    treeM.AddRange(support_forces.Branch(i)[j].Moments, path1);                    
-                    treeType.AddRange(support_forces.Branch(i)[j].Type, path1);
+                    for (int k = 0; k < support_forces.Branch(i)[j].Location.Count; k++)
+                    {
+                        if(support_forces.Branch(i)[j].Type[k] == rfResults[i].ResultType)
+                        {
+                            treeLoc.Add(support_forces.Branch(i)[j].Location[k], path1);
+                            treeF.Add(support_forces.Branch(i)[j].Forces[k], path1);
+                            treeM.Add(support_forces.Branch(i)[j].Moments[k], path1);
+                        }
+                    }
                     treeFlag.Add(support_forces.Branch(i)[j].Flag.ToString(), path2);
                 }                
             }
@@ -123,7 +128,6 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetDataTree(2, treeF);
             DA.SetDataTree(3, treeM);
             DA.SetDataTree(4, treeFlag);
-            DA.SetDataTree(5, treeType);
         }
 
         /// <summary>
@@ -157,7 +161,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("32254ac4-9fbe-400d-8b1a-f05756cddc4f"); }
+            get { return new Guid("d216ddd1-61c8-4c22-af07-31e58c22dbdc"); }
         }
     }
 }

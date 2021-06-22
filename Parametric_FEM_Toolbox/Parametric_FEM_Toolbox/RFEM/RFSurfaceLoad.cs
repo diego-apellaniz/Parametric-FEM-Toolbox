@@ -83,7 +83,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         public override string ToString()
         {
             return string.Format($"RFEM-SurfaceLoad;No:{No};LoadCase:{LoadCase};" +
-                 $"F1:{Magnitude1.ToString("0.00")}[kN/m²];F2:{Magnitude2.ToString("0.00")}[kN/m²];F3:{Magnitude3.ToString("0.00")}[kN/m²];" +
+                $"F1:{Magnitude1.ToString("0.00")}[kN/m²];F2:{Magnitude2.ToString("0.00")}[kN/m²];F3:{Magnitude3.ToString("0.00")}[kN/m²];" +
                 $"T4:{Magnitude4.ToString("0.00")};T5:{Magnitude5.ToString("0.00")};T6:{Magnitude6.ToString("0.00")};" +
                 $"Node1No:{Node1No.ToString()};Node2No:{Node2No.ToString()};Node3No:{Node3No.ToString()};" +
                 $"LoadType:{LoadType.ToString()};LoadDistType:{LoadDistType.ToString()};LoadDirType:{LoadDirType.ToString()};" +

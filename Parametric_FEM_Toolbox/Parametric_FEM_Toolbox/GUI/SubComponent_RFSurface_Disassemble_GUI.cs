@@ -49,6 +49,7 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterOutputParam(new Param_String(), "Geometry Type", "GType", "Geometry Type");
             unit.RegisterOutputParam(new Param_String(), "Thickness Type", "ThType", "Thickness Type");
             unit.RegisterOutputParam(new Param_String(), "Stiffness Type", "SType", "Stiffness Type");
+            unit.RegisterOutputParam(new Param_Number(), "Eccentricty [m]", "Ecc", "Surface eccentricity [m]");
             unit.RegisterOutputParam(new Param_Number(), "Area [m²]", "A", "Surface area");
 
             GH_ExtendableMenu gH_ExtendableMenu = new GH_ExtendableMenu(0, "advanced");
@@ -58,10 +59,10 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterOutputParam(new Param_String(), "Direction", "Dir", "Axes Direction");
             unit.RegisterOutputParam(new Param_String(), "Line Index", "Line", "Line Index");
             unit.RegisterOutputParam(new Param_Number(), "Rotation [rad]", "Rot", "Angular rotation [rad]");
-            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[10]);
             gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[11]);
             gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[12]);
             gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[13]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[14]);
             unit.AddMenu(gH_ExtendableMenu);
         }
 
@@ -87,13 +88,14 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetData(6, rfSurface.GeometryType);
             DA.SetData(7, rfSurface.ThicknessType);
             DA.SetData(8, rfSurface.StiffnessType);
-            DA.SetData(9, rfSurface.Area);
+            DA.SetData(9, rfSurface.Eccentricity);
+            DA.SetData(10, rfSurface.Area);
             if (rfSurface.SurfaceAxes != null)
             {
-                DA.SetData(10, rfSurface.Axes);
-                DA.SetData(11, rfSurface.SurfaceAxes.SurfaceAxesDirection.ToString());
-                DA.SetData(12, rfSurface.SurfaceAxes.AxesLineList);
-                DA.SetData(13, rfSurface.SurfaceAxes.Rotation);
+                DA.SetData(11, rfSurface.Axes);
+                DA.SetData(12, rfSurface.SurfaceAxes.SurfaceAxesDirection.ToString());
+                DA.SetData(13, rfSurface.SurfaceAxes.AxesLineList);
+                DA.SetData(14, rfSurface.SurfaceAxes.Rotation);
             }
         }
     }

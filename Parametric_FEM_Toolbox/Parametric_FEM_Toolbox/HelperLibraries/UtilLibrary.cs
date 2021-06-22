@@ -203,7 +203,10 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return false;
         }
 
-
+        public static string EmptyIfNull(this string self)
+        {
+            return self ?? "";
+        }
 
 
         #endregion

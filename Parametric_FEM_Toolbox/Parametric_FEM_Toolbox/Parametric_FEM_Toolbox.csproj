@@ -113,8 +113,12 @@
     <Compile Include="GUI\Component_ExtrudeMembers_GUI.cs" />
     <Compile Include="GUI\Component_LCA_GUI.cs" />
     <Compile Include="GUI\Component_ResultsLineReactions_GUI.cs" />
+    <Compile Include="Deprecated\Component_ResultsLineReactions_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\Component_ResultsMemberForces_GUI_OBSOLETE.cs" />
+    <Compile Include="Deprecated\Component_ResultsMemberForces_GUI_OBSOLETE_2.cs" />
+    <Compile Include="Deprecated\Component_ResultsNodeReactions_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\Component_ResultsNodeReactions_GUI.cs" />
+    <Compile Include="Deprecated\Component_ResultsSurfaceForces_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\Component_ResultsSurfaceForces_GUI.cs" />
     <Compile Include="GUI\Component_ResultsMemberForces_GUI.cs" />
     <Compile Include="Deprecated\Component_RFLineSupport_GUI_OBSOLETE.cs" />
