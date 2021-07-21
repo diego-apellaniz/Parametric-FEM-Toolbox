@@ -73,16 +73,16 @@
     </Reference>
     <Reference Include="GH_IO, Version=7.6.21127.19001, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\GH_IO.dll</HintPath>
+      <HintPath>C:\Program Files\Rhino 6\Plug-ins\Grasshopper\GH_IO.dll</HintPath>
     </Reference>
     <Reference Include="Grasshopper, Version=7.6.21127.19001, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
+      <HintPath>C:\Program Files\Rhino 6\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="RhinoCommon, Version=7.6.21127.19001, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Rhino 7\System\RhinoCommon.dll</HintPath>
+      <HintPath>C:\Program Files\Rhino 6\System\RhinoCommon.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -109,6 +109,7 @@
     <Compile Include="Deprecated\Component_FilterData_GUI_OBSOLETE_3.cs" />
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_5.cs" />
     <Compile Include="Deprecated\Component_GetResults_GUI_OBSOLETE_2.cs" />
+    <Compile Include="Deprecated\Component_GetResults_GUI_OBSOLETE_3.cs" />
     <Compile Include="GUI\Component_GetResults_GUI.cs" />
     <Compile Include="GUI\Component_ExtrudeMembers_GUI.cs" />
     <Compile Include="GUI\Component_LCA_GUI.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Deprecated\Component_RFLineSupport_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\Component_RFFreeLineLoad_GUI.cs" />
     <Compile Include="Deprecated\Component_RFMaterial_GUI_OBSOLETE_2.cs" />
+    <Compile Include="Deprecated\Component_RFMember_GUI_OBSOLETE_4.cs" />
     <Compile Include="GUI\Component_RFNodalRelease_GUI.cs" />
     <Compile Include="GUI\Component_RFMemberHinge_GUI.cs" />
     <Compile Include="Deprecated\Component_RFNodalSupport_GUI_OBSOLETE.cs" />
@@ -205,6 +207,8 @@
     <Compile Include="GUI\SubComponent_RFFreeLineLoad_Disassemble_GUI.cs" />
     <Compile Include="Deprecated\SubComponent_RFMaterial_Assemble_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\SubComponent_RFMaterial_Disassemble_GUI_OBSOLETE.cs" />
+    <Compile Include="Deprecated\SubComponent_RFMember_Assemble_GUI_OBSOLETE_2.cs" />
+    <Compile Include="Deprecated\SubComponent_RFMember_Disassemble_GUI_OBSOLETE_3.cs" />
     <Compile Include="GUI\SubComponent_RFNodalRelease_Disassemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFNodalRelease_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFMemberHinge_Disassemble_GUI.cs" />
@@ -315,6 +319,8 @@
     <Compile Include="UIWidgets\GH_SwitchAction.cs" />
     <Compile Include="UIWidgets\GH_SwitcherComponent.cs" />
     <Compile Include="UIWidgets\MenuCheckBox.cs" />
+    <Compile Include="UIWidgets\MenuRadioButton.cs" />
+    <Compile Include="UIWidgets\MenuRadioButtonGroup.cs" />
     <Compile Include="UIWidgets\MenuSlider.cs" />
     <Compile Include="UIWidgets\MenuStaticText.cs" />
     <Compile Include="UIWidgets\RuntimeComponentData.cs" />

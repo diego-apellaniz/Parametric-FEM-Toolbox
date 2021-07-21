@@ -442,6 +442,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 var effectiveLengths = data.GetMember(m.No, ItemAt.AtNo).GetEffectiveLengths();
                 var outMember = new RFMember(m, rfLine, effectiveLengths.FactorY, effectiveLengths.FactorZ);
                 outMember.SetFrames();
+                if (outMember.Type == MemberType.ResultBeamType)
+                {
+                    var resultbeam = data.GetMember(outMember.No, ItemAt.AtNo).GetExtraData() as IResultBeam;
+                    if (resultbeam != null)
+                    {
+                        outMember.SetResultBeam(resultbeam.GetData());
+                    }
+                }
                 rfMembers.Add(outMember);
             }
             return rfMembers;

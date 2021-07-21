@@ -148,7 +148,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("696e1767-3b83-474f-8df6-f943d247e0df"); }
+            get { return new Guid("cd20e5d4-4bcb-4237-ac42-7b3b1397fa66"); }
         }
     }
 }

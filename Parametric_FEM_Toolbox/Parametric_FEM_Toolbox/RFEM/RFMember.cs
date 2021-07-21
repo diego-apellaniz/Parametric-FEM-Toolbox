@@ -5,6 +5,7 @@ using Rhino.Geometry;
 using Parametric_FEM_Toolbox.Utilities;
 using Parametric_FEM_Toolbox.HelperLibraries;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Parametric_FEM_Toolbox.RFEM
 {
@@ -62,7 +63,18 @@ namespace Parametric_FEM_Toolbox.RFEM
             if (other.BaseLine != null)
             {
                 BaseLine = new RFLine(other.BaseLine);
-            }            
+            }
+            if (other.Type == MemberType.ResultBeamType)
+            {
+                ExceptMembers = other.ExceptMembers;
+                ExceptSolids = other.ExceptSolids;
+                ExceptSurfaces = other.ExceptSurfaces;
+                IncludeMembers = other.IncludeMembers;
+                IncludeSolids = other.IncludeSolids;
+                IncludeSurfaces = other.IncludeSurfaces;
+                Integrate = other.Integrate;
+                Parameters = other.Parameters;
+            }
             Frames = other.Frames;
         }
 
@@ -93,6 +105,16 @@ namespace Parametric_FEM_Toolbox.RFEM
         public int RibNo { get; set; }
         public double Kcry { get; set; }
         public double Kcrz { get; set; }
+        // Additional properties for Result Beams
+        public string ExceptMembers { get; set; }
+        public string ExceptSolids { get; set; }
+        public string ExceptSurfaces { get; set; }
+        public string IncludeMembers { get; set; }
+        public string IncludeSolids { get; set; }
+        public string IncludeSurfaces { get; set; }
+        public IntegrateStressesAndForcesType Integrate { get; set; }
+        public List<double> Parameters { get; set; }
+
         // Additional Properties to the RFEM Struct
         public RFLine BaseLine { get; set; }
         public List<Plane> Frames { get; set; }
@@ -145,6 +167,42 @@ namespace Parametric_FEM_Toolbox.RFEM
             myMember.NonlinearityNo = member.NonlinearityNo;
             myMember.RibNo = member.RibNo;
             return myMember;
+        }
+
+
+        public static implicit operator ResultBeam(RFMember member)
+        {
+            var myResultBeam = new ResultBeam
+            {
+                No = member.No,
+                ExceptMembers = member.ExceptMembers,
+                ExceptSolids = member.ExceptSolids,
+                ExceptSurfaces = member.ExceptSurfaces,
+                IncludeMembers = member.IncludeMembers,
+                IncludeSolids = member.IncludeSolids,
+                IncludeSurfaces = member.IncludeSurfaces,
+                Integrate = member.Integrate,                
+            };
+            if (member.Parameters != null)
+            {
+                myResultBeam.Parameters = member.Parameters.ToArray();
+            }
+            return myResultBeam;
+        }
+
+        public void SetResultBeam(ResultBeam beam)
+        {
+            ExceptMembers = beam.ExceptMembers;
+            ExceptSolids = beam.ExceptSolids;
+            ExceptSurfaces = beam.ExceptSurfaces;
+            IncludeMembers = beam.IncludeMembers;
+            IncludeSolids = beam.IncludeSolids;
+            IncludeSurfaces = beam.IncludeSurfaces;
+            Integrate = beam.Integrate;
+            if (beam.Parameters != null)
+            {
+                Parameters = beam.Parameters.ToList();
+            }
         }
 
         //Set Frames

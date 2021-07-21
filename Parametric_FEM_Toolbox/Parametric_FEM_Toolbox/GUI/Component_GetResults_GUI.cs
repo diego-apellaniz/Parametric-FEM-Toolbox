@@ -71,6 +71,9 @@ namespace Parametric_FEM_Toolbox.GUI
         private MenuCheckBox _surfaceForcesCheck;
         private MenuCheckBox _nodalReactionsCheck;
         private MenuCheckBox _lineReactionsCheck;
+        private MenuRadioButtonGroup _tagGrp;
+        MenuRadioButton buttonLocal;
+        MenuRadioButton buttonGlobal;
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -184,6 +187,25 @@ namespace Parametric_FEM_Toolbox.GUI
             MenuPanel menuPanel2 = new MenuPanel(2, "panel_results");
             menuPanel2.Header = "Select output results.\n";
 
+            _tagGrp = new MenuRadioButtonGroup(0, "radiogrp_tags");
+            _tagGrp.Direction = MenuRadioButtonGroup.LayoutDirection.Vertical;
+            _tagGrp.ValueChanged += _tagGrp__valueChanged;
+            _tagGrp.MaxActive = 1;
+            _tagGrp.MinActive = 1;
+            buttonLocal = new MenuRadioButton(0, "radio_local", "Local", MenuRadioButton.Alignment.Horizontal)
+            {
+                Name = "Local",
+                Active = true
+            };
+            buttonGlobal = new MenuRadioButton(1, "radio_global", "Global", MenuRadioButton.Alignment.Horizontal)
+            {
+                Name = "Global",
+                Active = false
+            };
+            _tagGrp.AddButton(buttonLocal);
+            _tagGrp.AddButton(buttonGlobal);
+            menuPanel2.AddControl(_tagGrp);
+
             _deformationsCheck = new MenuCheckBox(0, "deformations", "Deformation");
             _deformationsCheck.ValueChanged += _deformationsCheck__valueChanged;
             _deformationsCheck.Active = true;
@@ -209,6 +231,10 @@ namespace Parametric_FEM_Toolbox.GUI
             menuPanel2.AddControl(_surfaceForcesCheck);
             menuPanel2.AddControl(_nodalReactionsCheck);
             menuPanel2.AddControl(_lineReactionsCheck);
+            
+
+            
+
             gH_ExtendableMenu3.AddControl(menuPanel2);
 
             // Advanced
@@ -302,6 +328,12 @@ namespace Parametric_FEM_Toolbox.GUI
         private void _lineReactionsCheck__valueChanged(object sender, EventArgs e)
         {
             _ = ((MenuCheckBox)sender).Active;
+            _resetLC = true; // Get results
+            setModelProps();
+        }
+
+        private void _tagGrp__valueChanged(object sender, EventArgs e)
+        {
             _resetLC = true; // Get results
             setModelProps();
         }
@@ -559,7 +591,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     }
                     // Get analysis results
                     _resultTypes = new HashSet<ResultsValueType>();
-                    outResults = new RFResults(_lcresults, _saveddata, ref _resultTypes, iLoadCase,
+                    outResults = new RFResults(_lcresults, _saveddata, buttonLocal.Active, ref _resultTypes, iLoadCase,
                         _memberForcesCheck.Active, _surfaceForcesCheck.Active, _nodalReactionsCheck.Active,
                         _lineReactionsCheck.Active);                    
                     // Get deformations
@@ -862,7 +894,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("a9a23955-8876-4572-9e12-6ea6c2b9913d"); }
+            get { return new Guid("3baaede4-78f0-4427-8b09-432f37824c49"); }
         }
     }
 }

@@ -58,6 +58,29 @@ namespace Parametric_FEM_Toolbox.RFEM
             ToDelete = false;
         }
 
+        public RFResults(IResults results, IModelData data, bool local, ref HashSet<ResultsValueType> result_types, string loadcase, bool member_forces, bool surface_forces, bool reaction_forces, bool line_reaction_forces) // rfem object as array because they are related to the same member
+        {
+            LoadCase = loadcase;
+            if (member_forces)
+            {
+                MemberForces = GetRFMemberForces(results, data, ref result_types);
+            }
+            if (surface_forces)
+            {
+                SurfaceForces = GetRFSurfaceForces(results, data, ref result_types);
+            }
+            if (reaction_forces)
+            {
+                NodalSupportForces = GetRFNodalSupportForces(results, data, ref result_types, local);
+            }
+            if (line_reaction_forces)
+            {
+                LineSupportForces = GetRFLineSupportForces(results, data, ref result_types, local);
+            }
+            ToModify = false;
+            ToDelete = false;
+        }
+
         //Testing
         //public RFResults(IResults results, IResults results_raster, IModelData data, string loadcase, bool member_forces, bool surface_forces, bool reaction_forces):this(results, data, loadcase, member_forces, surface_forces, reaction_forces)
         //{
@@ -160,6 +183,17 @@ namespace Parametric_FEM_Toolbox.RFEM
             return myForces;
         }
 
+        public List<RFNodalSupportForces> GetRFNodalSupportForces(IResults results, IModelData data, ref HashSet<ResultsValueType> types, bool local)
+        {
+            var myForces = new List<RFNodalSupportForces>();
+            foreach (var nodalsupportforce in results.GetAllNodalSupportForces(local))
+            {
+                myForces.Add(new RFNodalSupportForces(nodalsupportforce, data));
+                types.Add(nodalsupportforce.Type);
+            }
+            return myForces;
+        }
+
         public List<RFLineSupportForces> GetRFLineSupportForces(IResults results, IModelData data)
         {
             var myForces = new List<RFLineSupportForces>();
@@ -182,6 +216,24 @@ namespace Parametric_FEM_Toolbox.RFEM
                 foreach (var line in linesupport.LineList.ToInt())
                 {
                     var forces = results.GetLineSupportForces(line, ItemAt.AtNo, false);
+                    myForces.Add(new RFLineSupportForces(forces));
+                    foreach (var type in forces.Select(x => x.Type).Distinct())
+                    {
+                        types.Add(type);
+                    }
+                }
+            }
+            return myForces;
+        }
+
+        public List<RFLineSupportForces> GetRFLineSupportForces(IResults results, IModelData data, ref HashSet<ResultsValueType> types, bool local)
+        {
+            var myForces = new List<RFLineSupportForces>();
+            foreach (var linesupport in data.GetLineSupports())
+            {
+                foreach (var line in linesupport.LineList.ToInt())
+                {
+                    var forces = results.GetLineSupportForces(line, ItemAt.AtNo, local);
                     myForces.Add(new RFLineSupportForces(forces));
                     foreach (var type in forces.Select(x => x.Type).Distinct())
                     {

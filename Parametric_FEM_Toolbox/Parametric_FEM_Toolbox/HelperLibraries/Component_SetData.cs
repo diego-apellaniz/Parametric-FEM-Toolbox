@@ -492,8 +492,17 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 //efflengths.FactorV = 1;
                 data.GetMember(rfMember.No, ItemAt.AtNo).SetEffectiveLengths(efflengths);
             }
+            if (rfMember.Type == MemberType.ResultBeamType)
+            {
+                var resultbeam = data.GetMember(rfMember.No, ItemAt.AtNo).GetExtraData() as IResultBeam;
+                if (resultbeam != null && rfMember.Integrate != IntegrateStressesAndForcesType.UnknownIntegration)
+                {
+                    resultbeam.SetData(rfMember);
+                }
+            }
             return rfMember;
         }
+
         public static void SetRFSurfaces(this IModelData data, List<GH_RFEM> ghsfcs, ref List<RFSurface> index)
         {
             var newData = false;
@@ -1992,8 +2001,10 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     }
                     else if (rfLoad.ToDelete)
                     {
+                        loadcase.PrepareModification();
                         loadcase.GetFreePolygonLoad(rfLoad.No, ItemAt.AtNo).Delete();
                         index.Add(rfLoad);
+                        loadcase.FinishModification();
                     }
                     else
                     {
