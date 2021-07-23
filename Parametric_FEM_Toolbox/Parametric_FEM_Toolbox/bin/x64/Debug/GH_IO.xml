@@ -407,6 +407,17 @@
             <param name="t">Message type.</param>
             <exception cref="T:System.ArgumentNullException">Thrown if message text is null or empty.</exception>
         </member>
+        <member name="M:GH_IO.Serialization.GH_Chunk.CopyValuesFromChunk(GH_IO.Serialization.GH_Chunk)">
+            <summary>
+            Copy all values and sub-chunks from another chunk.
+            </summary>
+        </member>
+        <member name="M:GH_IO.Serialization.GH_Chunk.CopyValuesToChunk">
+            <summary>
+            Copy all values and sub-chunks in this chunk to another chunk
+            which does not point to the same archive.
+            </summary>
+        </member>
         <member name="F:GH_IO.Serialization.GH_Chunk.m_name">
             <summary>
             Name of this chunk. This field is set only once, during construction.
@@ -2524,6 +2535,14 @@
             and thus cannot store runtime messages.
             </summary>
             <param name="chunk_name">Name of this chunk.</param>
+        </member>
+        <member name="M:GH_IO.Serialization.GH_LooseChunk.#ctor(System.String,System.Int32)">
+            <summary>
+            Create a new loose chunk. A loose chunk does not have an owner archive 
+            and thus cannot store runtime messages.
+            </summary>
+            <param name="chunk_name">Name of this chunk.</param>
+            <param name="chunk_index">Index of this chunk, negative one for no index.</param>
         </member>
         <member name="M:GH_IO.Serialization.GH_LooseChunk.Serialize_Binary">
             <summary>

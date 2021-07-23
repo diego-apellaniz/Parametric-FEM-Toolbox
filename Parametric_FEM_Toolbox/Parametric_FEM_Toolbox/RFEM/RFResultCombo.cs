@@ -31,6 +31,12 @@ namespace Parametric_FEM_Toolbox.RFEM
             ToDelete = false;
         }
 
+        public RFResultCombo(RFResultCombo other) : this((ResultCombination)other)
+        {
+            ToModify = other.ToModify;
+            ToDelete = other.ToDelete;
+        }
+
         //Properties to Wrap Fields from RFEM Struct
         public string Comment { get; set; }
         public string ID { get; set; }

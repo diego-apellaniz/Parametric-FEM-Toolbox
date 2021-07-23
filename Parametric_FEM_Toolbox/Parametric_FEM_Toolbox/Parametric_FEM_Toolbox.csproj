@@ -71,18 +71,18 @@
     <Reference Include="Eto">
       <HintPath>C:\Users\diego\.nuget\packages\eto.forms\2.4.1\lib\netstandard1.0\Eto.dll</HintPath>
     </Reference>
-    <Reference Include="GH_IO, Version=7.6.21127.19001, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
+    <Reference Include="GH_IO, Version=6.34.21034.7001, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Rhino 6\Plug-ins\Grasshopper\GH_IO.dll</HintPath>
+      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\GH_IO.dll</HintPath>
     </Reference>
-    <Reference Include="Grasshopper, Version=7.6.21127.19001, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
+    <Reference Include="Grasshopper, Version=6.34.21034.7001, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Rhino 6\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
+      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="RhinoCommon, Version=7.6.21127.19001, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
+    <Reference Include="RhinoCommon, Version=6.34.21034.7001, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Rhino 6\System\RhinoCommon.dll</HintPath>
+      <HintPath>C:\Program Files\Rhino 7\System\RhinoCommon.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

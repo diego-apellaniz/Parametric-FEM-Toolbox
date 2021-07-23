@@ -14,6 +14,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         // Tolerance for merging nodes closer to this distance [m].
         static double tol = 0.001;
 
+        #region Model Data
         public static void SetRFNodes(this IModelData data, List<GH_RFEM> ghNodes, ref List<RFNode> index)
         {
             var newData = false;
@@ -313,9 +314,6 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             // Remove duplicate points
         }
 
-
-
-
         public static RFLine SetRFLine(this IModelData data, ref RFLine rfLine, ref List<RFNode> existingNodes, ref List<RFLine> existingLines, ref int lastNoNo, ref int lastLineNo)
         {
             var newNodes = false;
@@ -336,8 +334,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     }
                 }
                 rfLine.NodeList = nodeList.Substring(0, nodeList.Length - 1);
-            }
-            
+            }            
             
             // Check if line already exists in RFEM
             if (!newNodes)
@@ -1615,6 +1612,10 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return rFMat;
         }
 
+        #endregion
+
+        #region Load Data
+
         public static void SetRFNodalLoads(this IModelData data, ILoads loads, List<GH_RFEM> ghNodes, ref List<RFNodalLoad> index)
         {
             var newData = false;
@@ -1623,9 +1624,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             var lastNoNo = 0;
             var lastNLNo = 0;
 
-            inNLoads = ghNodes.Select(x => new RFNodalLoad((RFNodalLoad)x.Value)).ToList();
-
-            
+            inNLoads = ghNodes.Select(x => new RFNodalLoad((RFNodalLoad)x.Value)).ToList();            
 
             foreach (var rfLoad in inNLoads)
             {
@@ -2115,6 +2114,10 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return rfLineLoad;
         }
 
+        #endregion
+
+        #region Load Cases and Combos
+
         public static void SetRFLoadCases(this IModelData data, ILoads loads, List<GH_RFEM> ghLoadCases, ref List<RFLoadCase> index, ref List<string> errorMsg)
         {
             var newData = false;
@@ -2174,6 +2177,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 loads.FinishModification();
                 return rfLoadCase;
             }
+
             // Set node without provided index number
             lastLCNo += 1;
             rfLoadCase.No = lastLCNo;
@@ -2325,6 +2329,10 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return rfLoadCombo;
         }
 
+        #endregion
+
+        #region Clear Output
+
         public static void ClearOutput(ref List<RFNode> nodelist, ref List<RFLine> linelist, ref List<RFMember> memberlist,
             ref List<RFSurface> srfclist, ref List<RFOpening> oplist, ref List<RFSupportP> supPlist, ref List<RFSupportL> supLlist,
             ref List<RFLineHinge> lineHingelist, ref List<RFCroSec> croSeclist, ref List<RFMaterial> matlist,
@@ -2460,5 +2468,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             resultComboList.Clear();
             freeLineLoadList.Clear();
         }
+
+        #endregion
     }
 }

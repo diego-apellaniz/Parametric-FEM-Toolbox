@@ -135,19 +135,19 @@ namespace Parametric_FEM_Toolbox.GUI
             if (DA.GetData(4, ref design))
             {
                 rfLoadCcombo.DesignSituation = (DesignSituationType)design;
+                // Check Action Category
+                if (rfLoadCcombo.DesignSituation == DesignSituationType.UnknownDesignSituation)
+                {
+                    msg = "Design Situation Type not supported. ";
+                    level = GH_RuntimeMessageLevel.Warning;
+                    return;
+                }
             }
             if (DA.GetData(5, ref toSolve))
             {
                 rfLoadCcombo.ToSolve = toSolve;
             }
-
-            // Check Action Category
-            if (rfLoadCcombo.DesignSituation == DesignSituationType.UnknownDesignSituation)
-            {
-                msg = "Design Situation Type not supported. ";
-                level = GH_RuntimeMessageLevel.Warning;
-                return;
-            }            
+                  
             DA.SetData(0, rfLoadCcombo);
         }
     }
