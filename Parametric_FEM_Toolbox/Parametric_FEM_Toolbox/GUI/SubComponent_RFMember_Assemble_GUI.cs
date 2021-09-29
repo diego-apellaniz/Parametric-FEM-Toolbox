@@ -171,7 +171,8 @@ namespace Parametric_FEM_Toolbox.GUI
 
             if (DA.GetData(23, ref inRFEM))
             {
-                rFMember = new RFMember((RFMember)inRFEM.Value);
+                var oldRFMember = (RFMember)inRFEM.Value;
+                rFMember = new RFMember(oldRFMember);
                 if (DA.GetData(1, ref sCS))
                 {
                     rFMember.StartCrossSectionNo = sCS;

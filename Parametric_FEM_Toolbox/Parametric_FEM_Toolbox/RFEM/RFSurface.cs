@@ -195,6 +195,8 @@ namespace Parametric_FEM_Toolbox.RFEM
         // Casting to GH Data Types
         public Brep ToBrep()
         {
+            if (Edges == null)
+                return null;
             //if (IsPlanar())
             //{
             //    return ToPlanarBrep();
@@ -273,7 +275,6 @@ namespace Parametric_FEM_Toolbox.RFEM
                     nurbs_surface.Points.SetPoint(u, v, ControlPoints[u, v]);
                 }
             }
-
             if (nurbs_surface.IsValid)
             {
                 return nurbs_surface.ToBrep();
@@ -302,6 +303,9 @@ namespace Parametric_FEM_Toolbox.RFEM
 
         public void GetAxes(IModelData data)
         {
+            if (Edges == null)
+                return;
+
             Point3D pt = new Point3D();
             pt.X = 0.0;
             pt.Y = 0.0;

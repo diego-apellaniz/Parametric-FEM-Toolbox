@@ -29,6 +29,7 @@ namespace Parametric_FEM_Toolbox.GUI
         List<RFSupportL> lineSupNo = new List<RFSupportL>();
         List<RFSupportS> sfcSupNo = new List<RFSupportS>();
         List<RFMemberHinge> memberHingeNo = new List<RFMemberHinge>();
+        List<RFMemberEccentricity> memberEccentricityNo = new List<RFMemberEccentricity>();
         List<RFLineHinge> lineHingeNo = new List<RFLineHinge>();
         List<RFNodalRelease> nodalReleaseNo = new List<RFNodalRelease>();
         List<RFCroSec> croSecNo = new List<RFCroSec>();
@@ -67,32 +68,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            // Use the pManager object to register your input parameters.
-            //pManager.AddParameter(new Param_RFEM(), "Nodes", "Nodes", "Nodes to set in the RFEM Model.", GH_ParamAccess.list);
-            //pManager[0].Optional = true;
-            //pManager.AddParameter(new Param_RFEM(), "Lines", "Lines", "Lines to set in the RFEM Model.", GH_ParamAccess.list);
-            //pManager[1].Optional = true;
-            //pManager.AddParameter(new Param_RFEM(), "Members", "Members", "Members to set in the RFEM Model.", GH_ParamAccess.list);
-            //pManager[2].Optional = true;
-            //pManager.AddParameter(new Param_RFEM(), "Surfaces", "Sfcs", "Surfaces to set in the RFEM Model.", GH_ParamAccess.list);
-            //pManager[3].Optional = true;
-            //pManager.AddParameter(new Param_RFEM(), "Openings", "Ops", "Openings to set in the RFEM Model.", GH_ParamAccess.list);
-            //pManager[4].Optional = true;
-            //pManager.AddParameter(new Param_RFEM(), "Nodal Supports", "NodSup", "Nodal Supports to set in the RFEM Model.", GH_ParamAccess.list);
-            //pManager[5].Optional = true;
-            //pManager.AddParameter(new Param_RFEM(), "Line Supports", "LineSup", "Line Supports to set in the RFEM Model.", GH_ParamAccess.list);
-            //pManager[6].Optional = true;
-            //pManager.AddParameter(new Param_RFEM(), "Line Hinges", "LineHinge", "Line Hinges to set in the RFEM Model.", GH_ParamAccess.list);
-            //pManager[7].Optional = true;
-            //pManager.AddParameter(new Param_RFEM(), "Cross Sections", "CroSec", "Cross Sections to set in the RFEM Model.", GH_ParamAccess.list);
-            //pManager[8].Optional = true;
-            //pManager.AddParameter(new Param_RFEM(), "Materials", "Mat", "Materials to set in the RFEM Model.", GH_ParamAccess.list);
-            //pManager[9].Optional = true;
             pManager.AddBooleanParameter("Run component?", "Run", "If true, the programm is executed.", GH_ParamAccess.item, false);
-            // modelDataCount = pManager.ParamCount;
-            // If you want to change properties of certain parameters, 
-            // you can use the pManager instance to access them by index:
-            // pManager[0].Optional = true;
         }
 
         /// <summary>
@@ -100,21 +76,6 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            // Use the pManager object to register your output parameters.
-            // Output parameters do not have default values, but they too must have the correct access type.
-            //pManager.AddParameter(new Param_RFEM(), "Nodes", "Nodes", "Nodes from the RFEM Model.", GH_ParamAccess.list);
-            //pManager.AddParameter(new Param_RFEM(), "Lines", "Lines", "Lines from the RFEM Model.", GH_ParamAccess.list);
-            //pManager.AddParameter(new Param_RFEM(), "Members", "Members", "Members from the RFEM Model.", GH_ParamAccess.list);
-            //pManager.AddParameter(new Param_RFEM(), "Surfaces", "Sfcs", "Surfaces from the RFEM Model.", GH_ParamAccess.list);
-            //pManager.AddParameter(new Param_RFEM(), "Openings", "Ops", "Openings from the RFEM Model.", GH_ParamAccess.list);
-            //pManager.AddParameter(new Param_RFEM(), "Nodal Supports", "NodSup", "Nodal Supports from in the RFEM Model.", GH_ParamAccess.list);
-            //pManager.AddParameter(new Param_RFEM(), "Line Supports", "LineSup", "Line Supports from in the RFEM Model.", GH_ParamAccess.list);
-            //pManager.AddParameter(new Param_RFEM(), "Line Hinges", "LineHinges", "Line Hinges from in the RFEM Model.", GH_ParamAccess.list);
-            //pManager.AddParameter(new Param_RFEM(), "Cross Sections", "CroSecs", "Cross Sections from in the RFEM Model.", GH_ParamAccess.list);
-            //pManager.AddParameter(new Param_RFEM(), "Material", "Mat", "Materials from the RFEM Model.", GH_ParamAccess.list);
-            // Sometimes you want to hide a specific parameter from the Rhino preview.
-            // You can use the HideParameter() method as a quick way:
-            // pManager.HideParameter(0);
         }
 
         protected override void RegisterEvaluationUnits(EvaluationUnitManager mngr)
@@ -142,14 +103,16 @@ namespace Parametric_FEM_Toolbox.GUI
             evaluationUnit.Inputs[7].Parameter.Optional = true;
             evaluationUnit.RegisterInputParam(new Param_RFEM(), "RF Member Hinges", "RF MemberHinges", "Member Hinges from  the RFEM Model.", GH_ParamAccess.list);
             evaluationUnit.Inputs[8].Parameter.Optional = true;
-            evaluationUnit.RegisterInputParam(new Param_RFEM(), "RF Line Hinges", "RF LineHinges", "Line Hinges from  the RFEM Model.", GH_ParamAccess.list);
+            evaluationUnit.RegisterInputParam(new Param_RFEM(), "RF Member Eccentricities", "RF MemberEcc", "Member Eccentricities from the RFEM Model.", GH_ParamAccess.list);
             evaluationUnit.Inputs[9].Parameter.Optional = true;
-            evaluationUnit.RegisterInputParam(new Param_RFEM(), "RF Nodal Releases", "RF NodalReleases", "Nodal Releases from  the RFEM Model.", GH_ParamAccess.list);
+            evaluationUnit.RegisterInputParam(new Param_RFEM(), "RF Line Hinges", "RF LineHinges", "Line Hinges from  the RFEM Model.", GH_ParamAccess.list);
             evaluationUnit.Inputs[10].Parameter.Optional = true;
-            evaluationUnit.RegisterInputParam(new Param_RFEM(), "RF Cross Sections", "RF CroSecs", "Cross Sections from in the RFEM Model.", GH_ParamAccess.list);
+            evaluationUnit.RegisterInputParam(new Param_RFEM(), "RF Nodal Releases", "RF NodalReleases", "Nodal Releases from  the RFEM Model.", GH_ParamAccess.list);
             evaluationUnit.Inputs[11].Parameter.Optional = true;
-            evaluationUnit.RegisterInputParam(new Param_RFEM(), "RF Materials", "RF Mat", "Materials to set in the RFEM Model.", GH_ParamAccess.list);
+            evaluationUnit.RegisterInputParam(new Param_RFEM(), "RF Cross Sections", "RF CroSecs", "Cross Sections from in the RFEM Model.", GH_ParamAccess.list);
             evaluationUnit.Inputs[12].Parameter.Optional = true;
+            evaluationUnit.RegisterInputParam(new Param_RFEM(), "RF Materials", "RF Mat", "Materials to set in the RFEM Model.", GH_ParamAccess.list);
+            evaluationUnit.Inputs[13].Parameter.Optional = true;
 
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Nodes", "RF Nodes", "Nodes from the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Lines", "RF Lines", "Lines from the RFEM Model.");
@@ -160,6 +123,7 @@ namespace Parametric_FEM_Toolbox.GUI
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Line Supports", "RF LineSup", "Line Supports from the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Surface Supports", "RF SrfcSup", "Surface Supports from  the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Member Hinges", "RF MemberHinges", "Member Hinges from the RFEM Model.");
+            evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Member Eccentricities", "RF MemberEcc", "Member Eccentricities from the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Line Hinges", "RF LineHinges", "Line Hinges from the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Nodal Releases", "RF NodalReleases", "Nodal Releases from the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Cross Sections", "RF CroSecs", "Cross Sections from the RFEM Model.");
@@ -265,6 +229,7 @@ namespace Parametric_FEM_Toolbox.GUI
             var ghSupsL = new List<GH_RFEM>();
             var ghSupsS = new List<GH_RFEM>();
             var ghMHs = new List<GH_RFEM>();
+            var ghEccs = new List<GH_RFEM>();
             var ghLHs = new List<GH_RFEM>();
             var ghNRs = new List<GH_RFEM>();
             var ghCSs = new List<GH_RFEM>();
@@ -292,7 +257,7 @@ namespace Parametric_FEM_Toolbox.GUI
             if (run)
             {
                 Component_SetData.ClearOutput(ref nodesNo, ref linesNo, ref membersNo, ref srfcNo, ref opNo, ref nodSupNo, ref lineSupNo, ref sfcSupNo,
-                    ref memberHingeNo, ref lineHingeNo, ref nodalReleaseNo, ref croSecNo, ref matNo, ref nodalLoadNo, ref lineLoadNo, ref memberLoadNo, ref surfaceLoadNo,
+                    ref memberHingeNo, ref memberEccentricityNo, ref lineHingeNo, ref nodalReleaseNo, ref croSecNo, ref matNo, ref nodalLoadNo, ref lineLoadNo, ref memberLoadNo, ref surfaceLoadNo,
                     ref freeLineLoadNo, ref polyLoadNo, ref loadcaseNo, ref loadcomboNo, ref resultcomboNo);
                 if (!DA.GetData(modelDataCount3+1, ref modelName))
                 {
@@ -305,17 +270,21 @@ namespace Parametric_FEM_Toolbox.GUI
                 {
                     // Set data
                     data.PrepareModification();
-                    if (DA.GetDataList(13, ghMats))
+                    if (DA.GetDataList(14, ghMats))
                     {
                         data.SetRFMaterials(ghMats, ref matNo, ref errorMsg);
                     }
-                    if (DA.GetDataList(12, ghCSs))
+                    if (DA.GetDataList(13, ghCSs))
                     {
                         data.SetRFCroSecs(ghCSs, ref croSecNo, ref errorMsg);
                     }
                     if (DA.GetDataList(9, ghMHs))
                     {
                         data.SetRFMemberHinges(ghMHs, ref memberHingeNo, ref errorMsg);
+                    }
+                    if (DA.GetDataList(10, ghEccs))
+                    {
+                        data.SetRFMemberEccentricities(ghEccs, ref memberEccentricityNo, ref errorMsg);
                     }
                     if (DA.GetDataList(1, ghNodes))
                     {
@@ -349,11 +318,11 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         data.SetRFSupportsS(ghSupsS, ref sfcSupNo, ref errorMsg);
                     }                    
-                    if (DA.GetDataList(10, ghLHs))
+                    if (DA.GetDataList(11, ghLHs))
                     {
                         data.SetRFLineHinges(ghLHs, ref lineHingeNo, ref errorMsg);
                     }
-                    if (DA.GetDataList(11, ghNRs))
+                    if (DA.GetDataList(12, ghNRs))
                     {
                         data.SetRFNodalReleases(ghNRs, ref nodalReleaseNo, ref errorMsg);
                     }
@@ -436,8 +405,8 @@ namespace Parametric_FEM_Toolbox.GUI
                 catch (Exception ex)
                 {
                     Component_SetData.ClearOutput(ref nodesNo, ref linesNo, ref membersNo, ref srfcNo, ref opNo, ref nodSupNo, ref lineSupNo, ref sfcSupNo,
-                        ref memberHingeNo, ref lineHingeNo, ref croSecNo, ref matNo, ref nodalLoadNo, ref lineLoadNo, ref memberLoadNo, ref surfaceLoadNo,
-                        ref polyLoadNo, ref loadcaseNo, ref loadcomboNo, ref resultcomboNo);
+                    ref memberHingeNo, ref memberEccentricityNo, ref lineHingeNo, ref nodalReleaseNo, ref croSecNo, ref matNo, ref nodalLoadNo, ref lineLoadNo, ref memberLoadNo, ref surfaceLoadNo,
+                    ref freeLineLoadNo, ref polyLoadNo, ref loadcaseNo, ref loadcomboNo, ref resultcomboNo);
                     Component_GetData.DisconnectRFEM(ref model, ref data);
                     throw ex;
                 }
@@ -453,19 +422,20 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetDataList(6, lineSupNo);
             DA.SetDataList(7, sfcSupNo);
             DA.SetDataList(8, memberHingeNo);
-            DA.SetDataList(9, lineHingeNo);
-            DA.SetDataList(10, nodalReleaseNo);
-            DA.SetDataList(11, croSecNo);
-            DA.SetDataList(12, matNo);
-            DA.SetDataList(13, nodalLoadNo);
-            DA.SetDataList(14, lineLoadNo);
-            DA.SetDataList(15, memberLoadNo);
-            DA.SetDataList(16, surfaceLoadNo);
-            DA.SetDataList(17, freeLineLoadNo);
-            DA.SetDataList(18, polyLoadNo);
-            DA.SetDataList(19, loadcaseNo);
-            DA.SetDataList(20, loadcomboNo);
-            DA.SetDataList(21, resultcomboNo);
+            DA.SetDataList(9, memberEccentricityNo);
+            DA.SetDataList(10, lineHingeNo);
+            DA.SetDataList(11, nodalReleaseNo);
+            DA.SetDataList(12, croSecNo);
+            DA.SetDataList(13, matNo);
+            DA.SetDataList(14, nodalLoadNo);
+            DA.SetDataList(15, lineLoadNo);
+            DA.SetDataList(16, memberLoadNo);
+            DA.SetDataList(17, surfaceLoadNo);
+            DA.SetDataList(18, freeLineLoadNo);
+            DA.SetDataList(19, polyLoadNo);
+            DA.SetDataList(20, loadcaseNo);
+            DA.SetDataList(21, loadcomboNo);
+            DA.SetDataList(22, resultcomboNo);
 
             if (errorMsg.Count != 0)
             {
@@ -506,7 +476,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("dc35d8eb-dbd8-4122-874a-7d236447bdb6"); }
+            get { return new Guid("87b043e6-715a-4cf4-b4ac-aca9f0e68988"); }
         }
     }
 }

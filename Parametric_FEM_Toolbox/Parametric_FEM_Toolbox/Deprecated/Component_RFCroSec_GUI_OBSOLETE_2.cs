@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 
 namespace Parametric_FEM_Toolbox.Deprecated
 {
-    public class Component_RFCroSec_GUI_OBSOLETE : GH_SwitcherComponent
+    public class Component_RFCroSec_GUI_OBSOLETE_2 : GH_SwitcherComponent
     {
         // Declare class variables outside the method "SolveInstance" so their values persist 
         // when the method is called again.
@@ -28,7 +28,7 @@ namespace Parametric_FEM_Toolbox.Deprecated
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public Component_RFCroSec_GUI_OBSOLETE()
+        public Component_RFCroSec_GUI_OBSOLETE_2()
           : base("RF Cross Section", "RFCroSec", "Creates a RFCroSec object to define new data or modify existing data " +
                 "in the RFEM model.", "B+G Toolbox", "RFEM")
         {

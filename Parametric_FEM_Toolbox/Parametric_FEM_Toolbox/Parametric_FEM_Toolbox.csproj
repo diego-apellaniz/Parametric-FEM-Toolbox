@@ -110,6 +110,7 @@
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_5.cs" />
     <Compile Include="Deprecated\Component_GetResults_GUI_OBSOLETE_2.cs" />
     <Compile Include="Deprecated\Component_GetResults_GUI_OBSOLETE_3.cs" />
+    <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_6.cs" />
     <Compile Include="GUI\Component_GetResults_GUI.cs" />
     <Compile Include="GUI\Component_ExtrudeMembers_GUI.cs" />
     <Compile Include="GUI\Component_LCA_GUI.cs" />
@@ -123,9 +124,11 @@
     <Compile Include="GUI\Component_ResultsSurfaceForces_GUI.cs" />
     <Compile Include="GUI\Component_ResultsMemberForces_GUI.cs" />
     <Compile Include="Deprecated\Component_RFLineSupport_GUI_OBSOLETE.cs" />
+    <Compile Include="Deprecated\Component_RFCroSec_GUI_OBSOLETE_3.cs" />
     <Compile Include="GUI\Component_RFFreeLineLoad_GUI.cs" />
     <Compile Include="Deprecated\Component_RFMaterial_GUI_OBSOLETE_2.cs" />
     <Compile Include="Deprecated\Component_RFMember_GUI_OBSOLETE_4.cs" />
+    <Compile Include="GUI\Component_RFMemberEccentricity_GUI.cs" />
     <Compile Include="GUI\Component_RFNodalRelease_GUI.cs" />
     <Compile Include="GUI\Component_RFMemberHinge_GUI.cs" />
     <Compile Include="Deprecated\Component_RFNodalSupport_GUI_OBSOLETE.cs" />
@@ -177,12 +180,14 @@
     <Compile Include="Deprecated\Component_SetData_GUI_OBSOLETE_3.cs" />
     <Compile Include="Deprecated\Component_SetData_GUI_OBSOLETE_4.cs" />
     <Compile Include="Deprecated\Component_SetData_GUI_OBSOLETE_5.cs" />
+    <Compile Include="Deprecated\Component_SetData_GUI_OBSOLETE_6.cs" />
     <Compile Include="GUI\Component_SetData_GUI.cs" />
     <Compile Include="GUI\Component_GetData_GUI.cs" />
     <Compile Include="Deprecated\Component_RFNode_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\SubComponent_Filter_Members_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\SubComponent_ExtrudeMembers_MESH_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_FreeLineLoads_GUI.cs" />
+    <Compile Include="GUI\SubComponent_Filter_MemberEccentricities_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_NodalReleases_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_MemberHinges_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_ResultCombos_GUI.cs" />
@@ -203,12 +208,16 @@
     <Compile Include="GUI\SubComponent_ExtrudeMembers_NURBS_GUI.cs" />
     <Compile Include="Deprecated\SubComponent_RFLineSupport_Assemble_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\SubComponent_RFLineSupport_Disassemble_GUI_OBSOLETE.cs" />
+    <Compile Include="Deprecated\SubComponent_RFCroSec_Assemble_GUI_OBSOLETE.cs" />
+    <Compile Include="Deprecated\SubComponent_RFCroSec_Disassemble_GUI_OBSOLETE_2.cs" />
     <Compile Include="GUI\SubComponent_RFFreeLineLoad_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFFreeLineLoad_Disassemble_GUI.cs" />
     <Compile Include="Deprecated\SubComponent_RFMaterial_Assemble_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\SubComponent_RFMaterial_Disassemble_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\SubComponent_RFMember_Assemble_GUI_OBSOLETE_2.cs" />
     <Compile Include="Deprecated\SubComponent_RFMember_Disassemble_GUI_OBSOLETE_3.cs" />
+    <Compile Include="GUI\SubComponent_RFMemberEccentricity_Assemble_GUI.cs" />
+    <Compile Include="GUI\SubComponent_RFMemberEccentricity_Disassemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFNodalRelease_Disassemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFNodalRelease_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFMemberHinge_Disassemble_GUI.cs" />
@@ -273,6 +282,7 @@
     <Compile Include="HelperLibraries\Component_GetData.cs" />
     <Compile Include="RFEM\RFFreeLineLoad.cs" />
     <Compile Include="RFEM\RFLineSupportForces.cs" />
+    <Compile Include="RFEM\RFMemberEccentricity.cs" />
     <Compile Include="RFEM\RFNodalRelease.cs" />
     <Compile Include="RFEM\RFNodalSupportForces.cs" />
     <Compile Include="RFEM\RFSurfaceForces.cs" />
@@ -620,6 +630,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Results_LineReactions.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon_RFEM_FilterMemberEccentricity.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Disassemble_MemberEccentricity.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Assemble_MemberEccentricity.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

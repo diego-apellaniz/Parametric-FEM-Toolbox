@@ -95,6 +95,7 @@ namespace Parametric_FEM_Toolbox.GUI
             subcomponents_.Add(new SubComponent_Filter_SupsL_GUI());
             subcomponents_.Add(new SubComponent_Filter_SupsS_GUI());
             subcomponents_.Add(new SubComponent_Filter_MemberHinges_GUI());
+            subcomponents_.Add(new SubComponent_Filter_MemberEccentricities_GUI());
             subcomponents_.Add(new SubComponent_Filter_LineHinges_GUI());
             subcomponents_.Add(new SubComponent_Filter_NodalReleases_GUI());
             subcomponents_.Add(new SubComponent_Filter_CroSecs_GUI());

@@ -437,11 +437,17 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     var myNurbs = data.GetNurbSpline(baseline.No, ItemAt.AtNo).GetExtraData();
                     rfLine = (new RFLine(baseline, baseline.NodeList.ToInt().Select(i => data.GetNode(i, ItemAt.AtNo).GetData().ToPoint3d(data)).ToArray(), myNurbs.Order, myNurbs.Weights, myNurbs.Knots));
                 }
-                //List<Point3d> vertices = new List<Point3d>();
-                //baseline.NodeList.ToInt().ForEach(x => vertices.Add(data.GetNode(x, ItemAt.AtNo).GetData().ToPoint3
-                var effectiveLengths = data.GetMember(m.No, ItemAt.AtNo).GetEffectiveLengths();
-                var outMember = new RFMember(m, rfLine, effectiveLengths.FactorY, effectiveLengths.FactorZ);
-                outMember.SetFrames();
+
+                var imember = data.GetMember(m.No, ItemAt.AtNo);
+                var effectiveLengths = imember.GetEffectiveLengths();
+                var sys1 = imember.GetLocalCoordinateSystem(0).GetData();
+                var sys2 = imember.GetLocalCoordinateSystem(1).GetData();
+                var ecc1 = imember.GetEccentricity(0,false).ToPoint3d();
+                var ecc2 = imember.GetEccentricity(1,false).ToPoint3d();
+                var outMember = new RFMember(m, rfLine, effectiveLengths.FactorY, effectiveLengths.FactorZ, sys1, sys2, ecc1, ecc2);
+
+                //outMember.SetFrames(); // Replace with automatic axis orientation from rfem
+
                 if (outMember.Type == MemberType.ResultBeamType)
                 {
                     var resultbeam = data.GetMember(outMember.No, ItemAt.AtNo).GetExtraData() as IResultBeam;
@@ -1711,6 +1717,131 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
 
         #endregion
 
+        #region MemberEccentricity
+
+        public static List<MemberEccentricity> FilterMEcc(Dlubal.RFEM5.IModelData data, List<RFFilter> filters)
+        {
+            var outEccentricities = new List<MemberEccentricity>();
+            foreach (var n in data.GetMemberEccentricities())
+            {
+                var include = true;
+                foreach (var filter in filters)
+                {
+                    if (!(filter.MEccList is null))
+                    {
+                        if (!filter.MEccList.Contains(n.No))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MEccComment is null))
+                    {
+                        if (!filter.MEccComment.Contains(n.Comment))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MEccReferenceType is null))
+                    {
+                        if (!filter.MEccReferenceType.Contains(n.ReferenceSystem.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MEccVertAl is null))
+                    {
+                        if (!filter.MEccVertAl.Contains(n.VerticalAlignment.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MEccHorAl is null))
+                    {
+                        if (!filter.MEccHorAl.Contains(n.HorizontalAlignment.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MEccX1 is null))
+                    {
+                        var value = n.Start.X*1000;
+                        if (!filter.MEccX1.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MEccY1 is null))
+                    {
+                        var value = n.Start.Y * 1000;
+                        if (!filter.MEccY1.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MEccZ1 is null))
+                    {
+                        var value = n.Start.Z * 1000;
+                        if (!filter.MEccZ1.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MEccX2 is null))
+                    {
+                        var value = n.End.X * 1000;
+                        if (!filter.MEccX2.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MEccY2 is null))
+                    {
+                        var value = n.End.Y * 1000;
+                        if (!filter.MEccY2.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.MEccZ2 is null))
+                    {
+                        var value = n.End.Z * 1000;
+                        if (!filter.MEccZ2.Includes(value))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                }
+                if (!include) continue;
+                outEccentricities.Add(n);
+            }
+            return outEccentricities;
+        }
+
+        public static List<RFMemberEccentricity> GetRFMemberEccentricities(List<MemberEccentricity> eccentricities, IModelData data)
+        {
+            var rfMemberEccentricities = new List<RFMemberEccentricity>();
+            // Get Planesss
+            foreach (var item in eccentricities)
+            {
+                var rfMemberEccentricity = new RFMemberEccentricity(item);
+                rfMemberEccentricities.Add(rfMemberEccentricity);
+            }
+            return rfMemberEccentricities;
+        }
+
+        #endregion
+
         #region Nodal Release
 
         public static List<NodalRelease> FilterNR(Dlubal.RFEM5.IModelData data, List<RFFilter> filters)
@@ -1960,6 +2091,35 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 outCroSec.Add(croSec);
             }
             return outCroSec;
+        }
+
+        public static List<RFCroSec> GetRFCroSecs(List<CrossSection> croSecs, IModel model, IModelData data, ref List<string> msg)
+        {
+            // Use Dlubal.RFEM3 to get shapes of cross sections
+            IrfStructure IStructure = (IrfStructure)model;
+            IStructure.rfGetApplication().rfLockLicence();
+            IrfStructuralData data2 = IStructure.rfGetStructuralData();
+            IrfDatabaseCrSc db = data2.rfGetDatabaseCrSc();
+
+            var rfCroSecs = new List<RFCroSec>();
+            foreach (var cs in croSecs)
+            {
+                var csRFEM5 = new RFCroSec(cs);
+                IrfCrossSectionDB2 csRFEM3 = db.rfGetCrossSection(cs.Description) as IrfCrossSectionDB2;
+                try
+                {
+                    var cscrvs = csRFEM3.rfGetShape();
+                    csRFEM5.SetShape(cscrvs);
+                    csRFEM5.SetShapeGeometry(db, data, cs);
+                }
+                catch
+                {
+                    msg.Add($"Shape of Cross Section No. {cs.No} not supported!");
+                }
+                rfCroSecs.Add(csRFEM5);
+            }
+            IStructure.rfGetApplication().rfUnlockLicence();
+            return rfCroSecs;
         }
 
         public static List<RFCroSec> GetRFCroSecs(List<CrossSection> croSecs, IModel model, ref List<string> msg)
@@ -3927,6 +4087,37 @@ ref List<RFResultCombo> rfResultCombos, ref List<RFMemberHinge> rfMemberHinges, 
             rfLoadCombos.Clear();
             rfResultCombos.Clear();
             rfMemberHinges.Clear();
+            rfNodalReleases.Clear();
+            rfFLLoads.Clear();
+        }
+
+        public static void ClearOutput(ref List<RFNode> rfNodes, ref List<RFLine> rfLines, ref List<RFMember> rfMembers, ref List<RFSurface> rfSurfaces,
+ref List<RFOpening> rfOpenings, ref List<RFSupportP> rfSupportss, ref List<RFSupportL> rfSupportsL, ref List<RFSupportS> rfSupportsS, ref List<RFLineHinge> rfLineHinges,
+ref List<RFCroSec> rfCroSecs, ref List<RFMaterial> rfMats, ref List<RFNodalLoad> rfNLoads, ref List<RFLineLoad> rfLLoads, ref List<RFMemberLoad> rfMLoads,
+ref List<RFSurfaceLoad> rfSLoads, ref List<RFFreePolygonLoad> rfPLoads, ref List<RFLoadCase> rfLoadCases, ref List<RFLoadCombo> rfLoadCombos,
+ref List<RFResultCombo> rfResultCombos, ref List<RFMemberHinge> rfMemberHinges, ref List<RFMemberEccentricity> rFMemberEccentricities, ref List<RFNodalRelease> rfNodalReleases, ref List<RFFreeLineLoad> rfFLLoads)
+        {
+            rfNodes.Clear();
+            rfLines.Clear();
+            rfMembers.Clear();
+            rfSurfaces.Clear();
+            rfOpenings.Clear();
+            rfSupportss.Clear();
+            rfSupportsL.Clear();
+            rfSupportsS.Clear();
+            rfLineHinges.Clear();
+            rfCroSecs.Clear();
+            rfMats.Clear();
+            rfNLoads.Clear();
+            rfLLoads.Clear();
+            rfMLoads.Clear();
+            rfSLoads.Clear();
+            rfPLoads.Clear();
+            rfLoadCases.Clear();
+            rfLoadCombos.Clear();
+            rfResultCombos.Clear();
+            rfMemberHinges.Clear();
+            rFMemberEccentricities.Clear();
             rfNodalReleases.Clear();
             rfFLLoads.Clear();
         }

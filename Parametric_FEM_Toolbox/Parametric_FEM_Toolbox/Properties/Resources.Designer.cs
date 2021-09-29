@@ -153,6 +153,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Assemble_MemberEccentricity {
+            get {
+                object obj = ResourceManager.GetObject("Assemble_MemberEccentricity", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Assemble_MemberLoad {
             get {
                 object obj = ResourceManager.GetObject("Assemble_MemberLoad", resourceCulture);
@@ -376,6 +386,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         internal static System.Drawing.Bitmap Disassemble_Member {
             get {
                 object obj = ResourceManager.GetObject("Disassemble_Member", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Disassemble_MemberEccentricity {
+            get {
+                object obj = ResourceManager.GetObject("Disassemble_MemberEccentricity", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -736,6 +756,16 @@ namespace Parametric_FEM_Toolbox.Properties {
         internal static System.Drawing.Bitmap icon_RFEM_FilterMember {
             get {
                 object obj = ResourceManager.GetObject("icon_RFEM_FilterMember", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_RFEM_FilterMemberEccentricity {
+            get {
+                object obj = ResourceManager.GetObject("icon_RFEM_FilterMemberEccentricity", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

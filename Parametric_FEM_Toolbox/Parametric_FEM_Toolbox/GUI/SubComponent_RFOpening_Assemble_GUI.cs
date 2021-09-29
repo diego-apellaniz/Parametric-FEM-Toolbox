@@ -103,9 +103,13 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                   Component_RFOpening.SetGeometry(inSrfc, ref rfOpening);
             }
+            else if (DA.GetData(4, ref boundList))
+            {
+                rfOpening.BoundaryLineList = boundList;
+            }
             else
             {
-                msg = "Insufficient input parameters. Provide either Input Opening Shape or existing RFOpening Object. ";
+                msg = "Insufficient input parameters. Provide either Input Opening Shape, Boundary Lines List or existing RFOpening Object. ";
                 level = GH_RuntimeMessageLevel.Warning;
                 return;
             }
@@ -133,7 +137,6 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                 rfOpening.BoundaryLineList = boundList;
             }
-
             DA.SetData(0, rfOpening);
         }
     }

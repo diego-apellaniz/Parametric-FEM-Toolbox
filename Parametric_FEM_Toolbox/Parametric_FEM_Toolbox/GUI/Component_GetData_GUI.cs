@@ -30,6 +30,7 @@ namespace Parametric_FEM_Toolbox.GUI
         List<RFSupportS> rfSupportsS = new List<RFSupportS>();
         List<RFLineHinge> rfLineHinges = new List<RFLineHinge>();
         List<RFMemberHinge> rfMemberHinges = new List<RFMemberHinge>();
+        List<RFMemberEccentricity> rfMemberEccentricities = new List<RFMemberEccentricity>();
         List<RFNodalRelease> rfNodalReleases = new List<RFNodalRelease>();
         List<RFCroSec> rfCroSecs = new List<RFCroSec>();
         List<RFMaterial> rfMaterials = new List<RFMaterial>();
@@ -103,14 +104,16 @@ namespace Parametric_FEM_Toolbox.GUI
             evaluationUnit.Inputs[7].Parameter.Optional = true;
             evaluationUnit.RegisterInputParam(new Param_Boolean(), "Member Hinges", "MemberHinges", "Member Hinges to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
             evaluationUnit.Inputs[8].Parameter.Optional = true;
-            evaluationUnit.RegisterInputParam(new Param_Boolean(), "Line Hinges", "LineHinges", "Line Hinges to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
+            evaluationUnit.RegisterInputParam(new Param_Boolean(), "Member Eccentricities", "MemberEcc", "Member Eccentricities to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
             evaluationUnit.Inputs[9].Parameter.Optional = true;
-            evaluationUnit.RegisterInputParam(new Param_Boolean(), "Nodal Releases", "NodalReleases", "Nodal Releases to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
+            evaluationUnit.RegisterInputParam(new Param_Boolean(), "Line Hinges", "LineHinges", "Line Hinges to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
             evaluationUnit.Inputs[10].Parameter.Optional = true;
-            evaluationUnit.RegisterInputParam(new Param_Boolean(), "Cross Sections", "CroSecs", "Cross Sections from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
+            evaluationUnit.RegisterInputParam(new Param_Boolean(), "Nodal Releases", "NodalReleases", "Nodal Releases to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
             evaluationUnit.Inputs[11].Parameter.Optional = true;
-            evaluationUnit.RegisterInputParam(new Param_Boolean(), "Materials", "Mat", "Materials to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
+            evaluationUnit.RegisterInputParam(new Param_Boolean(), "Cross Sections", "CroSecs", "Cross Sections from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
             evaluationUnit.Inputs[12].Parameter.Optional = true;
+            evaluationUnit.RegisterInputParam(new Param_Boolean(), "Materials", "Mat", "Materials to get from the RFEM Model.", GH_ParamAccess.item, new GH_Boolean(false));
+            evaluationUnit.Inputs[13].Parameter.Optional = true;
 
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Nodes", "RF Nodes", "Nodes from the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Lines", "RF Lines", "Lines from the RFEM Model.");
@@ -121,6 +124,7 @@ namespace Parametric_FEM_Toolbox.GUI
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Line Supports", "RF LineSup", "Line Supports from the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Surface Supports", "RF SrfcSup", "Surface Supports from the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Member Hinges", "RF MemberHinges", "Member Hinges from the RFEM Model.");
+            evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Member Eccentricities", "RF MemberEcc", "Member Hinges from the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Line Hinges", "RF LineHinges", "Line Hinges from the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "Nodal Releases", "NodalReleases", "Nodal Releases to get from the RFEM Model.");
             evaluationUnit.RegisterOutputParam(new Param_RFEM(), "RF Cross Sections", "RF CroSecs", "Cross Sections to get from the RFEM Model.");
@@ -244,6 +248,7 @@ namespace Parametric_FEM_Toolbox.GUI
             bool getsupportsL = false;
             bool getsupportsS = false;
             bool getMemberHinges = false;
+            bool getMemberEccentricities = false;
             bool getLineHinges = false;
             bool getNodalReleases = false;
             bool getCroSecs = false;
@@ -270,19 +275,20 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.GetData(7, ref getsupportsL);
             DA.GetData(8, ref getsupportsS);
             DA.GetData(9, ref getMemberHinges);
-            DA.GetData(10, ref getLineHinges);
-            DA.GetData(11, ref getNodalReleases);
-            DA.GetData(12, ref getCroSecs);
-            DA.GetData(13, ref getMaterials);
-            DA.GetData(14, ref getNodalLoads);
-            DA.GetData(15, ref getLineLoads);
-            DA.GetData(16, ref getMemberLoads);
-            DA.GetData(17, ref getSurfaceLoads);
-            DA.GetData(18, ref getFreeLineLoads);
-            DA.GetData(19, ref getPolyLoads);
-            DA.GetData(20, ref getLoadCases);
-            DA.GetData(21, ref getLoadCombos);
-            DA.GetData(22, ref getResultCombos);
+            DA.GetData(10, ref getMemberEccentricities);
+            DA.GetData(11, ref getLineHinges);
+            DA.GetData(12, ref getNodalReleases);
+            DA.GetData(13, ref getCroSecs);
+            DA.GetData(14, ref getMaterials);
+            DA.GetData(15, ref getNodalLoads);
+            DA.GetData(16, ref getLineLoads);
+            DA.GetData(17, ref getMemberLoads);
+            DA.GetData(18, ref getSurfaceLoads);
+            DA.GetData(19, ref getFreeLineLoads);
+            DA.GetData(20, ref getPolyLoads);
+            DA.GetData(21, ref getLoadCases);
+            DA.GetData(22, ref getLoadCombos);
+            DA.GetData(23, ref getResultCombos);
             if (DA.GetDataList(modelDataCount3+1, ghFilters))
             {
                 inFilters = ghFilters.Select(x => x.Value).ToList();
@@ -301,7 +307,7 @@ namespace Parametric_FEM_Toolbox.GUI
                 Component_GetData.ClearOutput(ref rfNodes, ref rfLines, ref rfMembers, ref rfSurfaces, ref rfOpenings,
                     ref rfSupportsP, ref rfSupportsL, ref rfSupportsS, ref rfLineHinges, ref rfCroSecs, ref rfMaterials, ref rfNodalLoads,
                     ref rfLineLoads, ref rfMemberLoads, ref rfSurfaceLoads, ref rfPolyLoads, ref rfLoadCases, ref rfLoadCombos,
-                    ref rfResultCombos, ref rfMemberHinges, ref rfNodalReleases, ref rfFreeLineLoads);
+                    ref rfResultCombos, ref rfMemberHinges, ref rfMemberEccentricities, ref rfNodalReleases, ref rfFreeLineLoads);
 
                 try
                 {
@@ -350,6 +356,11 @@ namespace Parametric_FEM_Toolbox.GUI
                         var filMemberHinges = Component_GetData.FilterMH(data, inFilters);
                         rfMemberHinges = Component_GetData.GetRFMemberHinges(filMemberHinges, data);
                     }
+                    if (getMemberEccentricities)
+                    {
+                        var filMemberEccentricities = Component_GetData.FilterMEcc(data, inFilters);
+                        rfMemberEccentricities = Component_GetData.GetRFMemberEccentricities(filMemberEccentricities, data);
+                    }
                     if (getLineHinges)
                     {
                         var filLineHinges = Component_GetData.FilterLH(data, inFilters);
@@ -363,7 +374,8 @@ namespace Parametric_FEM_Toolbox.GUI
                     if (getCroSecs)
                     {
                         var filCroSecs = Component_GetData.FilterCroSecs(data, inFilters);
-                        rfCroSecs = Component_GetData.GetRFCroSecs(filCroSecs, model, ref msg);
+                        //rfCroSecs = Component_GetData.GetRFCroSecs(filCroSecs, model, ref msg);
+                        rfCroSecs = Component_GetData.GetRFCroSecs(filCroSecs, model, data, ref msg);
                     }
                     if (getMaterials)
                     {
@@ -427,7 +439,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     Component_GetData.ClearOutput(ref rfNodes, ref rfLines, ref rfMembers, ref rfSurfaces, ref rfOpenings,
                     ref rfSupportsP, ref rfSupportsL, ref rfSupportsS, ref rfLineHinges, ref rfCroSecs, ref rfMaterials, ref rfNodalLoads,
                     ref rfLineLoads, ref rfMemberLoads, ref rfSurfaceLoads, ref rfPolyLoads, ref rfLoadCases, ref rfLoadCombos,
-                    ref rfResultCombos, ref rfMemberHinges, ref rfNodalReleases, ref rfFreeLineLoads);
+                    ref rfResultCombos, ref rfMemberHinges, ref rfMemberEccentricities, ref rfNodalReleases, ref rfFreeLineLoads);
                     throw ex;
                 }
                 Component_GetData.DisconnectRFEM(ref model, ref data);
@@ -443,19 +455,20 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetDataList(6, rfSupportsL);
             DA.SetDataList(7, rfSupportsS);
             DA.SetDataList(8, rfMemberHinges);
-            DA.SetDataList(9, rfLineHinges);
-            DA.SetDataList(10, rfNodalReleases);
-            DA.SetDataList(11, rfCroSecs);
-            DA.SetDataList(12, rfMaterials);
-            DA.SetDataList(13, rfNodalLoads);
-            DA.SetDataList(14, rfLineLoads);
-            DA.SetDataList(15, rfMemberLoads);
-            DA.SetDataList(16, rfSurfaceLoads);
-            DA.SetDataList(17, rfFreeLineLoads);
-            DA.SetDataList(18, rfPolyLoads);
-            DA.SetDataList(19, rfLoadCases);
-            DA.SetDataList(20, rfLoadCombos);
-            DA.SetDataList(21, rfResultCombos);
+            DA.SetDataList(9, rfMemberEccentricities);
+            DA.SetDataList(10, rfLineHinges);
+            DA.SetDataList(11, rfNodalReleases);
+            DA.SetDataList(12, rfCroSecs);
+            DA.SetDataList(13, rfMaterials);
+            DA.SetDataList(14, rfNodalLoads);
+            DA.SetDataList(15, rfLineLoads);
+            DA.SetDataList(16, rfMemberLoads);
+            DA.SetDataList(17, rfSurfaceLoads);
+            DA.SetDataList(18, rfFreeLineLoads);
+            DA.SetDataList(19, rfPolyLoads);
+            DA.SetDataList(20, rfLoadCases);
+            DA.SetDataList(21, rfLoadCombos);
+            DA.SetDataList(22, rfResultCombos);
 
             if (msg.Count != 0)
             {
@@ -496,7 +509,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("6d5e694d-4fe4-405a-ac82-92ecf2ca8e83"); }
+            get { return new Guid("80c63240-e0e6-4fee-b6a6-415c2b387864"); }
         }
     }
 }

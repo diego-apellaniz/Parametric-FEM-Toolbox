@@ -135,7 +135,7 @@ namespace Parametric_FEM_Toolbox.GUI
             // Get base geometry            
             var crosecs1 = iCroSecs.Where(x => x.No == iMember.StartCrossSectionNo).ToList()[0].Shape;
             var crosecs2 = iCroSecs.Where(x => x.No == iMember.EndCrossSectionNo).ToList()[0].Shape;
-            var baseline = iMember.BaseLine.ToCurve();
+            var baseline = iMember.GetEccentricBaseline();
 
             // Check geometry
             if ((crosecs1.Sum(x => x.SpanCount) != crosecs2.Sum(x => x.SpanCount)) || (crosecs1.Count != crosecs2.Count))

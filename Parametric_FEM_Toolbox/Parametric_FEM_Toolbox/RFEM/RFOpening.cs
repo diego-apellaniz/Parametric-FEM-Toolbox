@@ -40,12 +40,16 @@ namespace Parametric_FEM_Toolbox.RFEM
         {
             ToModify = other.ToModify;
             ToDelete = other.ToDelete;
-            var newEdges = new List<RFLine>();
-            foreach (var edge in other.Edges)
+            if (other.Edges != null)
             {
-                newEdges.Add(new RFLine(edge));
+                var newEdges = new List<RFLine>();
+                foreach (var edge in other.Edges)
+                {
+                    newEdges.Add(new RFLine(edge));
+                }
+                Edges = newEdges.ToArray();
             }
-            Edges = newEdges.ToArray();
+                
         }
 
         // Properties to Wrap Fields from RFEM Struct
@@ -97,12 +101,18 @@ namespace Parametric_FEM_Toolbox.RFEM
         // Casting to GH Data Types
         public Brep ToPlanarBrep()
         {
+            if (Edges == null)
+                return null;
+
             var sEdges = from e in Edges
-                         select e.ToCurve();       
+                        select e.ToCurve();       
             return Brep.CreatePlanarBreps(Curve.JoinCurves(sEdges), 0.01)[0];
         }
         public Boolean IsPlanar()
         {
+            if (Edges == null)
+                return false;
+
             var myEdges = new List<Curve>();
             var sEdges = from e in Edges
                          select e.ToCurve();

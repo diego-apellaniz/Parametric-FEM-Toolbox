@@ -16,9 +16,9 @@ namespace Parametric_FEM_Toolbox.RFEM
         public RFMember()
         {
         }
-        public RFMember(Member member, RFLine baseLine, double kcry, double kcrz)
+        public RFMember(Member member, RFLine baseLine, double kcry, double kcrz, CoordinateSystem sys1, CoordinateSystem sys2, Point3d ecc1, Point3d ecc2)
         {
-            Comment = member.Comment;
+            Comment = member.Comment == null? "": member.Comment;
             ID = member.ID;
             IsGenerated = member.IsGenerated;
             IsValid = member.IsValid;
@@ -45,24 +45,27 @@ namespace Parametric_FEM_Toolbox.RFEM
             Kcry = kcry;
             Kcrz = kcrz;
             BaseLine = baseLine;
-            Frames = null;
+            EccStart = new Vector3d(ecc1);
+            EccEnd = new Vector3d(ecc2);
+            SetFrames2(sys1, sys2);
             ToModify = false;
             ToDelete = false;
         }
-        public RFMember(Member member, RFLine baseLine) : this(member, baseLine, 1.0, 1.0)
+        public RFMember(Member member, RFLine baseLine) : this(member, baseLine, 1.0, 1.0, new CoordinateSystem(), new CoordinateSystem(), Point3d.Origin, Point3d.Origin)
         {            
         }        
         public RFMember (Member member) : this (member, null)
         {
         }
 
-        public RFMember(RFMember other) : this(other, null, other.Kcry, other.Kcrz)
+        public RFMember(RFMember other) : this(other, null, other.Kcry, other.Kcrz, new CoordinateSystem(), new CoordinateSystem(), Point3d.Origin, Point3d.Origin)
         {
             ToModify = other.ToModify;
             ToDelete = other.ToDelete;
             if (other.BaseLine != null)
             {
                 BaseLine = new RFLine(other.BaseLine);
+                Frames = new List<Plane>(other.Frames);
             }
             if (other.Type == MemberType.ResultBeamType)
             {
@@ -76,7 +79,10 @@ namespace Parametric_FEM_Toolbox.RFEM
                 Parameters = other.Parameters;
             }
             Frames = other.Frames;
+            EccStart = other.EccStart;
+            EccEnd = other.EccEnd;
         }
+
 
         // Properties to Wrap Fields from RFEM Struct
         public string Comment { get; set; }
@@ -114,7 +120,8 @@ namespace Parametric_FEM_Toolbox.RFEM
         public string IncludeSurfaces { get; set; }
         public IntegrateStressesAndForcesType Integrate { get; set; }
         public List<double> Parameters { get; set; }
-
+        public Vector3d EccStart { get; set; }
+        public Vector3d EccEnd { get; set; }
         // Additional Properties to the RFEM Struct
         public RFLine BaseLine { get; set; }
         public List<Plane> Frames { get; set; }
@@ -169,7 +176,6 @@ namespace Parametric_FEM_Toolbox.RFEM
             return myMember;
         }
 
-
         public static implicit operator ResultBeam(RFMember member)
         {
             var myResultBeam = new ResultBeam
@@ -205,7 +211,7 @@ namespace Parametric_FEM_Toolbox.RFEM
             }
         }
 
-        //Set Frames
+        //Set Frames -> used when creating a member in GH
         public void SetFrames()
         {
             var baseCrv = BaseLine.ToCurve();
@@ -249,6 +255,41 @@ namespace Parametric_FEM_Toolbox.RFEM
             outFrames.Add(frame1);
             outFrames.Add(frame2);
             Frames = outFrames;
+        }
+
+        // used to get the 100% accurate axis system when importing members from RFEM
+        public void SetFrames2(CoordinateSystem sys1, CoordinateSystem sys2)
+        {
+            if (BaseLine == null) // in case that we are copying from other member, because it will be null in this step, but frames will be copied from the other member anyway
+                return;
+            var vecX1 = new Vector3d(sys1.AxisY.ToPoint3d());
+            var vecY1 = new Vector3d(sys1.AxisZ.ToPoint3d());
+            var vecX2 = new Vector3d(sys2.AxisY.ToPoint3d());
+            var vecY2 = new Vector3d(sys2.AxisZ.ToPoint3d());
+            var baseCrv = BaseLine.ToCurve();
+            var frame1 = new Plane(baseCrv.PointAtStart, vecX1, vecY1);
+            var frame2 = new Plane(baseCrv.PointAtStart, vecX2, vecY2);
+            Frames = new List<Plane>() { frame1, frame2 };
+        }
+
+        public Curve GetEccentricBaseline()
+        {
+            var baseCrv = BaseLine.ToCurve();
+            if (EccStart.IsZero && EccEnd.IsZero)
+                return baseCrv;
+
+            var gh_crv = new GH_Curve(baseCrv);
+            var crv_destination = (IGH_GeometricGoo)gh_crv.DuplicateCurve();
+            var list1 = new List<Point3d>() { baseCrv.PointAtStart, baseCrv.PointAtEnd };
+            var list2 = new List<Vector3d>() { EccStart, EccEnd };
+            var spatialMorph = new HelperLibraries.UtilLibrary.SpatialMorph(list1, list2);
+            spatialMorph.PreserveStructure = false;
+            spatialMorph.QuickPreview = false;
+
+            crv_destination = crv_destination.Morph(spatialMorph);
+            var crv = (GH_Curve)crv_destination;
+
+            return crv.Value;
         }
 
         // Convert RFEM Object into Rhino Geometry.

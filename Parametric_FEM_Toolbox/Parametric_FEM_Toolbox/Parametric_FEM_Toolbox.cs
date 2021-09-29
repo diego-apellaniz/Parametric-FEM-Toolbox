@@ -59,7 +59,7 @@ namespace daqRFEM
         {
             get
             {
-                return "1.3.5";
+                return "1.4.0";
             }
         }
     }

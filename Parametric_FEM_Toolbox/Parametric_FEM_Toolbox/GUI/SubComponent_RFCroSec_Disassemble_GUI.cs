@@ -54,8 +54,28 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterOutputParam(new Param_Number(), "TemperatureLoadWidth [m]", "TempW", "TemperatureLoadWidth [m]");
             unit.RegisterOutputParam(new Param_Number(), "TemperatureLoadDepth [m]", "TempD", "TemperatureLoadDepth [m]");
             unit.RegisterOutputParam(new Param_String(), "TextID", "TextID", "TextID.");
-            unit.RegisterOutputParam(new Param_Boolean(), "User Defined", "User", "User Defined.");
+            unit.RegisterOutputParam(new Param_Boolean(), "User Defined", "User", "User Defined.");            
+
+            GH_ExtendableMenu gH_ExtendableMenu = new GH_ExtendableMenu(0, "Shape");
+            gH_ExtendableMenu.Name = "Shape Geometry";
+            gH_ExtendableMenu.Collapse();
             unit.RegisterOutputParam(new Param_Curve(), "Section Shape", "Shape", "Section Shape from the Cross Section Database of RFEM.");
+            unit.RegisterOutputParam(new Param_String(), "Type", "Type", "Section Type");
+            unit.RegisterOutputParam(new Param_Number(), "Height [m]", "H", "Height / Diameter");
+            unit.RegisterOutputParam(new Param_Number(), "Width [m]", "W", "Width");
+            unit.RegisterOutputParam(new Param_Number(), "Web Thickness [m]", "Tw", "Web Thickness / Thickness");
+            unit.RegisterOutputParam(new Param_Number(), "Flange Thickness [m]", "Tf", "Flange Thickness");
+            unit.RegisterOutputParam(new Param_Number(), "Inner Radius [m]", "Ri", "Fillet Radius, Inner Radius");
+            unit.RegisterOutputParam(new Param_Number(), "Outer Radius [m]", "Ro", "Flange Edge Radius, Outer Radius");
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[15]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[16]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[17]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[18]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[19]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[20]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[21]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[22]);
+            unit.AddMenu(gH_ExtendableMenu);
         }
 
         public override void SolveInstance(IGH_DataAccess DA, out string msg, out GH_RuntimeMessageLevel level)
@@ -87,6 +107,13 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetData(13, rFCroSec.TextID);
             DA.SetData(14, rFCroSec.UserDefined);
             DA.SetDataList(15, rFCroSec.Shape);
+            DA.SetData(16, rFCroSec.Type);
+            DA.SetData(17, rFCroSec.H);
+            DA.SetData(18, rFCroSec.W);
+            DA.SetData(19, rFCroSec.Tw);
+            DA.SetData(20, rFCroSec.Tf);
+            DA.SetData(21, rFCroSec.Ri);
+            DA.SetData(22, rFCroSec.Ro);
         }
     }
 }

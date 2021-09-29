@@ -521,6 +521,61 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return outPoints;
         }
 
+        public class SpatialMorph : SpaceMorph
+        {
+            public List<Point3d> s_space;
+
+            public List<Vector3d> s_motion;
+
+            public SpatialMorph(List<Point3d> space, List<Vector3d> forces)
+            {
+                s_space = space;
+                s_motion = forces;
+                for (int num = s_space.Count - 1; num >= 0; num--)
+                {
+                    if (!s_space[num].IsValid)
+                    {
+                        s_space.RemoveAt(num);
+                        s_motion.RemoveAt(num);
+                    }
+                }
+                for (int num2 = s_space.Count - 1; num2 >= 0; num2--)
+                {
+                    if (!s_motion[num2].IsValid)
+                    {
+                        s_space.RemoveAt(num2);
+                        s_motion.RemoveAt(num2);
+                    }
+                }
+            }
+
+            public override Point3d MorphPoint(Point3d point)
+            {
+                double num = 0.0;
+                Vector3d zero = Vector3d.Zero;
+                for (int i = 0; i < s_space.Count; i++)
+                {
+                    double num2 = point.DistanceTo(s_space[i]);
+                    if (num2 < 1E-12)
+                    {
+                        return point + s_motion[i];
+                    }
+                    double num3 = 1.0 / num2;
+                    num += num3;
+                    zero += s_motion[i] * num3;
+                }
+                if (num == 0.0)
+                {
+                    return point;
+                }
+                double num4 = 1.0 / num;
+                zero.X *= num4;
+                zero.Y *= num4;
+                zero.Z *= num4;
+                return point + zero;
+            }
+        }
+
         #endregion
     }
 }

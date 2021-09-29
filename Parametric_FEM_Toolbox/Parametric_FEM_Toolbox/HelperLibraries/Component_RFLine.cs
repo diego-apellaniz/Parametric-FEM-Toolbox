@@ -21,7 +21,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 inControlPoints.Add(pt.Location);
             }
             rFLine.ControlPoints = inControlPoints.ToArray();
-            if  (curve.Degree > 1)
+            if (curve.Degree > 1 && !curve.IsArc() )
                 {
                 var inWeights = new double[myNurbs.Points.Count];
                 var myKnots = new double[curve.Degree + myNurbs.Points.Count + 1];
@@ -39,7 +39,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 rFLine.Weights = inWeights.ToArray();
                 rFLine.Knots = myKnots;
             }
-             
+
 
             //inControlPoints.Add(curve.PointAtStart);
             //for (int i = 0; i < curve.SpanCount; i++)
@@ -56,14 +56,19 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             //    inControlPoints.Add(curve.PointAt(t1));
             //}
             //rFLine.ControlPoints = inControlPoints.ToArray();
-            if (curve.Degree > 1)
-            {
+
+            if (curve.IsArc() &&  rFLine.ControlPoints.Length>=5)
+            {                
+                rFLine.ControlPoints = new Point3d[3] { rFLine.ControlPoints[0], rFLine.ControlPoints[2], rFLine.ControlPoints[4] };
+                if (curve.IsClosed)
+                    rFLine.Type = LineType.CircleType;
+                else
+                    rFLine.Type = LineType.ArcType;
+            }                
+            else if (curve.Degree > 1)
                 rFLine.Type = LineType.NurbSplineType;
-            }
             else
-            {
                 rFLine.Type = LineType.PolylineType;
-            }
             //rFLine.Vertices = null;
         }
     }

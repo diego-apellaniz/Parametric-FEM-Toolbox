@@ -13,7 +13,7 @@ using Parametric_FEM_Toolbox.UIWidgets;
 using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 
-namespace Parametric_FEM_Toolbox.GUI
+namespace Parametric_FEM_Toolbox.Deprecated
 {
     public class Component_RFCroSec_GUI_OBSOLETE: GH_SwitcherComponent
     {
@@ -82,8 +82,8 @@ namespace Parametric_FEM_Toolbox.GUI
         // The PostConstructor is called from within each constructor.DO NOT OVERRIDE THIS unless you know what you are doing.
         protected override void RegisterEvaluationUnits(EvaluationUnitManager mngr)
         {
-            subcomponents_.Add(new SubComponent_RFCroSec_Assemble_GUI());
-            subcomponents_.Add(new SubComponent_RFCroSec_Disassemble_GUI());
+            subcomponents_.Add(new SubComponent_RFCroSec_Assemble_GUI_OBSOLETE());
+            subcomponents_.Add(new SubComponent_RFCroSec_Disassemble_GUI_OBSOLETE_2());
 
             foreach (SubComponent item in subcomponents_)
             {

@@ -300,5 +300,16 @@ namespace Parametric_FEM_Toolbox.Utilities
         public List<Interval> FLLX { get; set; }
         public List<Interval> FLLY { get; set; }
         public List<Interval> FLLZ { get; set; }
+        public List<int> MEccList { get; set; }
+        public List<string> MEccComment { get; set; }
+        public List<string> MEccReferenceType { get; set; }
+        public List<string> MEccVertAl { get; set; }
+        public List<string> MEccHorAl { get; set; }
+        public List<Interval> MEccX1 { get; set; }
+        public List<Interval> MEccY1 { get; set; }
+        public List<Interval> MEccZ1 { get; set; }
+        public List<Interval> MEccX2 { get; set; }
+        public List<Interval> MEccY2 { get; set; }
+        public List<Interval> MEccZ2 { get; set; }
     }
 }

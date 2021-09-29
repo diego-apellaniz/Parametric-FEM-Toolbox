@@ -354,7 +354,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 lastLineNo += 1;
                 rfLine.No = lastLineNo;
             }
-            if (inputNodeList ||  rfLine.Type == LineType.PolylineType)
+            if (inputNodeList ||  rfLine.Type == LineType.PolylineType || rfLine.Type == LineType.ArcType || rfLine.Type == LineType.CircleType)
             {
                 data.SetLine(rfLine);
             }
@@ -575,10 +575,6 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     {
                         var mySfc = (Dlubal.RFEM5.Surface)rfSfc;
                         var myNo = rfSfc.No;
-                        //if (rfSfc.NewNo > 0)
-                        //{
-                        //    mySfc.No = rfSfc.NewNo;
-                        //}
                         data.GetSurface(myNo, ItemAt.AtNo).SetData(ref mySfc);
                         index.Add(rfSfc);
                     }
@@ -600,7 +596,9 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                             newData = true;
                         }
 
-                        index.Add(data.SetRFSfc(rfSfc, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo, ref lastSfcNo));
+                        var outRFsfc = data.SetRFSfc(rfSfc, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo, ref lastSfcNo);
+                        index.Add(outRFsfc);
+
                         // Add openings
                         if (!(rfSfc.Openings == null))
                         {
@@ -858,13 +856,17 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         public static RFOpening SetRFOpening(this IModelData data, ref RFOpening rfOpening, ref List<RFNode> existingNodes, ref List<RFLine> existingLines, ref int lastNoNo, ref int lastLineNo, ref int lastOpNo)
         {
             // Get boundaries
-            var boundList = "";
-            foreach (var edge in rfOpening.Edges)
+            if (String.IsNullOrEmpty(rfOpening.BoundaryLineList))
             {
-                boundList += data.SetRFLine(edge, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo).No;
-                boundList += ",";
+                var boundList = "";
+                foreach (var edge in rfOpening.Edges)
+                {
+                    boundList += data.SetRFLine(edge, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo).No;
+                    boundList += ",";
+                }
+                rfOpening.BoundaryLineList = boundList.Substring(0, boundList.Length - 1);
             }
-            rfOpening.BoundaryLineList = boundList.Substring(0, boundList.Length - 1);
+       
             // Set member with a provided index number or without
             if (rfOpening.No == 0)
             {
@@ -1345,6 +1347,67 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             rfMH.No = lastMHNo;
             data.SetMemberHinge(rfMH);
             return rfMH;
+        }
+
+        public static void SetRFMemberEccentricities(this IModelData data, List<GH_RFEM> ghEccs, ref List<RFMemberEccentricity> index, ref List<string> errorMsg)
+        {
+            var newData = false;
+            var inEccs = new List<RFMemberEccentricity>();
+            var lastEccNo = 0;
+
+            inEccs = ghEccs.Select(x => new RFMemberEccentricity((RFMemberEccentricity)x.Value)).ToList();
+            foreach (var rfEcc in inEccs)
+            {
+                try
+                {
+                    if (rfEcc.ToModify)
+                    {
+                        var myEcc = (MemberEccentricity)rfEcc;
+                        var myNo = myEcc.No;
+                        //if (rfSup.NewNo > 0)
+                        //{
+                        //    myNo = rfSup.NewNo;
+                        //}
+                        data.GetMemberEccentricity(myNo, ItemAt.AtNo).SetData(ref myEcc);
+                        index.Add(rfEcc);
+                    }
+                    else if (rfEcc.ToDelete)
+                    {
+                        data.GetMemberHinge(rfEcc.No, ItemAt.AtNo).Delete();
+                        index.Add(rfEcc);
+                    }
+                    else
+                    {
+                        if (newData == false)
+                        {
+                            lastEccNo = data.GetLastObjectNo(ModelObjectType.MemberEccentricityObject);
+                            newData = true;
+                        }
+                        index.Add(data.SetRFMemberEccentricity(rfEcc, ref lastEccNo));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    index.Add(null);
+                    errorMsg.Add($"Import of Member Hinge No.{rfEcc.No} failed! " + ex.Message);
+                }
+            }
+        }
+
+        public static RFMemberEccentricity SetRFMemberEccentricity(this IModelData data, ref RFMemberEccentricity rfMEcc, ref int lastMEccNo)
+        {
+
+            // Set support with a provided index number
+            if (!(rfMEcc.No == 0))
+            {
+                data.SetMemberEccentricity(rfMEcc);
+                return rfMEcc;
+            }
+            // Set node without provided index number
+            lastMEccNo += 1;
+            rfMEcc.No = lastMEccNo;
+            data.SetMemberEccentricity(rfMEcc);
+            return rfMEcc;
         }
 
         public static void SetRFNodalReleases(this IModelData data, List<GH_RFEM> ghHinges, ref List<RFNodalRelease> index, ref List<string> errorMsg)
@@ -2454,6 +2517,39 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             supLlist.Clear();
             supSlist.Clear();
             memberHingelist.Clear();
+            lineHingelist.Clear();
+            nodalReleaselist.Clear();
+            croSeclist.Clear();
+            matlist.Clear();
+            nodalLoadList.Clear();
+            lineLoadList.Clear();
+            memberLoadList.Clear();
+            surfaceLoadList.Clear();
+            polyLoadList.Clear();
+            loadCaseList.Clear();
+            loadComboList.Clear();
+            resultComboList.Clear();
+            freeLineLoadList.Clear();
+        }
+
+        public static void ClearOutput(ref List<RFNode> nodelist, ref List<RFLine> linelist, ref List<RFMember> memberlist,
+        ref List<RFSurface> srfclist, ref List<RFOpening> oplist, ref List<RFSupportP> supPlist, ref List<RFSupportL> supLlist,
+        ref List<RFSupportS> supSlist, ref List<RFMemberHinge> memberHingelist, ref List<RFMemberEccentricity> memberEcclist, ref List<RFLineHinge> lineHingelist, ref List<RFNodalRelease> nodalReleaselist,
+        ref List<RFCroSec> croSeclist, ref List<RFMaterial> matlist,
+        ref List<RFNodalLoad> nodalLoadList, ref List<RFLineLoad> lineLoadList, ref List<RFMemberLoad> memberLoadList,
+        ref List<RFSurfaceLoad> surfaceLoadList, ref List<RFFreeLineLoad> freeLineLoadList, ref List<RFFreePolygonLoad> polyLoadList, ref List<RFLoadCase> loadCaseList,
+        ref List<RFLoadCombo> loadComboList, ref List<RFResultCombo> resultComboList)
+        {
+            nodelist.Clear();
+            linelist.Clear();
+            memberlist.Clear();
+            srfclist.Clear();
+            oplist.Clear();
+            supPlist.Clear();
+            supLlist.Clear();
+            supSlist.Clear();
+            memberHingelist.Clear();
+            memberEcclist.Clear();
             lineHingelist.Clear();
             nodalReleaselist.Clear();
             croSeclist.Clear();
