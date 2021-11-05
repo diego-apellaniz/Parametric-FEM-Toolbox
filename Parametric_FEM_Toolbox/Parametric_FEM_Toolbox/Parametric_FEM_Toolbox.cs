@@ -26,7 +26,7 @@ namespace daqRFEM
             get
             {
                 //Return a short string describing the purpose of this GHA library.
-                return "This Plug-In enables a functional interoperability between the FEM software RFEM and" +
+                return "This Plug-In enables a functional interoperability between the FEM software RFEM and " +
                     "Grasshopper. Thus, the full potential of Grasshopper can be used to manipulate existing" +
                     " RFEM - Models and get data from them.";
             }
@@ -59,7 +59,7 @@ namespace daqRFEM
         {
             get
             {
-                return "1.4.0";
+                return "1.4.1";
             }
         }
     }

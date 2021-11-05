@@ -132,8 +132,9 @@ namespace Parametric_FEM_Toolbox.GUI
             var axesLines = 0;
             Point3d pt1 = new Point3d();
             Point3d pt2 = new Point3d();
-            int csNo = 0;
+            
             var rot = 0.0;
+            int csNo = 0;
 
             if (DA.GetData(13, ref inRFEM))
             {

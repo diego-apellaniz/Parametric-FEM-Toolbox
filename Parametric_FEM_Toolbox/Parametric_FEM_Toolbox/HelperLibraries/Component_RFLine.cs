@@ -21,7 +21,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 inControlPoints.Add(pt.Location);
             }
             rFLine.ControlPoints = inControlPoints.ToArray();
-            if (curve.Degree > 1 && !curve.IsArc() )
+            if (curve.Degree > 1 && !(curve.IsArc() && rFLine.ControlPoints.Length >= 5)) // if curve has less that 5 control points it wil be treated as NURBS regardless
                 {
                 var inWeights = new double[myNurbs.Points.Count];
                 var myKnots = new double[curve.Degree + myNurbs.Points.Count + 1];
