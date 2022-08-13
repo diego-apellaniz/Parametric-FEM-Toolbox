@@ -313,71 +313,71 @@ namespace Parametric_FEM_Toolbox.GUI
                 {
                     if (getnodes)
                     {
-                        var filNodes = Component_GetData.FilterNodes(data, inFilters);
+                        var filNodes = Component_GetData.FilterNodes(data, inFilters, ref msg);
                         rfNodes = Component_GetData.GetRFNodes(filNodes, data);
                     }
-                    if (getlines)
+                    if (getlines && msg.Count < 0)
                     {
                         var filLines = Component_GetData.FilterLines(data, inFilters);
                         rfLines = Component_GetData.GetRFLines(filLines, data);
                     }
-                    if (getmembers)
+                    if (getmembers && msg.Count < 0)
                     {
                         var filMembers = Component_GetData.FilterMembers(data, inFilters);
                         rfMembers = Component_GetData.GetRFMembers(filMembers, data);
                     }
-                    if (getsurfaces)
+                    if (getsurfaces && msg.Count < 0)
                     {
                         var filSrfcs = Component_GetData.FilterSurfaces(data, inFilters);
                         rfSurfaces = Component_GetData.GetRFSurfaces(filSrfcs, data);
                     }
-                    if (getopenings)
+                    if (getopenings && msg.Count < 0)
                     {
                         var filOpenings = Component_GetData.FilterOpenings(data, inFilters);
                         rfOpenings = Component_GetData.GetRFOpenings(filOpenings,data);
                     }
-                    if (getsupportsP)
+                    if (getsupportsP && msg.Count < 0)
                     {
                         var filSupportsP = Component_GetData.FilterSupsP(data, inFilters);
                         rfSupportsP = Component_GetData.GetRFSupportsP(filSupportsP, data);
                     }
-                    if (getsupportsL)
+                    if (getsupportsL && msg.Count < 0)
                     {
                         var filSupportsL = Component_GetData.FilterSupsL(data, inFilters);
                         rfSupportsL = Component_GetData.GetRFSupportsL(filSupportsL, data);
                     }
-                    if (getsupportsS)
+                    if (getsupportsS && msg.Count < 0)
                     {
                         var filSupportsS = Component_GetData.FilterSupsS(data, inFilters);
                         rfSupportsS = Component_GetData.GetRFSupportsS(filSupportsS, data);
                     }
-                    if (getMemberHinges)
+                    if (getMemberHinges && msg.Count < 0)
                     {
                         var filMemberHinges = Component_GetData.FilterMH(data, inFilters);
                         rfMemberHinges = Component_GetData.GetRFMemberHinges(filMemberHinges, data);
                     }
-                    if (getMemberEccentricities)
+                    if (getMemberEccentricities && msg.Count < 0)
                     {
                         var filMemberEccentricities = Component_GetData.FilterMEcc(data, inFilters);
                         rfMemberEccentricities = Component_GetData.GetRFMemberEccentricities(filMemberEccentricities, data);
                     }
-                    if (getLineHinges)
+                    if (getLineHinges && msg.Count < 0)
                     {
                         var filLineHinges = Component_GetData.FilterLH(data, inFilters);
                         rfLineHinges = Component_GetData.GetRFLineHinges(filLineHinges, data);
                     }
-                    if (getNodalReleases)
+                    if (getNodalReleases && msg.Count < 0)
                     {
                         var filNodalReleases = Component_GetData.FilterNR(data, inFilters);
                         rfNodalReleases = Component_GetData.GetRFNodalReleases(filNodalReleases, data);
                     }
-                    if (getCroSecs)
+                    if (getCroSecs && msg.Count < 0)
                     {
                         var filCroSecs = Component_GetData.FilterCroSecs(data, inFilters);
                         //rfCroSecs = Component_GetData.GetRFCroSecs(filCroSecs, model, ref msg);
                         rfCroSecs = Component_GetData.GetRFCroSecs(filCroSecs, model, data, ref msg);
                     }
-                    if (getMaterials)
+                    if (getMaterials && msg.Count < 0)
                     {
                         var filMaterials = Component_GetData.FilterMaterials(data, inFilters);
                         rfMaterials = Component_GetData.GetRFMaterials(filMaterials, data);
@@ -388,61 +388,61 @@ namespace Parametric_FEM_Toolbox.GUI
                     {
                         Component_GetData.GetLoadsFromRFEM(model, ref loads);
                     }
-                    if (getNodalLoads)
+                    if (getNodalLoads && msg.Count < 0)
                     {
                         var filNodalLoads = Component_GetData.FilterNodalLoads(data, loads, inFilters);
                         rfNodalLoads = Component_GetData.GetRFNodalLoads(filNodalLoads, data);
                     }
-                    if (getLineLoads)
+                    if (getLineLoads && msg.Count < 0)
                     {
                         var filLineLoads = Component_GetData.FilterLineLoads(data, loads, inFilters);
                         rfLineLoads = Component_GetData.GetRFLineLoads(filLineLoads, data);
                     }
-                    if (getMemberLoads)
+                    if (getMemberLoads && msg.Count < 0)
                     {
                         var filMemberLoads = Component_GetData.FilterMemberLoads(data, loads, inFilters);
                         rfMemberLoads = Component_GetData.GetRFMemberLoads(filMemberLoads, data);
                     }
-                    if (getSurfaceLoads)
+                    if (getSurfaceLoads && msg.Count < 0)
                     {
                         var filSurfaceLoads = Component_GetData.FilterSurfaceLoads(data, loads, inFilters);
                         rfSurfaceLoads = Component_GetData.GetRFSurfaceLoads(filSurfaceLoads, data);
                     }
-                    if (getFreeLineLoads)
+                    if (getFreeLineLoads && msg.Count < 0)
                     {
                         var filLineLoads = Component_GetData.FilterFreeLineLoads(data, loads, inFilters);
                         rfFreeLineLoads = Component_GetData.GetRFFreeLineLoads(filLineLoads, data);
                     }
-                    if (getPolyLoads)
+                    if (getPolyLoads && msg.Count < 0)
                     {
                         var filPolyLoads = Component_GetData.FilterPolyLoads(data, loads, inFilters);
                         rfPolyLoads = Component_GetData.GetRFPolyLoads(filPolyLoads, data);
                     }
-                    if (getLoadCases)
+                    if (getLoadCases && msg.Count < 0)
                     {
                         var filLoadCases = Component_GetData.FilterLoadCases(data, loads, inFilters);
                         rfLoadCases = Component_GetData.GetRFLoadCases(filLoadCases, data);
                     }
-                    if (getLoadCombos)
+                    if (getLoadCombos && msg.Count < 0)
                     {
                         var filLoadCombos = Component_GetData.FilterLoadCombos(data, loads, inFilters);
                         rfLoadCombos = Component_GetData.GetRFLoadCombos(filLoadCombos, data);
                     }
-                    if (getResultCombos)
+                    if (getResultCombos && msg.Count < 0)
                     {
                         var filResultombos = Component_GetData.FilterResultCombos(data, loads, inFilters);
                         rfResultCombos = Component_GetData.GetRFResultCombos(filResultombos, data);
                     }
-                }
+            }
                 catch (Exception ex)
-                {
+            {
                     Component_GetData.ClearOutput(ref rfNodes, ref rfLines, ref rfMembers, ref rfSurfaces, ref rfOpenings,
                     ref rfSupportsP, ref rfSupportsL, ref rfSupportsS, ref rfLineHinges, ref rfCroSecs, ref rfMaterials, ref rfNodalLoads,
                     ref rfLineLoads, ref rfMemberLoads, ref rfSurfaceLoads, ref rfPolyLoads, ref rfLoadCases, ref rfLoadCombos,
                     ref rfResultCombos, ref rfMemberHinges, ref rfMemberEccentricities, ref rfNodalReleases, ref rfFreeLineLoads);
-                    throw ex;
-                }
-                Component_GetData.DisconnectRFEM(ref model, ref data);
+                //throw ex;
+            }
+            Component_GetData.DisconnectRFEM(ref model, ref data);
             }
 
             // Assign GH Output

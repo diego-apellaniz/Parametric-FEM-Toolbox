@@ -71,18 +71,18 @@
     <Reference Include="Eto">
       <HintPath>C:\Users\diego\.nuget\packages\eto.forms\2.4.1\lib\netstandard1.0\Eto.dll</HintPath>
     </Reference>
-    <Reference Include="GH_IO, Version=6.34.21034.7001, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
+    <Reference Include="GH_IO, Version=6.35.21222.17001, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\GH_IO.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Rhino 7\Plug-ins\Grasshopper\GH_IO.dll</HintPath>
     </Reference>
-    <Reference Include="Grasshopper, Version=6.34.21034.7001, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
+    <Reference Include="Grasshopper, Version=6.35.21222.17001, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Rhino 7\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="RhinoCommon, Version=6.34.21034.7001, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
+    <Reference Include="RhinoCommon, Version=6.35.21222.17001, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Rhino 7\System\RhinoCommon.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Rhino 7\System\RhinoCommon.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -114,6 +114,7 @@
     <Compile Include="GUI\Component_GetResults_GUI.cs" />
     <Compile Include="GUI\Component_ExtrudeMembers_GUI.cs" />
     <Compile Include="GUI\Component_LCA_GUI.cs" />
+    <Compile Include="Deprecated\Component_OptimizeCS_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\Component_ResultsLineReactions_GUI.cs" />
     <Compile Include="Deprecated\Component_ResultsLineReactions_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\Component_ResultsMemberForces_GUI_OBSOLETE.cs" />
@@ -649,11 +650,8 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>Copy "$(TargetPath)" "D:\Diego\AppData\Roaming\Grasshopper\Libraries\$(TargetName).gha"
-Copy "$(TargetPath)" "C:\Users\diego\AppData\Roaming\Grasshopper\Libraries\$(TargetName).gha"
-Copy "$(TargetPath)" "C:\Users\dapellaniz\AppData\Roaming\Grasshopper\Libraries\$(TargetName).gha"
-Copy "$(TargetPath)" "D:\Users\dapellaniz\AppData\Roaming\Grasshopper\Libraries\$(ProjectName).gha"
-Copy "$(TargetPath)" "$(TargetDir)$(ProjectName).gha"
+    <PostBuildEvent>Copy "$(TargetPath)" "C:\Users\diego\AppData\Roaming\Grasshopper\Libraries\$(TargetName).gha"
+Copy "$(TargetPath)" "D:\Users\dapellaniz\AppData\Roaming\Grasshopper\Libraries\$(TargetName).gha"
 Erase "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

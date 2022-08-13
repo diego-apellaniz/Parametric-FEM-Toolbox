@@ -348,6 +348,26 @@
             Gets the hash code.
             </summary>
         </member>
+        <member name="M:GH_IO.Serialization.ID.GetHashCode">
+            <summary>
+            Gets the hash code.
+            </summary>
+            <returns>A number representing the hash code.</returns>
+        </member>
+        <member name="M:GH_IO.Serialization.ID.CompareTo(GH_IO.Serialization.ID)">
+            <summary>
+            Compares this ID to another ID.
+            </summary>
+            <param name="other">The other ID.</param>
+            <returns>Less than 0, if other comes before this. 0 is other is at the same place. More than zero otherwise.</returns>
+        </member>
+        <member name="M:GH_IO.Serialization.ID.Equals(GH_IO.Serialization.ID)">
+            <summary>
+            Determines if two IDs are equal.
+            </summary>
+            <param name="other">The other ID.</param>
+            <returns>true is both are equal.</returns>
+        </member>
         <member name="M:GH_IO.Serialization.ID.ToString">
             <summary>
             Gets a string representation for this ID.
@@ -577,6 +597,36 @@
             Create a new collection.
             </summary>
         </member>
+        <member name="P:GH_IO.Serialization.GH_Chunk.ChunkKeyedCollection.Count">
+            <summary>
+            Returns the amount in the collection.
+            </summary>
+        </member>
+        <member name="M:GH_IO.Serialization.GH_Chunk.ChunkKeyedCollection.Add(GH_IO.Serialization.GH_Chunk)">
+            <summary>
+            Adds a new chunk.
+            </summary>
+            <param name="chunk">The chunk to be added.</param>
+        </member>
+        <member name="M:GH_IO.Serialization.GH_Chunk.ChunkKeyedCollection.Remove(GH_IO.Serialization.GH_Chunk)">
+            <summary>
+            Removes a chunk.
+            </summary>
+            <param name="chunk">The chunk to be removed.</param>
+            <returns>True if the operation was successful; false otherwise.</returns>
+        </member>
+        <member name="M:GH_IO.Serialization.GH_Chunk.ChunkKeyedCollection.Remove(GH_IO.Serialization.ID)">
+            <summary>
+            Removes an ID.
+            </summary>
+            <param name="id">The ID to be removed.</param>
+            <returns>True if the operation was successful; false otherwise.</returns>
+        </member>
+        <member name="M:GH_IO.Serialization.GH_Chunk.ChunkKeyedCollection.Clear">
+            <summary>
+            Removes all chunks from the collection.
+            </summary>
+        </member>
         <member name="M:GH_IO.Serialization.GH_Chunk.ChunkKeyedCollection.TryGetValue(GH_IO.Serialization.ID,GH_IO.Serialization.GH_Chunk@)">
             <summary>
             Try and find the chunk that belongs to a given ID.
@@ -584,6 +634,12 @@
             <param name="id">ID to look for.</param>
             <param name="chunk">Chunk result.</param>
             <returns>True is a chunk was found, false if otherwise.</returns>
+        </member>
+        <member name="M:GH_IO.Serialization.GH_Chunk.ChunkKeyedCollection.GetEnumerator">
+            <summary>
+            Gets an enumerator that iterates over all chunks in the collection.
+            </summary>
+            <returns>The enumerator.</returns>
         </member>
         <member name="F:GH_IO.Serialization.GH_Chunk.m_chunks">
             <summary>

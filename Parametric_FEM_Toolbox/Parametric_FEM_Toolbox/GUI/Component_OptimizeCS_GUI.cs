@@ -42,8 +42,9 @@ namespace Parametric_FEM_Toolbox.GUI
         {
             // Use the pManager object to register your input parameters.
             //pManager.AddIntegerParameter("Cross Sections", "CroSecs", "Cross Section Indexes to optimize with the EC3 Module.", GH_ParamAccess.list);
-            pManager.AddIntegerParameter("Load Combinations", "LoadCombo", "Load Combinations to run in the EC3 Module.", GH_ParamAccess.list);
             pManager.AddBooleanParameter("Run component?", "Run", "If true, the programm is executed.", GH_ParamAccess.item, false);
+            pManager.AddIntegerParameter("Load Combinations", "LoadCombo", "Load Combinations to run in the EC3 Module.", GH_ParamAccess.list);
+            pManager.AddBooleanParameter("Optimize?", "Opt", "If true, the cross sections are optimized.", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -51,8 +52,12 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-             //Use the pManager object to register your output parameters.
-             //Output parameters do not have default values, but they too must have the correct access type.
+            //Use the pManager object to register your output parameters.
+            //Output parameters do not have default values, but they too must have the correct access type.
+            pManager.AddIntegerParameter("Member No", "No", "Member number.", GH_ParamAccess.list);
+            pManager.AddNumberParameter("Location", "X", "Location of result along member.", GH_ParamAccess.list);
+            pManager.AddNumberParameter("Utilization", "Util", "Utilization ratio.", GH_ParamAccess.list);
+            pManager.AddTextParameter("Comment", "Check", "Comment about the design check.", GH_ParamAccess.list);
             pManager.AddNumberParameter("Steel Mass", "Mass", "Steel Mass [kg] of the optimized structure.", GH_ParamAccess.item);
 
             // Sometimes you want to hide a specific parameter from the Rhino preview.
@@ -89,10 +94,14 @@ namespace Parametric_FEM_Toolbox.GUI
         protected override void SolveInstance(IGH_DataAccess DA, EvaluationUnit unit)
         {
             var run = false;
+            var opt = false;
 
             var combos = new List<int>();
             var mass = 0.0;
-
+            var outMembers = new List<int>();
+            var outUtils = new List<double>();
+            var outLocation = new List<double>();
+            var outCheck = new List<string>();
 
             var modelName = "";
             IModel model = null;
@@ -100,10 +109,11 @@ namespace Parametric_FEM_Toolbox.GUI
 
             var errorMsg = new List<string>();
 
-            DA.GetData(1, ref run);
+            DA.GetData(0, ref run);
+            DA.GetData(2, ref opt);
             if (run)
             {
-                if (!DA.GetData(2+1, ref modelName))
+                if (!DA.GetData(3+1, ref modelName))
                 {
                     Component_GetData.ConnectRFEM(ref model, ref data);
                 }else
@@ -113,7 +123,7 @@ namespace Parametric_FEM_Toolbox.GUI
                 try
                 {
                     //Calculate Load Combos
-                    DA.GetDataList(0, combos);
+                    DA.GetDataList(1, combos);
                     var myCalculation = model.GetCalculation();
                     myCalculation.Clean();
                     foreach (var no in combos)
@@ -131,7 +141,14 @@ namespace Parametric_FEM_Toolbox.GUI
                     for (int i = 0; i < countCS; i++)
                     {
                         Dlubal.STEEL_EC3.CROSS_SECTION myCSEC3 = myCaseEC3.moGetCrossSection(i + 1, ITEM_AT.AT_NO);
-                        myCSEC3.Optimization = 1;
+                        if(opt)
+                        {
+                            myCSEC3.Optimization = 1;
+                        }else
+                        {
+                            myCSEC3.Optimization = 0;
+                        }
+                        
                         myCaseEC3.moSetCrossSection(myCSEC3.No, ITEM_AT.AT_NO, myCSEC3);
                     }
 
@@ -139,38 +156,55 @@ namespace Parametric_FEM_Toolbox.GUI
                     var error = myCaseEC3.moCalculate();
 
                     //Querschnitt an RFEM übergeben.
-                    var myCSECRFEM = new List<CrossSection>();
-                    for (int i = 0; i < countCS; i++)
+                    if (opt)
                     {
-                        Dlubal.STEEL_EC3.CROSS_SECTION myCSEC3 = myCaseEC3.moGetCrossSection(i + 1, ITEM_AT.AT_NO);
-                        var myCS = data.GetCrossSection(i + 1, ItemAt.AtNo).GetData();
-                        myCS.TextID = myCSEC3.Description;
-                        myCS.Description = myCSEC3.Description;
-                        myCSECRFEM.Add(myCS);
-                    }
+                        var myCSECRFEM = new List<CrossSection>();
+                        for (int i = 0; i < countCS; i++)
+                        {
+                            Dlubal.STEEL_EC3.CROSS_SECTION myCSEC3 = myCaseEC3.moGetCrossSection(i + 1, ITEM_AT.AT_NO);
+                            var myCS = data.GetCrossSection(i + 1, ItemAt.AtNo).GetData();
+                            myCS.TextID = myCSEC3.Description;
+                            myCS.Description = myCSEC3.Description;
 
-                    // Set Data
-                    data.PrepareModification();
-                    foreach (var crosec in myCSECRFEM)
+                            myCSECRFEM.Add(myCS);
+                        }
+                        // Set Data
+                        data.PrepareModification();
+                        foreach (var crosec in myCSECRFEM)
+                        {
+                            data.SetCrossSection(crosec);
+                        }
+                        data.FinishModification();
+                    }                    
+
+                    // Get utilization of members
+                    var results = myCaseEC3.moGetResults().moGetDesignByMemberAll();
+                    foreach (var r in results)
                     {
-                        data.SetCrossSection(crosec);
-                    }
-                    data.FinishModification();
+                        outMembers.Add(r.MemberNo);
+                        outLocation.Add(r.X);
+                        outUtils.Add(r.DesignRatio);
+                        outCheck.Add(r.comment);
+                    }                    
 
                     // Get steel mass
                     var members = data.GetMembers();
                     mass = members.Sum(item => item.Weight);
 
-                }
+            }
                 catch (Exception ex)
-                {
-                    Component_GetData.DisconnectRFEM(ref model, ref data);
-                    throw ex;
-                }
+            {
+                Component_GetData.DisconnectRFEM(ref model, ref data);
+                throw ex;
+            }
             Component_GetData.DisconnectRFEM(ref model, ref data);
             }
             // Assign Output
-            DA.SetData(0, mass);
+            DA.SetDataList(0,outMembers);
+            DA.SetDataList(1, outLocation);
+            DA.SetDataList(2,outUtils);
+            DA.SetDataList(3, outCheck);
+            DA.SetData(4, mass);
 
 
             if (errorMsg.Count != 0)
@@ -212,7 +246,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("da5f13a0-a824-4444-abe5-efb224d7e419"); }
+            get { return new Guid("7cb59f27-f52e-4a8c-97e5-b345b4d8aa37"); }
         }
     }
 }

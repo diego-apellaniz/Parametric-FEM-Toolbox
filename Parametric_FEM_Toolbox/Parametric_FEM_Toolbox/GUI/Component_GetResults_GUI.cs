@@ -770,6 +770,7 @@ namespace Parametric_FEM_Toolbox.GUI
                 //var gh_path = new GH_Path(_meshdisplacements.Paths[i]);
                 var mesh_path = new GH_Path(_meshdisplacementsByType.Paths[i].Indices[0]);
                 // Get fe mesh as starting mesh
+                //var mesh = _feMeshes.Branch(mesh_path)[0].DuplicateMesh();
                 var mesh = _feMeshes.Branch(mesh_path)[0].DuplicateMesh();
                 // Move FE Nodes according to displacements
                 for (int j = 0; j < mesh.Vertices.Count; j++)

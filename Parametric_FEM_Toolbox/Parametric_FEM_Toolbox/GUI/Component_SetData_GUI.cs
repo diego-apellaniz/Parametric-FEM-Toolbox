@@ -266,8 +266,8 @@ namespace Parametric_FEM_Toolbox.GUI
                 {
                     Component_GetData.ConnectRFEM(modelName, ref model, ref data);
                 }
-                try
-                {
+                //try
+                //{
                     // Set data
                     data.PrepareModification();
                     if (DA.GetDataList(14, ghMats))
@@ -401,15 +401,15 @@ namespace Parametric_FEM_Toolbox.GUI
                         }
                         data.SetRFFreePolygonLoads(loads, ghPolyLoads, ref polyLoadNo, ref errorMsg);
                     }
-                }
-                catch (Exception ex)
-                {
-                    Component_SetData.ClearOutput(ref nodesNo, ref linesNo, ref membersNo, ref srfcNo, ref opNo, ref nodSupNo, ref lineSupNo, ref sfcSupNo,
-                    ref memberHingeNo, ref memberEccentricityNo, ref lineHingeNo, ref nodalReleaseNo, ref croSecNo, ref matNo, ref nodalLoadNo, ref lineLoadNo, ref memberLoadNo, ref surfaceLoadNo,
-                    ref freeLineLoadNo, ref polyLoadNo, ref loadcaseNo, ref loadcomboNo, ref resultcomboNo);
-                    Component_GetData.DisconnectRFEM(ref model, ref data);
-                    throw ex;
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    Component_SetData.ClearOutput(ref nodesNo, ref linesNo, ref membersNo, ref srfcNo, ref opNo, ref nodSupNo, ref lineSupNo, ref sfcSupNo,
+                //    ref memberHingeNo, ref memberEccentricityNo, ref lineHingeNo, ref nodalReleaseNo, ref croSecNo, ref matNo, ref nodalLoadNo, ref lineLoadNo, ref memberLoadNo, ref surfaceLoadNo,
+                //    ref freeLineLoadNo, ref polyLoadNo, ref loadcaseNo, ref loadcomboNo, ref resultcomboNo);
+                //    Component_GetData.DisconnectRFEM(ref model, ref data);
+                //    throw ex;
+                //}
             Component_GetData.DisconnectRFEM(ref model, ref data);
             }
             // Assign Output

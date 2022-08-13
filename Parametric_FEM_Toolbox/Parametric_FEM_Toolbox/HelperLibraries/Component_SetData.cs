@@ -289,7 +289,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                         data.SetNode(node);
                     }
                 }
-                
+
                 // Set lines
                 for (i = 0; i < inLines.Count; i++)
                 {
@@ -304,13 +304,13 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     inLines[i].NodeList = linepts;
                     index.Add(data.SetRFLine(inLines[i], ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo));
                 }
-            }            
+            }
             catch (Exception ex)
             {
                 index.Add(null);
                 errorMsg.Add($"Import of Line No.{i} failed! " + ex.Message);
             }
-            
+
             // Remove duplicate points
         }
 
@@ -322,7 +322,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             {
                 inputNodeList = false;
                 // Get NodeList
-                var nodeList = "";                
+                var nodeList = "";
                 foreach (var point in rfLine.ControlPoints)
                 {
                     var prevLastNoNo = lastNoNo;
@@ -334,8 +334,8 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     }
                 }
                 rfLine.NodeList = nodeList.Substring(0, nodeList.Length - 1);
-            }            
-            
+            }
+
             // Check if line already exists in RFEM
             if (!newNodes)
             {
@@ -354,7 +354,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 lastLineNo += 1;
                 rfLine.No = lastLineNo;
             }
-            if (inputNodeList ||  rfLine.Type == LineType.PolylineType || rfLine.Type == LineType.ArcType || rfLine.Type == LineType.CircleType)
+            if (inputNodeList || rfLine.Type == LineType.PolylineType || rfLine.Type == LineType.ArcType || rfLine.Type == LineType.CircleType)
             {
                 data.SetLine(rfLine);
             }
@@ -617,7 +617,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             }
             // Get generated CSys in Grasshopper - at the end to call PrepareModification just once
             data.FinishModification();
-            data.PrepareModification();            
+            data.PrepareModification();
             foreach (var rfSfc in index)
             {
                 try
@@ -632,7 +632,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 {
                     errorMsg.Add($"CSys of Surface No.{rfSfc.No} caused an error! " + ex.Message);
                 }
-            }            
+            }
         }
         public static RFSurface SetRFSfc(this IModelData data, ref RFSurface rfSfc, ref List<RFNode> existingNodes, ref List<RFLine> existingLines, ref int lastNoNo, ref int lastLineNo, ref int lastSfcNo)
         {
@@ -673,7 +673,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             }
             if (rfSfc.GeometryType == SurfaceGeometryType.NurbsSurfaceType)
             {
-                data.SetNurbsSurface(rfSfc);                    
+                data.SetNurbsSurface(rfSfc);
             }
             else if (rfSfc.GeometryType == SurfaceGeometryType.QuadrangleSurfaceType && !inputLineList)
             {
@@ -751,7 +751,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             {
                 data.GetSurface(rfSfc.No, ItemAt.AtNo).SetInputAxes(rfSfc.SurfaceAxes);
             }
-            
+
             // Return RFSfc
             return rfSfc;
         }
@@ -866,7 +866,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 }
                 rfOpening.BoundaryLineList = boundList.Substring(0, boundList.Length - 1);
             }
-       
+
             // Set member with a provided index number or without
             if (rfOpening.No == 0)
             {
@@ -1656,7 +1656,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     if (modelOrthoElastic != null)
                     {
                         modelOrthoElastic.SetData(rFMat);
-                    }                    
+                    }
                 }
                 return rFMat;
             }
@@ -1679,6 +1679,47 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
 
         #region Load Data
 
+        private static Dictionary<ILoadCase, List<RFNodalLoad>> group_nodalloads(ILoads loads, List<RFNodalLoad> rfLineLoads, List<GH_RFEM> ghSLoads)
+        {
+            var outDict = new Dictionary<ILoadCase, List<RFNodalLoad>>();
+            foreach (var rfLoad in rfLineLoads)
+            {
+                var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+                if (!outDict.ContainsKey(loadcase))
+                {
+                    outDict.Add(loadcase, new List<RFNodalLoad>() { rfLoad });
+                }
+                else
+                {
+                    var new_list = outDict[loadcase];
+                    new_list.Add(rfLoad);
+                    outDict[loadcase] = new_list;
+                }
+            }
+            return outDict;
+        }
+
+
+        private static void set_nodes_for_loads(IModelData data, ref List<RFNodalLoad> rfNodalLoads, ref List<RFNode> existingNodes, ref int lastNoNo, double tol)
+        {
+            data.PrepareModification();
+            for (int i = 0; i < rfNodalLoads.Count; i++)
+            {
+                // Get Node List?
+                if (rfNodalLoads[i].NodeList == null)
+                {
+                    var nodeList = "";
+                    foreach (var pt in rfNodalLoads[i].Location)
+                    {
+                        var rfNode = new RFNode(new Node(), pt);
+                        nodeList += data.SetRFNode(ref rfNode, ref existingNodes, ref lastNoNo, tol).No.ToString() + ",";
+                    }
+                    rfNodalLoads[i].NodeList = nodeList.Substring(0, nodeList.Length - 1);
+                }
+            }
+            data.FinishModification();
+        }
+
         public static void SetRFNodalLoads(this IModelData data, ILoads loads, List<GH_RFEM> ghNodes, ref List<RFNodalLoad> index)
         {
             var newData = false;
@@ -1687,7 +1728,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             var lastNoNo = 0;
             var lastNLNo = 0;
 
-            inNLoads = ghNodes.Select(x => new RFNodalLoad((RFNodalLoad)x.Value)).ToList();            
+            inNLoads = ghNodes.Select(x => new RFNodalLoad((RFNodalLoad)x.Value)).ToList();
 
             foreach (var rfLoad in inNLoads)
             {
@@ -1719,7 +1760,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     index.Add(data.SetRFNodalLoad(loadcase, rfLoad, ref existingNodes, ref lastNoNo, ref lastNLNo, tol));
                 }
             }
-            
+
         }
 
         public static void SetRFNodalLoads(this IModelData data, ILoads loads, List<GH_RFEM> ghNodes, ref List<RFNodalLoad> index, ref List<string> errorMsg)
@@ -1732,82 +1773,169 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
 
             inNLoads = ghNodes.Select(x => new RFNodalLoad((RFNodalLoad)x.Value)).ToList();
 
-            foreach (var rfLoad in inNLoads)
+            //foreach (var rfLoad in inNLoads)
+            //{
+            //    //try
+            //    //{
+            //        var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+            //        if (rfLoad.ToModify)
+            //        {
+            //            loadcase.PrepareModification();
+            //            var myload = (NodalLoad)rfLoad;
+            //            //if (rfSup.NewNo > 0)
+            //            //{
+            //            //    myNo = rfSup.NewNo;
+            //            //}
+            //            loadcase.GetNodalLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else if (rfLoad.ToDelete)
+            //        {
+            //            loadcase.PrepareModification();
+            //            loadcase.GetNodalLoad(rfLoad.No, ItemAt.AtNo).Delete();
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else
+            //        {
+            //            if (newData == false)
+            //            {
+            //                existingNodes = Component_GetData.GetRFNodes(data.GetNodes().ToList(), data);
+            //                lastNoNo = data.GetLastObjectNo(ModelObjectType.NodeObject);
+            //                lastNLNo = loadcase.GetLastObjectNo(LoadObjectType.NodalLoadObject);
+            //                newData = true;
+            //            }
+            //            index.Add(data.SetRFNodalLoad(loadcase, rfLoad, ref existingNodes, ref lastNoNo, ref lastNLNo, tol));
+            //        }
+            //    //}
+            //    //catch (Exception ex)
+            //    //{
+            //    //    index.Add(null);
+            //    //    errorMsg.Add($"Import of Nodal Load No.{rfLoad.No} failed! " + ex.Message);
+            //    //}
+            //}
+
+            existingNodes = Component_GetData.GetRFNodes(data.GetNodes().ToList(), data);
+            lastNoNo = data.GetLastObjectNo(ModelObjectType.NodeObject);
+            set_nodes_for_loads(data, ref inNLoads, ref existingNodes, ref lastNoNo, tol);
+            var dict_loadcases = group_nodalloads(loads, inNLoads, ghNodes);
+            foreach (var loadcase in dict_loadcases.Keys)
             {
-                try
+                loadcase.PrepareModification();
+                foreach (var rfLoad in dict_loadcases[loadcase])
                 {
-                    var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
-                    if (rfLoad.ToModify)
+                    try
                     {
-                        loadcase.PrepareModification();
-                        var myload = (NodalLoad)rfLoad;
-                        //if (rfSup.NewNo > 0)
-                        //{
-                        //    myNo = rfSup.NewNo;
-                        //}
-                        loadcase.GetNodalLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else if (rfLoad.ToDelete)
-                    {
-                        loadcase.PrepareModification();
-                        loadcase.GetNodalLoad(rfLoad.No, ItemAt.AtNo).Delete();
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else
-                    {
-                        if (newData == false)
+                        if (rfLoad.ToModify)
                         {
-                            existingNodes = Component_GetData.GetRFNodes(data.GetNodes().ToList(), data);
-                            lastNoNo = data.GetLastObjectNo(ModelObjectType.NodeObject);
-                            lastNLNo = loadcase.GetLastObjectNo(LoadObjectType.NodalLoadObject);
-                            newData = true;
+                            loadcase.PrepareModification();
+                            var myload = (NodalLoad)rfLoad;
+                            //if (rfSup.NewNo > 0)
+                            //{
+                            //    myNo = rfSup.NewNo;
+                            //}
+                            loadcase.GetNodalLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+                            index.Add(rfLoad);
                         }
-                        index.Add(data.SetRFNodalLoad(loadcase, rfLoad, ref existingNodes, ref lastNoNo, ref lastNLNo, tol));
+                        else if (rfLoad.ToDelete)
+                        {
+                            loadcase.GetNodalLoad(rfLoad.No, ItemAt.AtNo).Delete();
+                            index.Add(rfLoad);
+                        }
+                        else
+                        {
+                            if (newData == false)
+                            {
+                                existingNodes = Component_GetData.GetRFNodes(data.GetNodes().ToList(), data);
+                                lastNoNo = data.GetLastObjectNo(ModelObjectType.NodeObject);
+                                lastNLNo = loadcase.GetLastObjectNo(LoadObjectType.NodalLoadObject);
+                                newData = true;
+                            }
+                            index.Add(data.SetRFNodalLoad(loadcase, rfLoad, ref existingNodes, ref lastNoNo, ref lastNLNo, tol));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        index.Add(null);
+                        errorMsg.Add($"Import of Nodal Load No.{rfLoad.No} failed! " + ex.Message);
                     }
                 }
-                catch (Exception ex)
-                {
-                    index.Add(null);
-                    errorMsg.Add($"Import of Nodal Load No.{rfLoad.No} failed! " + ex.Message);
-                }
+                loadcase.FinishModification();
             }
         }
 
         public static RFNodalLoad SetRFNodalLoad(this IModelData data, ILoadCase loadcase, ref RFNodalLoad rfNodalLoad, ref List<RFNode> existingNodes, ref int lastNo, ref int lastNLNo, double tol)
         {
-            // Get Node List?
-            if (rfNodalLoad.NodeList == null)
-            {
-                var nodeList = "";
-                data.PrepareModification();
-                foreach (var pt in rfNodalLoad.Location)
-                {
-                    var rfNode = new RFNode(new Node(), pt);
-                    nodeList += data.SetRFNode(ref rfNode, ref existingNodes, ref lastNo, tol).No.ToString() + ",";
-                }
-                data.FinishModification();
-                rfNodalLoad.NodeList = nodeList.Substring(0, nodeList.Length - 1);
-            }
+            //// Get Node List?
+            //if (rfNodalLoad.NodeList == null)
+            //{
+            //    var nodeList = "";
+            //    data.PrepareModification();
+            //    foreach (var pt in rfNodalLoad.Location)
+            //    {
+            //        var rfNode = new RFNode(new Node(), pt);
+            //        nodeList += data.SetRFNode(ref rfNode, ref existingNodes, ref lastNo, tol).No.ToString() + ",";
+            //    }
+            //    data.FinishModification();
+            //    rfNodalLoad.NodeList = nodeList.Substring(0, nodeList.Length - 1);
+            //}
             // Set support with a provided index number
             if (!(rfNodalLoad.No == 0))
             {
-                loadcase.PrepareModification();
+                //loadcase.PrepareModification();
                 loadcase.SetNodalLoad(rfNodalLoad);
-                loadcase.FinishModification();
+                //loadcase.FinishModification();
                 return rfNodalLoad;
             }
             // Set node without provided index number
             lastNLNo += 1;
             rfNodalLoad.No = lastNLNo;
-            loadcase.PrepareModification();
+            //loadcase.PrepareModification();
             loadcase.SetNodalLoad(rfNodalLoad);
-            loadcase.FinishModification();
+            //loadcase.FinishModification();
             return rfNodalLoad;
         }
 
+        private static Dictionary<ILoadCase, List<RFLineLoad>> group_lineloads(ILoads loads, List<RFLineLoad> rfLineLoads, List<GH_RFEM> ghSLoads)
+        {
+            var outDict = new Dictionary<ILoadCase, List<RFLineLoad>>();
+            foreach (var rfLoad in rfLineLoads)
+            {
+                var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+                if (!outDict.ContainsKey(loadcase))
+                {
+                    outDict.Add(loadcase, new List<RFLineLoad>() { rfLoad });
+                }
+                else
+                {
+                    var new_list = outDict[loadcase];
+                    new_list.Add(rfLoad);
+                    outDict[loadcase] = new_list;
+                }
+            }
+            return outDict;
+        }
+
+        private static void set_lines_for_loads(IModelData data, ref List<RFLineLoad> rfLineLoads, ref List<RFNode> existingNodes, ref List<RFLine> existingLines, ref int lastNoNo, ref int lastLineNo, double tol)
+        {
+            data.PrepareModification();
+            for (int i = 0; i < rfLineLoads.Count; i++)
+            {
+                if (rfLineLoads[i].LineList == null)
+                {
+                    var lineList = "";
+                    
+                    foreach (var rfLine in rfLineLoads[i].BaseLines)
+                    {
+                        var myRFLine = new RFLine(rfLine);
+                        lineList += data.SetRFLine(ref myRFLine, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo).No.ToString() + ",";
+                    }
+                    rfLineLoads[i].LineList = lineList.Substring(0, lineList.Length - 1);
+                }
+            }
+            data.FinishModification();
+        }
 
         public static void SetRFLineLoads(this IModelData data, ILoads loads, List<GH_RFEM> ghLLoads, ref List<RFLineLoad> index, ref List<string> errorMsg)
         {
@@ -1820,130 +1948,248 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             var lastLLNo = 0;
 
             inLLoads = ghLLoads.Select(x => new RFLineLoad((RFLineLoad)x.Value)).ToList();
-            foreach (var rfLoad in inLLoads)
+            //foreach (var rfLoad in inLLoads)
+            //{
+            //    try
+            //    {
+            //        var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+            //        if (rfLoad.ToModify)
+            //        {
+            //            loadcase.PrepareModification();
+            //            var myload = (LineLoad)rfLoad;
+            //            //if (rfSup.NewNo > 0)
+            //            //{
+            //            //    myNo = rfSup.NewNo;
+            //            //}
+            //            loadcase.GetLineLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else if (rfLoad.ToDelete)
+            //        {
+            //            loadcase.PrepareModification();
+            //            loadcase.GetLineLoad(rfLoad.No, ItemAt.AtNo).Delete();
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else
+            //        {
+            //            if (newData == false)
+            //            {
+            //                existingNodes = Component_GetData.GetRFNodes(data.GetNodes().ToList(), data);
+            //                existingLines = Component_GetData.GetRFLines(data.GetLines().ToList(), data);
+            //                lastNoNo = data.GetLastObjectNo(ModelObjectType.NodeObject);
+            //                lastLineNo = data.GetLastObjectNo(ModelObjectType.LineObject);
+            //                lastLLNo = loadcase.GetLastObjectNo(LoadObjectType.LineLoadObject);
+            //                newData = true;
+            //            }
+            //            index.Add(data.SetRFLineLoad(loadcase, rfLoad, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo, ref lastLLNo, tol));
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        index.Add(null);
+            //        errorMsg.Add($"Import of Line Load No.{rfLoad.No} failed! " + ex.Message);
+            //    }
+            //}
+
+            existingNodes = Component_GetData.GetRFNodes(data.GetNodes().ToList(), data);
+            existingLines = Component_GetData.GetRFLines(data.GetLines().ToList(), data);
+            lastNoNo = data.GetLastObjectNo(ModelObjectType.NodeObject);
+            lastLineNo = data.GetLastObjectNo(ModelObjectType.LineObject);
+            set_lines_for_loads(data, ref inLLoads, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo, tol);
+            var dict_loadcases = group_lineloads(loads, inLLoads, ghLLoads);
+            foreach (var loadcase in dict_loadcases.Keys)
             {
-                try
+                loadcase.PrepareModification();
+                foreach (var rfLoad in dict_loadcases[loadcase])
                 {
-                    var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
-                    if (rfLoad.ToModify)
+                    try
                     {
-                        loadcase.PrepareModification();
-                        var myload = (LineLoad)rfLoad;
-                        //if (rfSup.NewNo > 0)
-                        //{
-                        //    myNo = rfSup.NewNo;
-                        //}
-                        loadcase.GetLineLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else if (rfLoad.ToDelete)
-                    {
-                        loadcase.PrepareModification();
-                        loadcase.GetLineLoad(rfLoad.No, ItemAt.AtNo).Delete();
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else
-                    {
-                        if (newData == false)
+                        if (rfLoad.ToModify)
                         {
-                            existingNodes = Component_GetData.GetRFNodes(data.GetNodes().ToList(), data);
-                            existingLines = Component_GetData.GetRFLines(data.GetLines().ToList(), data);
-                            lastNoNo = data.GetLastObjectNo(ModelObjectType.NodeObject);
-                            lastLineNo = data.GetLastObjectNo(ModelObjectType.LineObject);
-                            lastLLNo = loadcase.GetLastObjectNo(LoadObjectType.LineLoadObject);
-                            newData = true;
+                            var myload = (LineLoad)rfLoad;
+                            //if (rfSup.NewNo > 0)
+                            //{
+                            //    myNo = rfSup.NewNo;
+                            //}
+                            loadcase.GetLineLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+                            index.Add(rfLoad);
                         }
-                        index.Add(data.SetRFLineLoad(loadcase, rfLoad, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo, ref lastLLNo, tol));
+                        else if (rfLoad.ToDelete)
+                        {
+                            loadcase.GetLineLoad(rfLoad.No, ItemAt.AtNo).Delete();
+                            index.Add(rfLoad);
+                        }
+                        else
+                        {
+                            if (newData == false)
+                            {
+                                existingNodes = Component_GetData.GetRFNodes(data.GetNodes().ToList(), data);
+                                existingLines = Component_GetData.GetRFLines(data.GetLines().ToList(), data);
+                                lastNoNo = data.GetLastObjectNo(ModelObjectType.NodeObject);
+                                lastLineNo = data.GetLastObjectNo(ModelObjectType.LineObject);
+                                lastLLNo = loadcase.GetLastObjectNo(LoadObjectType.LineLoadObject);
+                                newData = true;
+                            }
+                            index.Add(data.SetRFLineLoad(loadcase, rfLoad, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo, ref lastLLNo, tol));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        index.Add(null);
+                        errorMsg.Add($"Import of Line Load No.{rfLoad.No} failed! " + ex.Message);
                     }
                 }
-                catch (Exception ex)
-                {
-                    index.Add(null);
-                    errorMsg.Add($"Import of Line Load No.{rfLoad.No} failed! " + ex.Message);
-                }
+                loadcase.FinishModification();
             }
         }
 
         public static RFLineLoad SetRFLineLoad(this IModelData data, ILoadCase loadcase, ref RFLineLoad rfLineLoad, ref List<RFNode> existingNodes, ref List<RFLine> existingLines, ref int lastNoNo, ref int lastLineNo, ref int lastLLNo, double tol)
         {
+            // already applied in method set_lines_for_loads
             // Get Node List?
-            if (rfLineLoad.LineList == null)
-            {
-                var lineList = "";
-                data.PrepareModification();
-                foreach (var rfLine in rfLineLoad.BaseLines)
-                {
-                    var myRFLine = new RFLine(rfLine);
-                    lineList += data.SetRFLine(ref myRFLine, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo).No.ToString() + ",";
-                }
-                data.FinishModification();
-                rfLineLoad.LineList = lineList.Substring(0, lineList.Length - 1);
-            }
+            //if (rfLineLoad.LineList == null)
+            //{
+            //    var lineList = "";
+            //    loadcase.FinishModification();
+            //    data.PrepareModification();
+            //    foreach (var rfLine in rfLineLoad.BaseLines)
+            //    {
+            //        var myRFLine = new RFLine(rfLine);
+            //        lineList += data.SetRFLine(ref myRFLine, ref existingNodes, ref existingLines, ref lastNoNo, ref lastLineNo).No.ToString() + ",";
+            //    }
+            //    data.FinishModification();
+            //    loadcase.PrepareModification();
+            //    rfLineLoad.LineList = lineList.Substring(0, lineList.Length - 1);
+            //}
             // Set support with a provided index number
             if (!(rfLineLoad.No == 0))
             {
-                loadcase.PrepareModification();
+                //loadcase.PrepareModification();
                 loadcase.SetLineLoad(rfLineLoad);
-                loadcase.FinishModification();
+                //loadcase.FinishModification();
                 return rfLineLoad;
             }
             // Set node without provided index number
             lastLLNo += 1;
             rfLineLoad.No = lastLLNo;
-            loadcase.PrepareModification();
+            //loadcase.PrepareModification();
             loadcase.SetLineLoad(rfLineLoad);
-            loadcase.FinishModification();
+            //loadcase.FinishModification();
             return rfLineLoad;
+        }
+
+        private static Dictionary<ILoadCase, List<RFMemberLoad>> group_memberloads(ILoads loads, List<GH_RFEM> ghSLoads)
+        {
+            var outDict = new Dictionary<ILoadCase, List<RFMemberLoad>>();
+            var inPLoads = ghSLoads.Select(x => new RFMemberLoad((RFMemberLoad)x.Value)).ToList();
+            foreach (var rfLoad in inPLoads)
+            {
+                var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+                if (!outDict.ContainsKey(loadcase))
+                {
+                    outDict.Add(loadcase, new List<RFMemberLoad>() { rfLoad });
+                }
+                else
+                {
+                    var new_list = outDict[loadcase];
+                    new_list.Add(rfLoad);
+                    outDict[loadcase] = new_list;
+                }
+            }
+            return outDict;
         }
 
         public static void SetRFMemberLoads(this IModelData data, ILoads loads, List<GH_RFEM> ghMLoads, ref List<RFMemberLoad> index, ref List<string> errorMsg)
         {
             var newData = false;
-            var inMLoads = new List<RFMemberLoad>();
+            //var inMLoads = new List<RFMemberLoad>();
             var lastMLNo = 0;
 
-            inMLoads = ghMLoads.Select(x => new RFMemberLoad((RFMemberLoad)x.Value)).ToList();
-            foreach (var rfLoad in inMLoads)
+            //inMLoads = ghMLoads.Select(x => new RFMemberLoad((RFMemberLoad)x.Value)).ToList();
+            //foreach (var rfLoad in inMLoads)
+            //{
+            //    try
+            //    {
+            //        var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+            //        if (rfLoad.ToModify)
+            //        {
+            //            loadcase.PrepareModification();
+            //            var myload = (MemberLoad)rfLoad;
+            //            //if (rfSup.NewNo > 0)
+            //            //{
+            //            //    myNo = rfSup.NewNo;
+            //            //}
+            //            loadcase.GetMemberLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else if (rfLoad.ToDelete)
+            //        {
+            //            loadcase.PrepareModification();
+            //            loadcase.GetMemberLoad(rfLoad.No, ItemAt.AtNo).Delete();
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else
+            //        {
+            //            if (newData == false)
+            //            {
+            //                lastMLNo = loadcase.GetLastObjectNo(LoadObjectType.MemberLoadObject);
+            //                newData = true;
+            //            }
+            //            index.Add(data.SetRFMemberLoad(loadcase, rfLoad, ref lastMLNo));
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        index.Add(null);
+            //        errorMsg.Add($"Import of Member Load No.{rfLoad.No} failed! " + ex.Message);
+            //    }
+            //}
+
+            var dict_loadcases = group_memberloads(loads, ghMLoads);
+            foreach (var loadcase in dict_loadcases.Keys)
             {
-                try
+                loadcase.PrepareModification();
+                foreach (var rfLoad in dict_loadcases[loadcase])
                 {
-                    var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
-                    if (rfLoad.ToModify)
+                    try
                     {
-                        loadcase.PrepareModification();
-                        var myload = (MemberLoad)rfLoad;
-                        //if (rfSup.NewNo > 0)
-                        //{
-                        //    myNo = rfSup.NewNo;
-                        //}
-                        loadcase.GetMemberLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else if (rfLoad.ToDelete)
-                    {
-                        loadcase.PrepareModification();
-                        loadcase.GetMemberLoad(rfLoad.No, ItemAt.AtNo).Delete();
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else
-                    {
-                        if (newData == false)
+                        if (rfLoad.ToModify)
                         {
-                            lastMLNo = loadcase.GetLastObjectNo(LoadObjectType.MemberLoadObject);
-                            newData = true;
+                            var myload = (MemberLoad)rfLoad;
+                            //if (rfSup.NewNo > 0)
+                            //{
+                            //    myNo = rfSup.NewNo;
+                            //}
+                            loadcase.GetMemberLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+                            index.Add(rfLoad);
                         }
-                        index.Add(data.SetRFMemberLoad(loadcase, rfLoad, ref lastMLNo));
+                        else if (rfLoad.ToDelete)
+                        {
+                            loadcase.GetMemberLoad(rfLoad.No, ItemAt.AtNo).Delete();
+                            index.Add(rfLoad);
+                        }
+                        else
+                        {
+                            if (newData == false)
+                            {
+                                lastMLNo = loadcase.GetLastObjectNo(LoadObjectType.MemberLoadObject);
+                                newData = true;
+                            }
+                            index.Add(data.SetRFMemberLoad(loadcase, rfLoad, ref lastMLNo));
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        index.Add(null);
+                        errorMsg.Add($"Import of Member Load No.{rfLoad.No} failed! " + ex.Message);
+                    }
+
                 }
-                catch (Exception ex)
-                {
-                    index.Add(null);
-                    errorMsg.Add($"Import of Member Load No.{rfLoad.No} failed! " + ex.Message);
-                }
+                loadcase.FinishModification();
             }
         }
 
@@ -1953,66 +2199,130 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             // Set support with a provided index number
             if (!(rfMemberLoad.No == 0))
             {
-                loadcase.PrepareModification();
+                //loadcase.PrepareModification();
                 loadcase.SetMemberLoad(rfMemberLoad);
-                loadcase.FinishModification();
+                //loadcase.FinishModification();
                 return rfMemberLoad;
             }
             // Set node without provided index number
             lastMLNo += 1;
             rfMemberLoad.No = lastMLNo;
-            loadcase.PrepareModification();
+            //loadcase.PrepareModification();
             loadcase.SetMemberLoad(rfMemberLoad);
-            loadcase.FinishModification();
+            //loadcase.FinishModification();
             return rfMemberLoad;
+        }
+
+        private static Dictionary<ILoadCase, List<RFSurfaceLoad>> group_surfaceloads(ILoads loads, List<GH_RFEM> ghSLoads)
+        {
+            var outDict = new Dictionary<ILoadCase, List<RFSurfaceLoad>>();
+            var inPLoads = ghSLoads.Select(x => new RFSurfaceLoad((RFSurfaceLoad)x.Value)).ToList();
+            foreach (var rfLoad in inPLoads)
+            {
+                var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+                if (!outDict.ContainsKey(loadcase))
+                {
+                    outDict.Add(loadcase, new List<RFSurfaceLoad>() { rfLoad });
+                }
+                else
+                {
+                    var new_list = outDict[loadcase];
+                    new_list.Add(rfLoad);
+                    outDict[loadcase] = new_list;
+                }
+            }
+            return outDict;
         }
 
         public static void SetRFSurfaceLoads(this IModelData data, ILoads loads, List<GH_RFEM> ghSLoads, ref List<RFSurfaceLoad> index, ref List<string> errorMsg)
         {
             var newData = false;
-            var inSLoads = new List<RFSurfaceLoad>();
+            //var inSLoads = new List<RFSurfaceLoad>();
             var lastSLNo = 0;
 
-            inSLoads = ghSLoads.Select(x => new RFSurfaceLoad((RFSurfaceLoad)x.Value)).ToList();
-            foreach (var rfLoad in inSLoads)
+            //inSLoads = ghSLoads.Select(x => new RFSurfaceLoad((RFSurfaceLoad)x.Value)).ToList();
+            //foreach (var rfLoad in inSLoads)
+            //{
+            //    try
+            //    {
+            //        var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+            //        if (rfLoad.ToModify)
+            //        {
+            //            loadcase.PrepareModification();
+            //            var myload = (SurfaceLoad)rfLoad;
+            //            //if (rfSup.NewNo > 0)
+            //            //{
+            //            //    myNo = rfSup.NewNo;
+            //            //}
+            //            loadcase.GetSurfaceLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else if (rfLoad.ToDelete)
+            //        {
+            //            loadcase.PrepareModification();
+            //            loadcase.GetSurfaceLoad(rfLoad.No, ItemAt.AtNo).Delete();
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else
+            //        {
+            //            if (newData == false)
+            //            {
+            //                lastSLNo = loadcase.GetLastObjectNo(LoadObjectType.SurfaceLoadObject);
+            //                newData = true;
+            //            }
+            //            index.Add(data.SetRFSurfaceLoad(loadcase, rfLoad, ref lastSLNo));
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        index.Add(null);
+            //        errorMsg.Add($"Import of Surface Load No.{rfLoad.No} failed! " + ex.Message);
+            //    }
+            //}
+
+            var dict_loadcases = group_surfaceloads(loads, ghSLoads);
+            foreach (var loadcase in dict_loadcases.Keys)
             {
-                try
+                loadcase.PrepareModification();
+                foreach (var rfLoad in dict_loadcases[loadcase])
                 {
-                    var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
-                    if (rfLoad.ToModify)
+                    try
                     {
-                        loadcase.PrepareModification();
-                        var myload = (SurfaceLoad)rfLoad;
-                        //if (rfSup.NewNo > 0)
-                        //{
-                        //    myNo = rfSup.NewNo;
-                        //}
-                        loadcase.GetSurfaceLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else if (rfLoad.ToDelete)
-                    {
-                        loadcase.PrepareModification();
-                        loadcase.GetSurfaceLoad(rfLoad.No, ItemAt.AtNo).Delete();
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else
-                    {
-                        if (newData == false)
+                        if (rfLoad.ToModify)
                         {
-                            lastSLNo = loadcase.GetLastObjectNo(LoadObjectType.SurfaceLoadObject);
-                            newData = true;
+                            var myload = (SurfaceLoad)rfLoad;
+                            //if (rfSup.NewNo > 0)
+                            //{
+                            //    myNo = rfSup.NewNo;
+                            //}
+                            loadcase.GetSurfaceLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+                            index.Add(rfLoad);
                         }
-                        index.Add(data.SetRFSurfaceLoad(loadcase, rfLoad, ref lastSLNo));
+                        else if (rfLoad.ToDelete)
+                        {
+                            loadcase.GetSurfaceLoad(rfLoad.No, ItemAt.AtNo).Delete();
+                            index.Add(rfLoad);
+                        }
+                        else
+                        {
+                            if (newData == false)
+                            {
+                                lastSLNo = loadcase.GetLastObjectNo(LoadObjectType.SurfaceLoadObject);
+                                newData = true;
+                            }
+                            index.Add(data.SetRFSurfaceLoad(loadcase, rfLoad, ref lastSLNo));
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        index.Add(null);
+                        errorMsg.Add($"Import of Surface Load No.{rfLoad.No} failed! " + ex.Message);
+                    }
+
                 }
-                catch (Exception ex)
-                {
-                    index.Add(null);
-                    errorMsg.Add($"Import of Surface Load No.{rfLoad.No} failed! " + ex.Message);
-                }
+                loadcase.FinishModification();
             }
         }
 
@@ -2023,66 +2333,124 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             // Set support with a provided index number
             if (!(rfSurfaceLoad.No == 0))
             {
-                loadcase.PrepareModification();
+                //loadcase.PrepareModification();
                 loadcase.SetSurfaceLoad(rfSurfaceLoad);
-                loadcase.FinishModification();
+                //loadcase.FinishModification();
                 return rfSurfaceLoad;
             }
             // Set node without provided index number
             lastSLNo += 1;
             rfSurfaceLoad.No = lastSLNo;
-            loadcase.PrepareModification();
+            //loadcase.PrepareModification();
             loadcase.SetSurfaceLoad(rfSurfaceLoad);
-            loadcase.FinishModification();
+            //loadcase.FinishModification();
             return rfSurfaceLoad;
+        }
+
+        private static Dictionary<ILoadCase, List<RFFreePolygonLoad>> group_polyloads(ILoads loads, List<GH_RFEM> ghSLoads)
+        {
+            var outDict = new Dictionary<ILoadCase, List<RFFreePolygonLoad>>();
+            var inPLoads = ghSLoads.Select(x => new RFFreePolygonLoad((RFFreePolygonLoad)x.Value)).ToList();
+            foreach (var rfLoad in inPLoads)
+            {
+                var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+                if(!outDict.ContainsKey(loadcase))
+                {
+                    outDict.Add(loadcase, new List<RFFreePolygonLoad>() { rfLoad });
+                }else
+                {
+                    var new_list = outDict[loadcase];
+                    new_list.Add(rfLoad);
+                    outDict[loadcase] = new_list;
+                }
+            }
+            return outDict;
         }
 
         public static void SetRFFreePolygonLoads(this IModelData data, ILoads loads, List<GH_RFEM> ghSLoads, ref List<RFFreePolygonLoad> index, ref List<string> errorMsg)
         {
             var newData = false;
-            var inPLoads = new List<RFFreePolygonLoad>();
+            //var inPLoads = new List<RFFreePolygonLoad>();
             var lastPLNo = 0;
 
-            inPLoads = ghSLoads.Select(x => new RFFreePolygonLoad((RFFreePolygonLoad)x.Value)).ToList();
-            foreach (var rfLoad in inPLoads)
+            //inPLoads = ghSLoads.Select(x => new RFFreePolygonLoad((RFFreePolygonLoad)x.Value)).ToList();
+            //foreach (var rfLoad in inPLoads)
+            //{
+            //    try
+            //    {
+            //        var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+            //        if (rfLoad.ToModify)
+            //        {
+            //            loadcase.PrepareModification();
+            //            var myload = (FreePolygonLoad)rfLoad;
+            //            //if (rfSup.NewNo > 0)
+            //            //{
+            //            //    myNo = rfSup.NewNo;
+            //            //}
+            //            loadcase.GetFreePolygonLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else if (rfLoad.ToDelete)
+            //        {
+            //            loadcase.PrepareModification();
+            //            loadcase.GetFreePolygonLoad(rfLoad.No, ItemAt.AtNo).Delete();
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else
+            //        {
+            //            if (newData == false)
+            //            {
+            //                lastPLNo = loadcase.GetLastObjectNo(LoadObjectType.SurfaceLoadObject);
+            //                newData = true;
+            //            }
+            //            index.Add(data.SetRFFreePolygonLoad(loadcase, rfLoad, ref lastPLNo));
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        index.Add(null);
+            //        errorMsg.Add($"Import of Free Polygon Load No.{rfLoad.No} failed! " + ex.Message);
+            //    }
+            //}
+
+            var dict_loadcases = group_polyloads(loads, ghSLoads);
+            foreach (var loadcase in dict_loadcases.Keys)
             {
-                try
+                loadcase.PrepareModification();
+                foreach (var rfLoad in dict_loadcases[loadcase])
                 {
-                    var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
-                    if (rfLoad.ToModify)
+                    try
                     {
-                        loadcase.PrepareModification();
-                        var myload = (FreePolygonLoad)rfLoad;
-                        //if (rfSup.NewNo > 0)
-                        //{
-                        //    myNo = rfSup.NewNo;
-                        //}
-                        loadcase.GetFreePolygonLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else if (rfLoad.ToDelete)
-                    {
-                        loadcase.PrepareModification();
-                        loadcase.GetFreePolygonLoad(rfLoad.No, ItemAt.AtNo).Delete();
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else
-                    {
-                        if (newData == false)
+                        if (rfLoad.ToModify)
                         {
-                            lastPLNo = loadcase.GetLastObjectNo(LoadObjectType.SurfaceLoadObject);
-                            newData = true;
+                            var myload = (FreePolygonLoad)rfLoad;
+                            loadcase.GetFreePolygonLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+                            index.Add(rfLoad);
                         }
-                        index.Add(data.SetRFFreePolygonLoad(loadcase, rfLoad, ref lastPLNo));
+                        else if (rfLoad.ToDelete)
+                        {
+                            loadcase.GetFreePolygonLoad(rfLoad.No, ItemAt.AtNo).Delete();
+                            index.Add(rfLoad);
+                        }
+                        else
+                        {
+                            if (newData == false)
+                            {
+                                lastPLNo = loadcase.GetLastObjectNo(LoadObjectType.SurfaceLoadObject);
+                                newData = true;
+                            }
+                            index.Add(data.SetRFFreePolygonLoad(loadcase, rfLoad, ref lastPLNo));
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    index.Add(null);
-                    errorMsg.Add($"Import of Free Polygon Load No.{rfLoad.No} failed! " + ex.Message);
-                }
+                    catch (Exception ex)
+                    {
+                        index.Add(null);
+                        errorMsg.Add($"Import of Free Polygon Load No.{rfLoad.No} failed! " + ex.Message);
+                    }
+                }                
+                loadcase.FinishModification();
             }
         }
 
@@ -2092,88 +2460,152 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             // Set support with a provided index number
             if (!(rfPolyLoad.No == 0))
             {
-                loadcase.PrepareModification();
+                //loadcase.PrepareModification();
                 loadcase.SetFreePolygonLoad(rfPolyLoad);
-                loadcase.FinishModification();
+                //loadcase.FinishModification();
                 return rfPolyLoad;
             }
             // Set node without provided index number
             lastPLNo += 1;
             rfPolyLoad.No = lastPLNo;
-            loadcase.PrepareModification();
+            //loadcase.PrepareModification();
             loadcase.SetFreePolygonLoad(rfPolyLoad);
-            loadcase.FinishModification();
+            //loadcase.FinishModification();
             return rfPolyLoad;
+        }
+
+        private static Dictionary<ILoadCase, List<RFFreeLineLoad>> group_freelineloads(ILoads loads, List<GH_RFEM> ghSLoads)
+        {
+            var outDict = new Dictionary<ILoadCase, List<RFFreeLineLoad>>();
+            var inPLoads = ghSLoads.Select(x => new RFFreeLineLoad((RFFreeLineLoad)x.Value)).ToList();
+            foreach (var rfLoad in inPLoads)
+            {
+                var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+                if (!outDict.ContainsKey(loadcase))
+                {
+                    outDict.Add(loadcase, new List<RFFreeLineLoad>() { rfLoad });
+                }
+                else
+                {
+                    var new_list = outDict[loadcase];
+                    new_list.Add(rfLoad);
+                    outDict[loadcase] = new_list;
+                }
+            }
+            return outDict;
         }
 
         public static void SetRFFreeLineLoads(this IModelData data, ILoads loads, List<GH_RFEM> ghLLoads, ref List<RFFreeLineLoad> index, ref List<string> errorMsg)
         {
             var newData = false;
-            var inLLoads = new List<RFFreeLineLoad>();
-            var existingNodes = new List<RFNode>();
-            var existingLines = new List<RFLine>();
+            //var inLLoads = new List<RFFreeLineLoad>();
+            //var existingNodes = new List<RFNode>();
+            //var existingLines = new List<RFLine>();
             var lastLLNo = 0;
 
-            inLLoads = ghLLoads.Select(x => new RFFreeLineLoad((RFFreeLineLoad)x.Value)).ToList();
-            foreach (var rfLoad in inLLoads)
+            //inLLoads = ghLLoads.Select(x => new RFFreeLineLoad((RFFreeLineLoad)x.Value)).ToList();
+            //foreach (var rfLoad in inLLoads)
+            //{
+            //    try
+            //    {
+            //        var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+            //        if (rfLoad.ToModify)
+            //        {
+            //            loadcase.PrepareModification();
+            //            var myload = (FreeLineLoad)rfLoad;
+            //            //if (rfSup.NewNo > 0)
+            //            //{
+            //            //    myNo = rfSup.NewNo;
+            //            //}
+            //            loadcase.GetFreeLineLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else if (rfLoad.ToDelete)
+            //        {
+            //            loadcase.PrepareModification();
+            //            loadcase.GetFreeLineLoad(rfLoad.No, ItemAt.AtNo).Delete();
+            //            index.Add(rfLoad);
+            //            loadcase.FinishModification();
+            //        }
+            //        else
+            //        {
+            //            if (newData == false)
+            //            {
+            //                lastLLNo = loadcase.GetLastObjectNo(LoadObjectType.FreeLineLoadObject);
+            //                newData = true;
+            //            }
+            //            index.Add(data.SetRFFreeLineLoad(loadcase, rfLoad, ref lastLLNo, tol));
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        index.Add(null);
+            //        errorMsg.Add($"Import of Line Load No.{rfLoad.No} failed! " + ex.Message);
+            //    }
+            //}
+
+
+            var dict_loadcases = group_freelineloads(loads, ghLLoads);
+            foreach (var loadcase in dict_loadcases.Keys)
             {
-                try
+                loadcase.PrepareModification();
+                foreach (var rfLoad in dict_loadcases[loadcase])
                 {
-                    var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
-                    if (rfLoad.ToModify)
+                    try
                     {
-                        loadcase.PrepareModification();
-                        var myload = (FreeLineLoad)rfLoad;
-                        //if (rfSup.NewNo > 0)
-                        //{
-                        //    myNo = rfSup.NewNo;
-                        //}
-                        loadcase.GetFreeLineLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else if (rfLoad.ToDelete)
-                    {
-                        loadcase.PrepareModification();
-                        loadcase.GetFreeLineLoad(rfLoad.No, ItemAt.AtNo).Delete();
-                        index.Add(rfLoad);
-                        loadcase.FinishModification();
-                    }
-                    else
-                    {
-                        if (newData == false)
+                        if (rfLoad.ToModify)
                         {
-                            lastLLNo = loadcase.GetLastObjectNo(LoadObjectType.FreeLineLoadObject);
-                            newData = true;
+                            var myload = (FreeLineLoad)rfLoad;
+                            //if (rfSup.NewNo > 0)
+                            //{
+                            //    myNo = rfSup.NewNo;
+                            //}
+                            loadcase.GetFreeLineLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+                            index.Add(rfLoad);
                         }
-                        index.Add(data.SetRFFreeLineLoad(loadcase, rfLoad, ref lastLLNo, tol));
+                        else if (rfLoad.ToDelete)
+                        {
+                            loadcase.GetFreeLineLoad(rfLoad.No, ItemAt.AtNo).Delete();
+                            index.Add(rfLoad);
+                        }
+                        else
+                        {
+                            if (newData == false)
+                            {
+                                lastLLNo = loadcase.GetLastObjectNo(LoadObjectType.FreeLineLoadObject);
+                                newData = true;
+                            }
+                            index.Add(data.SetRFFreeLineLoad(loadcase, rfLoad, ref lastLLNo, tol));
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        index.Add(null);
+                        errorMsg.Add($"Import of Line Load No.{rfLoad.No} failed! " + ex.Message);
+                    }
+                    
                 }
-                catch (Exception ex)
-                {
-                    index.Add(null);
-                    errorMsg.Add($"Import of Line Load No.{rfLoad.No} failed! " + ex.Message);
-                }
+                loadcase.FinishModification();
             }
         }
 
         public static RFFreeLineLoad SetRFFreeLineLoad(this IModelData data, ILoadCase loadcase, ref RFFreeLineLoad rfLineLoad, ref int lastLLNo, double tol)
         {
-
             // Set support with a provided index number
             if (!(rfLineLoad.No == 0))
             {
-                loadcase.PrepareModification();
+                //loadcase.PrepareModification();
                 loadcase.SetFreeLineLoad(rfLineLoad);
-                loadcase.FinishModification();
+                //loadcase.FinishModification();
                 return rfLineLoad;
             }
             // Set node without provided index number
             lastLLNo += 1;
             rfLineLoad.No = lastLLNo;
-            loadcase.PrepareModification();
+            //loadcase.PrepareModification();
             loadcase.SetFreeLineLoad(rfLineLoad);
-            loadcase.FinishModification();
+            //loadcase.FinishModification();
             return rfLineLoad;
         }
 

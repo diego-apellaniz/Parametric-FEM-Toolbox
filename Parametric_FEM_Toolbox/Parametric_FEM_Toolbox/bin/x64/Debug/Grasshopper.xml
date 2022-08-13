@@ -9237,7 +9237,7 @@ Nechť již hříšné saxofony ďáblů rozzvučí síň úděsnými tóny walt
  Utility class for seeding render queues with GH geometry.
  </summary>
 </member>
-<member name="P:Grasshopper.Kernel.GH_DocumentRenderMeshProvider.Document">
+<member name="P:Grasshopper.Kernel.GH_DocumentRenderMeshProvider.RenderMeshDocuments">
  <summary>
  Gets the currently relevant document.
  </summary>
@@ -45693,6 +45693,16 @@ Nechť již hříšné saxofony ďáblů rozzvučí síň úděsnými tóny walt
  Gets or sets whether Grasshopper document solutions are wrapped in undo records.
  </summary>
 </member>
+<member name="P:Grasshopper.CentralSettings.PanelDefaultFontFamily">
+ <summary>
+ Gets or sets the font family name of the default font for panels.
+ </summary>
+</member>
+<member name="P:Grasshopper.CentralSettings.PanelDefaultFontSize">
+ <summary>
+ Gets or sets the font family name of the default font for panels.
+ </summary>
+</member>
 <member name="P:Grasshopper.CentralSettings.CreateSolutionUndoRecord">
  <summary>
  Gets or sets whether Grasshopper document solutions are wrapped in undo records.
@@ -45901,6 +45911,11 @@ Nechť již hříšné saxofony ďáblů rozzvučí síň úděsnými tóny walt
 <member name="E:Grasshopper.CentralSettings.ComponentCascadeMenusChanged">
  <summary>
  Raised whenever the ComponentCascadeMenus setting changes.
+ </summary>
+</member>
+<member name="E:Grasshopper.CentralSettings.PanelDefaultFontChanged">
+ <summary>
+ Raised whenever the PanelDefaultFontFamily or PanelDefaultFontSize settings change.
  </summary>
 </member>
 <member name="E:Grasshopper.CentralSettings.CreateSolutionUndoRecordChanged">
@@ -47314,6 +47329,37 @@ Nechť již hříšné saxofony ďáblů rozzvučí síň úděsnými tóny walt
  <summary>
  This class only provids static (Shared in VB) methods and cannot be constructed.
  </summary>
+</member>
+<member name="M:Grasshopper.Utility.DocumentTolerance">
+ <summary>
+ Returns the Absolute Tolerance of the model document
+ </summary>
+ <returns></returns>
+</member>
+<member name="M:Grasshopper.Utility.DocumentAngleTolerance">
+ <summary>
+ Returns the Angle Tolerance in degrees for the model document
+ </summary>
+ <returns></returns>
+</member>
+<member name="M:Grasshopper.Utility.DocumentUnits">
+ <summary>
+ Returns the unit system for the model document
+ </summary>
+ <returns></returns>
+</member>
+<member name="M:Grasshopper.Utility.SetDefaultTolerances(System.Double,System.Double)">
+ <summary>
+ Utility function to set absolute and angle tolerance fields.
+ </summary>
+ <param name="absoluteTolerance">Value to set model absolute tolerance</param>
+ <param name="angleToleranceDegrees">Value to set model angle tolerance in degrees</param>
+</member>
+<member name="M:Grasshopper.Utility.SetDefaultUnits(System.String)">
+ <summary>
+ Utility function to set model unit fields
+ </summary>
+ <param name="modelUnits">Value to set default model units</param>
 </member>
 <member name="M:Grasshopper.Utility.TernaryIf``1(System.Boolean,``0,``0)">
  <summary>

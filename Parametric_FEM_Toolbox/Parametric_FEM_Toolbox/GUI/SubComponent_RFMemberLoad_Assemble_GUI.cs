@@ -244,18 +244,24 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                 rfMemberLoad.Magnitude6 = f6;
             }
-            if (DA.GetData(10, ref t1) && DA.GetData(11, ref t2))
+            if (DA.GetData(19, ref reldistances))
+            {
+                rfMemberLoad.RelativeDistances = reldistances;
+            }
+            if (DA.GetData(10, ref t1) | DA.GetData(11, ref t2))
             {
                 rfMemberLoad.DistanceA = t1;
                 rfMemberLoad.DistanceB = t2;
                 rfMemberLoad.OverTotalLength = false;
-                if ((t1 < 0.0) || (t1 > 1.0) || (t2 < 0.0) || (t2 > 1.0))
+                if (rfMemberLoad.RelativeDistances)
                 {
-                    msg = "Invalid interval. ";
-                    level = GH_RuntimeMessageLevel.Warning;
-                    return;
+                    if ((t1 < 0.0) || (t1 > 1.0) || (t2 < 0.0) || (t2 > 1.0))
+                    {
+                        msg = "Invalid interval. ";
+                        level = GH_RuntimeMessageLevel.Warning;
+                        return;
+                    }
                 }
-
             }
             if (DA.GetData(14, ref type))
             {
@@ -403,11 +409,7 @@ namespace Parametric_FEM_Toolbox.GUI
             if (DA.GetData(18, ref totallength))
             {
                 rfMemberLoad.OverTotalLength = totallength;
-            }
-            if (DA.GetData(19, ref reldistances))
-            {
-                rfMemberLoad.RelativeDistances = reldistances;
-            }
+            }            
             DA.SetData(0, rfMemberLoad);
         }
     }

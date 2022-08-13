@@ -14,11 +14,18 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
     public static class Component_GetData
     {
         #region Nodes
-        public static List<Node> FilterNodes(Dlubal.RFEM5.IModelData data, List<RFFilter> filters)
-        {
+        public static List<Node> FilterNodes(Dlubal.RFEM5.IModelData data, List<RFFilter> filters, ref List<string> msgs)
+        {      
             var outNodes = new List<Node>();
             foreach (var n in data.GetNodes())
             {
+                //// Add check to node in line
+                //if (n.Type == NodeType.NodeOnLine)
+                //{
+                //    msgs.Add($"Node {n.No} has an invalid type.");
+                //    continue;
+                //}
+                //now filter
                 var include = true;
                 foreach (var filter in filters)
                 {
@@ -86,6 +93,12 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 outNodes.Add(n);
             }
             return outNodes;
+        }
+
+        public static List<Node> FilterNodes(Dlubal.RFEM5.IModelData data, List<RFFilter> filters)
+        {
+            var msgs = new List<string>();
+            return FilterNodes(data, filters, ref msgs);
         }
 
         public static List<RFNode> GetRFNodes(List<Node> nodes, IModelData data)
@@ -734,11 +747,14 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     }
                     rfSfc.ControlPoints = ctrl_points;
                 }
-                // Get Surface Input and Result Axes
-                var sufaceaxes = data.GetSurface(s.No, ItemAt.AtNo).GetInputAxes();
-                rfSfc.SurfaceAxes = new RFEM.SurfaceAxes(sufaceaxes);
-                // Get surface axes
-                rfSfc.GetAxes(data);
+                if (rfSfc.GeometryType== SurfaceGeometryType.PlaneSurfaceType)
+                {
+                    // Get Surface Input and Result Axes
+                    var sufaceaxes = data.GetSurface(s.No, ItemAt.AtNo).GetInputAxes();
+                    rfSfc.SurfaceAxes = new RFEM.SurfaceAxes(sufaceaxes);
+                    // Get surface axes
+                    rfSfc.GetAxes(data);
+                }
                 // Output
                 rfSurfaces.Add(rfSfc);
             }
