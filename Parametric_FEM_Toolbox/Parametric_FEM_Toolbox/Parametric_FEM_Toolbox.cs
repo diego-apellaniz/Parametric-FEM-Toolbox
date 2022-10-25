@@ -59,7 +59,7 @@ namespace daqRFEM
         {
             get
             {
-                return "1.4.3"; //wip loads grouping load cases and surfaces now work with csys
+                return "1.4.4"; //
             }
         }
     }

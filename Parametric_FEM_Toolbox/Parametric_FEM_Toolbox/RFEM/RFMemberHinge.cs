@@ -29,6 +29,12 @@ namespace Parametric_FEM_Toolbox.RFEM
             Tx = hinge.TranslationalConstantX / 1000;
             Ty = hinge.TranslationalConstantY / 1000;
             Tz = hinge.TranslationalConstantZ / 1000;
+            RotationalNonlinearityX = hinge.RotationalNonlinearityX;
+            RotationalNonlinearityY = hinge.RotationalNonlinearityY;
+            RotationalNonlinearityZ = hinge.RotationalNonlinearityZ;
+            TranslationalNonlinearityX = hinge.TranslationalNonlinearityX;
+            TranslationalNonlinearityY = hinge.TranslationalNonlinearityY;
+            TranslationalNonlinearityZ = hinge.TranslationalNonlinearityZ;
             ToModify = false;
             ToDelete = false;
         }
@@ -37,6 +43,12 @@ namespace Parametric_FEM_Toolbox.RFEM
         {
             ToModify = other.ToModify;
             ToDelete = other.ToDelete;
+            DiagramTransX = other.DiagramTransX;
+            DiagramTransY = other.DiagramTransY;
+            DiagramTransZ = other.DiagramTransZ;
+            DiagramRotX = other.DiagramRotX;
+            DiagramRotY = other.DiagramRotY;
+            DiagramRotZ = other.DiagramRotZ;
         }
 
         //Properties to Wrap Fields from RFEM Struct
@@ -51,9 +63,22 @@ namespace Parametric_FEM_Toolbox.RFEM
         public double Rx { get; set; }
         public double Ry { get; set; }
         public double Rz { get; set; }
+        public NonlinearityType RotationalNonlinearityX { get; set; }
+        public NonlinearityType RotationalNonlinearityY { get; set; }
+        public NonlinearityType RotationalNonlinearityZ { get; set; }
+        public NonlinearityType TranslationalNonlinearityX { get; set; }
+        public NonlinearityType TranslationalNonlinearityY { get; set; }
+        public NonlinearityType TranslationalNonlinearityZ { get; set; }
         // Additional Properties to the RFEM Struct
         public bool ToModify { get; set; }
         public bool ToDelete { get; set; }
+        public RFDiagram DiagramTransX { get; set; }
+        public RFDiagram DiagramTransY { get; set; }
+        public RFDiagram DiagramTransZ { get; set; }
+        public RFDiagram DiagramRotX { get; set; }
+        public RFDiagram DiagramRotY { get; set; }
+        public RFDiagram DiagramRotZ { get; set; }
+
         //public int NewNo { get; set; }
 
         // Display Info of the RFEM Objects on Panels
@@ -82,7 +107,13 @@ namespace Parametric_FEM_Toolbox.RFEM
                 RotationalConstantX = memberHinge.Rx * 1000,
                 RotationalConstantY = memberHinge.Ry * 1000,
                 RotationalConstantZ = memberHinge.Rz * 1000,
-             };
+                TranslationalNonlinearityX = memberHinge.TranslationalNonlinearityX,
+                TranslationalNonlinearityY = memberHinge.TranslationalNonlinearityY,
+                TranslationalNonlinearityZ = memberHinge.TranslationalNonlinearityZ,
+                RotationalNonlinearityX = memberHinge.RotationalNonlinearityX,
+                RotationalNonlinearityY = memberHinge.RotationalNonlinearityY,
+                RotationalNonlinearityZ = memberHinge.RotationalNonlinearityZ
+            };
             return myMemberHinge;
         }
 

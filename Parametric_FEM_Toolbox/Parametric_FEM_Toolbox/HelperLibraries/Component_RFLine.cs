@@ -15,6 +15,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         {
             var inControlPoints = new List<Point3d>();
             rFLine.Order = curve.Degree + 1;
+            //rFLine.Order = curve.Degree;
             var myNurbs = curve.ToNurbsCurve();
             foreach (var pt in myNurbs.Points)
             {

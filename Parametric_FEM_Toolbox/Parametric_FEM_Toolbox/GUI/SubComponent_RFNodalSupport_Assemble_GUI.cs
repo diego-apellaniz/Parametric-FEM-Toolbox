@@ -221,7 +221,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     msg = "Nonlinearity Type not supported. ";
                     level = GH_RuntimeMessageLevel.Warning;
                     return;
-                }else if(rfSup.Tx == 0.0)
+                }else if(rfSup.Tx == -1)
                 {
                     msg = "Unassigned support in Dir X. ";
                     level = GH_RuntimeMessageLevel.Warning;
@@ -237,7 +237,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     level = GH_RuntimeMessageLevel.Warning;
                     return;
                 }
-                else if (rfSup.Ty == 0.0)
+                else if (rfSup.Ty == -1)
                 {
                     msg = "Unassigned support in Dir Y. ";
                     level = GH_RuntimeMessageLevel.Warning;
@@ -253,7 +253,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     level = GH_RuntimeMessageLevel.Warning;
                     return;
                 }
-                else if (rfSup.Tz == 0.0)
+                else if (rfSup.Tz == -1)
                 {
                     msg = "Unassigned support in Dir Z. ";
                     level = GH_RuntimeMessageLevel.Warning;
@@ -269,7 +269,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     level = GH_RuntimeMessageLevel.Warning;
                     return;
                 }
-                else if (rfSup.Rx == 0.0)
+                else if (rfSup.Rx == -1)
                 {
                     msg = "Unassigned support in Dir X. ";
                     level = GH_RuntimeMessageLevel.Warning;
@@ -285,7 +285,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     level = GH_RuntimeMessageLevel.Warning;
                     return;
                 }
-                else if (rfSup.Ry == 0.0)
+                else if (rfSup.Ry == -1)
                 {
                     msg = "Unassigned support in Dir Y. ";
                     level = GH_RuntimeMessageLevel.Warning;
@@ -301,7 +301,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     level = GH_RuntimeMessageLevel.Warning;
                     return;
                 }
-                else if (rfSup.Rz == 0.0)
+                else if (rfSup.Rz == -1)
                 {
                     msg = "Unassigned support in Dir Z. ";
                     level = GH_RuntimeMessageLevel.Warning;

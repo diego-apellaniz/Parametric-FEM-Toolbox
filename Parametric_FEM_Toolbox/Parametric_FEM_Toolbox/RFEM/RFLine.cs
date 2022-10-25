@@ -51,7 +51,7 @@ namespace Parametric_FEM_Toolbox.RFEM
         public RFLine(RFLine other) : this(other, other.ControlPoints, other.Order, other.Weights, other.Knots)
         {
             ToModify = other.ToModify;
-            ToDelete = other.ToDelete;            
+            ToDelete = other.ToDelete;
         }
 
         // Properties to Wrap Fields from RFEM Struct

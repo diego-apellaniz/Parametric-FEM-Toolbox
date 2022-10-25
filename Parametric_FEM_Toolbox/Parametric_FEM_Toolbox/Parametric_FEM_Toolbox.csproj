@@ -69,20 +69,17 @@
       <HintPath>D:\Diego\Documentos\Otros\SDK_en\Reference Assemblies\x86\Dlubal.STEEL_EC3.dll</HintPath>
     </Reference>
     <Reference Include="Eto">
-      <HintPath>C:\Users\diego\.nuget\packages\eto.forms\2.4.1\lib\netstandard1.0\Eto.dll</HintPath>
+      <HintPath>C:\Program Files\Rhino 7\System\Eto.dll</HintPath>
     </Reference>
-    <Reference Include="GH_IO, Version=6.35.21222.17001, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Rhino 7\Plug-ins\Grasshopper\GH_IO.dll</HintPath>
+    <Reference Include="GH_IO">
+      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\GH_IO.dll</HintPath>
     </Reference>
-    <Reference Include="Grasshopper, Version=6.35.21222.17001, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Rhino 7\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
+    <Reference Include="Grasshopper">
+      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="RhinoCommon, Version=6.35.21222.17001, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Rhino 7\System\RhinoCommon.dll</HintPath>
+    <Reference Include="RhinoCommon">
+      <HintPath>C:\Program Files\Rhino 7\System\RhinoCommon.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -111,10 +108,12 @@
     <Compile Include="Deprecated\Component_GetResults_GUI_OBSOLETE_2.cs" />
     <Compile Include="Deprecated\Component_GetResults_GUI_OBSOLETE_3.cs" />
     <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_6.cs" />
+    <Compile Include="Deprecated\Component_GetData_GUI_OBSOLETE_7.cs" />
     <Compile Include="GUI\Component_GetResults_GUI.cs" />
     <Compile Include="GUI\Component_ExtrudeMembers_GUI.cs" />
     <Compile Include="GUI\Component_LCA_GUI.cs" />
     <Compile Include="Deprecated\Component_OptimizeCS_GUI_OBSOLETE.cs" />
+    <Compile Include="GUI\Component_RFDiagram_GUI.cs" />
     <Compile Include="GUI\Component_ResultsLineReactions_GUI.cs" />
     <Compile Include="Deprecated\Component_ResultsLineReactions_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\Component_ResultsMemberForces_GUI_OBSOLETE.cs" />
@@ -129,7 +128,12 @@
     <Compile Include="GUI\Component_RFFreeLineLoad_GUI.cs" />
     <Compile Include="Deprecated\Component_RFMaterial_GUI_OBSOLETE_2.cs" />
     <Compile Include="Deprecated\Component_RFMember_GUI_OBSOLETE_4.cs" />
+    <Compile Include="GUI\Component_RFFreeRectangularLoad_GUI.cs" />
+    <Compile Include="GUI\Component_RFLineReleaseType_GUI.cs" />
+    <Compile Include="Deprecated\Component_RFLineRelease_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\Component_RFMemberEccentricity_GUI.cs" />
+    <Compile Include="GUI\Component_RFLineRelease_GUI.cs" />
+    <Compile Include="Deprecated\Component_RFMemberHinge_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\Component_RFNodalRelease_GUI.cs" />
     <Compile Include="GUI\Component_RFMemberHinge_GUI.cs" />
     <Compile Include="Deprecated\Component_RFNodalSupport_GUI_OBSOLETE.cs" />
@@ -182,6 +186,7 @@
     <Compile Include="Deprecated\Component_SetData_GUI_OBSOLETE_4.cs" />
     <Compile Include="Deprecated\Component_SetData_GUI_OBSOLETE_5.cs" />
     <Compile Include="Deprecated\Component_SetData_GUI_OBSOLETE_6.cs" />
+    <Compile Include="Deprecated\Component_SetData_GUI_OBSOLETE_7.cs" />
     <Compile Include="GUI\Component_SetData_GUI.cs" />
     <Compile Include="GUI\Component_GetData_GUI.cs" />
     <Compile Include="Deprecated\Component_RFNode_GUI_OBSOLETE.cs" />
@@ -217,8 +222,18 @@
     <Compile Include="Deprecated\SubComponent_RFMaterial_Disassemble_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\SubComponent_RFMember_Assemble_GUI_OBSOLETE_2.cs" />
     <Compile Include="Deprecated\SubComponent_RFMember_Disassemble_GUI_OBSOLETE_3.cs" />
+    <Compile Include="GUI\SubComponent_RFFreeRectangularLoad_Disassemble_GUI.cs" />
+    <Compile Include="GUI\SubComponent_RFFreeRectangularLoad_Assemble_GUI.cs" />
+    <Compile Include="GUI\SubComponent_RFLineReleaseType_Assemble_GUI.cs" />
+    <Compile Include="GUI\SubComponent_RFLineReleaseType_Disassemble_GUI.cs" />
+    <Compile Include="Deprecated\SubComponent_RFLineRelease_Assemble_GUI_OBSOLETE.cs" />
+    <Compile Include="Deprecated\SubComponent_RFLineRelease_Disassemble_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\SubComponent_RFMemberEccentricity_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFMemberEccentricity_Disassemble_GUI.cs" />
+    <Compile Include="GUI\SubComponent_RFLineRelease_Assemble_GUI.cs" />
+    <Compile Include="GUI\SubComponent_RFLineRelease_Disassemble_GUI.cs" />
+    <Compile Include="Deprecated\SubComponent_RFMemberHinge_Disassemble_GUI_OBSOLETE.cs" />
+    <Compile Include="Deprecated\SubComponent_RFMemberHinge_Assemble_GUI_OBSOLETE.cs" />
     <Compile Include="GUI\SubComponent_RFNodalRelease_Disassemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFNodalRelease_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFMemberHinge_Disassemble_GUI.cs" />
@@ -274,6 +289,7 @@
     <Compile Include="GUI\SubComponent_Filter_SupsL_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_NodalLoads_GUI.cs" />
     <Compile Include="GUI\SubComponent_Filter_SupsP_GUI.cs" />
+    <Compile Include="HelperLibraries\ComponentDiagram.cs" />
     <Compile Include="HelperLibraries\Component_ExtrudeMembers.cs" />
     <Compile Include="HelperLibraries\Component_GetResults.cs" />
     <Compile Include="HelperLibraries\Component_RFOpening.cs" />
@@ -282,8 +298,12 @@
     <Compile Include="HelperLibraries\Component_SetData.cs" />
     <Compile Include="HelperLibraries\Component_GetData.cs" />
     <Compile Include="RFEM\RFFreeLineLoad.cs" />
+    <Compile Include="RFEM\RFDiagram.cs" />
+    <Compile Include="RFEM\RFFreeRectangularLoad.cs" />
+    <Compile Include="RFEM\RFLineReleaseType.cs" />
     <Compile Include="RFEM\RFLineSupportForces.cs" />
     <Compile Include="RFEM\RFMemberEccentricity.cs" />
+    <Compile Include="RFEM\RFLineRelease.cs" />
     <Compile Include="RFEM\RFNodalRelease.cs" />
     <Compile Include="RFEM\RFNodalSupportForces.cs" />
     <Compile Include="RFEM\RFSurfaceForces.cs" />
@@ -641,6 +661,12 @@
   <ItemGroup>
     <None Include="Resources\Assemble_MemberEccentricity.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Disassemble_LineReleases.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Assemble_LineReleases.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -651,7 +677,7 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>Copy "$(TargetPath)" "C:\Users\diego\AppData\Roaming\Grasshopper\Libraries\$(TargetName).gha"
-Copy "$(TargetPath)" "D:\Users\dapellaniz\AppData\Roaming\Grasshopper\Libraries\$(TargetName).gha"
+Copy "$(TargetPath)" "C:\Users\dapellaniz\AppData\Roaming\Grasshopper\Libraries\$(TargetName).gha"
 Erase "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

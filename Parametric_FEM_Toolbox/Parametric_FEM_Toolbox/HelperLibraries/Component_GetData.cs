@@ -1978,7 +1978,152 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             return rfNodalReleases;
         }
 
-#endregion
+        #endregion
+
+        #region Line Release
+
+        public static List<LineRelease> FilterLR(Dlubal.RFEM5.IModelData data, List<RFFilter> filters)
+        {
+            var outReleases = new List<LineRelease>();
+            foreach (var n in data.GetLineReleases())
+            {
+                var include = true;
+                foreach (var filter in filters)
+                {
+                    if (!(filter.LRList is null))
+                    {
+                        if (!filter.LRList.Contains(n.No))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.LRComment is null))
+                    {
+                        if (!filter.LRComment.Contains(n.Comment))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.LRLineNo is null))
+                    {
+                        if (!filter.LRLineNo.Contains(n.LineNo))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.LRTypeNo is null))
+                    {
+                        if (!filter.LRTypeNo.Contains(n.TypeNo))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.LRReleasedMembersNo is null))
+                    {
+                        var inLinesNo = n.ReleasedMembers.ToInt();
+                        if (!(inLinesNo.Intersect(filter.LRReleasedMembersNo).ToArray().Length > 0))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.LRReleasedSurfacesNo is null))
+                    {
+                        var inLinesNo = n.ReleasedSurfaces.ToInt();
+                        if (!(inLinesNo.Intersect(filter.LRReleasedSurfacesNo).ToArray().Length > 0))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.LRReleasedSolidsNo is null))
+                    {
+                        var inLinesNo = n.ReleasedSolids.ToInt();
+                        if (!(inLinesNo.Intersect(filter.LRReleasedSolidsNo).ToArray().Length > 0))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.LRLocation is null))
+                    {
+                        if (!filter.LRLocation.Contains(n.Location.ToString()))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                }
+                if (!include) continue;
+                outReleases.Add(n);
+            }
+            return outReleases;
+        }
+
+        public static List<RFLineRelease> GetRFLineReleases(List<LineRelease> releases, IModelData data)
+        {
+            var rfLineReleases = new List<RFLineRelease>();
+            // Get Planesss
+            foreach (var item in releases)
+            {
+                var rFLineRelease = new RFLineRelease(item);
+                rfLineReleases.Add(rFLineRelease);
+            }
+            return rfLineReleases;
+        }
+
+        #endregion
+
+        #region Line Release Type
+
+        public static List<LineReleaseType> FilterLRTypes(Dlubal.RFEM5.IModelData data, List<RFFilter> filters)
+        {
+            var outReleases = new List<LineReleaseType>();
+            foreach (var n in data.GetLineReleaseTypes())
+            {
+                var include = true;
+                foreach (var filter in filters)
+                {
+                    if (!(filter.LRTypeList is null))
+                    {
+                        if (!filter.LRTypeList.Contains(n.No))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.LRTypeComment is null))
+                    {
+                        if (!filter.LRTypeComment.Contains(n.Comment))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }                    
+                }
+                if (!include) continue;
+                outReleases.Add(n);
+            }
+            return outReleases;
+        }
+
+        public static List<RFLineReleaseType> GetRFLineReleaseTypes(List<LineReleaseType> releases, IModelData data)
+        {
+            var rfLineReleases = new List<RFLineReleaseType>();
+            // Get Planesss
+            foreach (var item in releases)
+            {
+                var rFLineRelease = new RFLineReleaseType(item);
+                rfLineReleases.Add(rFLineRelease);
+            }
+            return rfLineReleases;
+        }
+
+        #endregion
 
         #region Cross Section
 
@@ -3573,6 +3718,101 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
 
         #endregion
 
+        #region FreeRectangularLoads
+
+        public static Dictionary<Tuple<int, int>, FreeRectangularLoad> FilterRectangularLoads(Dlubal.RFEM5.IModelData data, ILoads loads, List<RFFilter> filters)
+        {
+            var outDictionaryLoads = new Dictionary<Tuple<int, int>, FreeRectangularLoad>();
+            //var outNodalLoads = new List<MemberLoad>();
+            // Select load cases
+            var lcAll = loads.GetLoadCases();
+            var lcSelected = new List<int>();
+            foreach (var lc in lcAll)
+            {
+                int lcIndex = lc.Loading.No;
+                bool include = true;
+                foreach (var filter in filters)
+                {
+                    if (!(filter.RLLC is null))
+                    {
+                        if (!filter.RLLC.Contains(lc.Loading.No))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                }
+                if (include)
+                {
+                    lcSelected.Add(lcIndex);
+                }
+            }
+            // Select nodal Loads
+            var dicSelected = new Dictionary<Tuple<int, int>, FreeRectangularLoad>();
+            foreach (var index in lcSelected)
+            {
+                foreach (var load in loads.GetLoadCase(index, ItemAt.AtNo).GetFreeRectangularLoads())
+                {
+                    var loadTuple = new Tuple<int, int>(load.No, index);
+                    dicSelected.Add(loadTuple, load);
+                }
+            }
+            foreach (var n in (dicSelected))
+            {
+                var include = true;
+                foreach (var filter in filters)
+                {
+                    if (!(filter.RLList is null))
+                    {
+                        if (!filter.RLList.Contains(n.Value.No))
+                        {
+                            include = false;
+                            break;
+                        }
+                    }
+                    if (!(filter.RLComment is null))
+                    {
+                        if (!filter.RLComment.Contains(n.Value.Comment))
+                        {
+                            include = false;
+                            break;
+                        }                    }
+                    
+                }
+                if (!include) continue;
+                outDictionaryLoads.Add(n.Key, n.Value);
+            }
+            return outDictionaryLoads;
+        }
+
+        public static List<RFFreeRectangularLoad> GetRFRectLoads(Dictionary<Tuple<int, int>, FreeRectangularLoad> loads, IModelData data)
+        {
+            var rfPolyLoadList = new List<RFFreeRectangularLoad>();
+            // Get Planesss
+            foreach (var item in loads)
+            {
+                var rfPolyLoad = new RFFreeRectangularLoad(item.Value, item.Key.Item2);
+                // Get polygons
+                var rfsfcs = new List<RFSurface>();
+                var allSfcs = GetRFSurfaces(data.GetSurfaces().ToList(), data);
+                if (rfPolyLoad.SurfaceList != "")
+                {
+                    foreach (var sfcNo in rfPolyLoad.SurfaceList.ToInt())
+                    {
+                        rfsfcs.AddRange(allSfcs.Where(x => x.No == sfcNo));
+                    }
+                }
+                else
+                {
+                    rfsfcs = allSfcs;
+                }
+                rfPolyLoadList.Add(rfPolyLoad);
+            }
+            return rfPolyLoadList;
+        }
+
+        #endregion
+
         #region Fre  Line Loads
 
         public static Dictionary<Tuple<int, int>, FreeLineLoad> FilterFreeLineLoads(Dlubal.RFEM5.IModelData data, ILoads loads, List<RFFilter> filters)
@@ -4136,6 +4376,41 @@ ref List<RFResultCombo> rfResultCombos, ref List<RFMemberHinge> rfMemberHinges, 
             rFMemberEccentricities.Clear();
             rfNodalReleases.Clear();
             rfFLLoads.Clear();
+        }
+
+        public static void ClearOutput(ref List<RFNode> rfNodes, ref List<RFLine> rfLines, ref List<RFMember> rfMembers, ref List<RFSurface> rfSurfaces,
+ref List<RFOpening> rfOpenings, ref List<RFSupportP> rfSupportss, ref List<RFSupportL> rfSupportsL, ref List<RFSupportS> rfSupportsS, ref List<RFLineHinge> rfLineHinges,
+ref List<RFCroSec> rfCroSecs, ref List<RFMaterial> rfMats, ref List<RFNodalLoad> rfNLoads, ref List<RFLineLoad> rfLLoads, ref List<RFMemberLoad> rfMLoads,
+ref List<RFSurfaceLoad> rfSLoads, ref List<RFFreePolygonLoad> rfPLoads, ref List<RFLoadCase> rfLoadCases, ref List<RFLoadCombo> rfLoadCombos,
+ref List<RFResultCombo> rfResultCombos, ref List<RFMemberHinge> rfMemberHinges, ref List<RFMemberEccentricity> rFMemberEccentricities, ref List<RFNodalRelease> rfNodalReleases, ref List<RFFreeLineLoad> rfFLLoads,
+ref List<RFLineRelease> rfLineReleases, ref List<RFLineReleaseType> rfLineReleaseTypes, ref List<RFFreeRectangularLoad> rfFRLoads)
+        {
+            rfNodes.Clear();
+            rfLines.Clear();
+            rfMembers.Clear();
+            rfSurfaces.Clear();
+            rfOpenings.Clear();
+            rfSupportss.Clear();
+            rfSupportsL.Clear();
+            rfSupportsS.Clear();
+            rfLineHinges.Clear();
+            rfCroSecs.Clear();
+            rfMats.Clear();
+            rfNLoads.Clear();
+            rfLLoads.Clear();
+            rfMLoads.Clear();
+            rfSLoads.Clear();
+            rfPLoads.Clear();
+            rfLoadCases.Clear();
+            rfLoadCombos.Clear();
+            rfResultCombos.Clear();
+            rfMemberHinges.Clear();
+            rFMemberEccentricities.Clear();
+            rfNodalReleases.Clear();
+            rfFLLoads.Clear();
+            rfLineReleases.Clear();
+            rfLineReleaseTypes.Clear();
+            rfFRLoads.Clear();
         }
 
 

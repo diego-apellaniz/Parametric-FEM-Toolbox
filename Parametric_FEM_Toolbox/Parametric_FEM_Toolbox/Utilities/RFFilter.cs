@@ -249,6 +249,9 @@ namespace Parametric_FEM_Toolbox.Utilities
         public List<Interval> PLX { get; set; }
         public List<Interval> PLY { get; set; }
         public List<Interval> PLZ { get; set; }
+        public List<int> RLList { get; set; }
+        public List<string> RLComment { get; set; }
+        public List<int> RLLC { get; set; }
         public List<int> LCList { get; set; }
         public List<string> LCComment { get; set; }
         public List<string> LCAction { get; set; }
@@ -288,6 +291,16 @@ namespace Parametric_FEM_Toolbox.Utilities
         public List<int> NRGeneratedNodeNo { get; set; }
         public List<string> NRAxisSystem { get; set; }
         public List<string> NRLocation { get; set; }
+        public List<int> LRList { get; set; }
+        public List<string> LRComment { get; set; }
+        public List<int> LRLineNo { get; set; }
+        public List<int> LRTypeNo { get; set; }
+        public List<int> LRReleasedMembersNo { get; set; }
+        public List<int> LRReleasedSurfacesNo { get; set; }
+        public List<int> LRReleasedSolidsNo { get; set; }
+        public List<string> LRLocation { get; set; }
+        public List<int> LRTypeList { get; set; }
+        public List<string> LRTypeComment { get; set; }
         public List<int> FLLList { get; set; }
         public List<string> FLLComment { get; set; }
         public List<int> FLLLC { get; set; }

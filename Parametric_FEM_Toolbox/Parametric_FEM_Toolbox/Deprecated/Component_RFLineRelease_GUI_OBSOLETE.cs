@@ -13,9 +13,9 @@ using Parametric_FEM_Toolbox.UIWidgets;
 using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 
-namespace Parametric_FEM_Toolbox.GUI
+namespace Parametric_FEM_Toolbox.Deprecated
 {
-    public class Component_RFMemberHinge_GUI : GH_SwitcherComponent
+    public class Component_RFLineRelease_GUI_OBSOLETE : GH_SwitcherComponent
     {
         // Declare class variables outside the method "SolveInstance" so their values persist 
         // when the method is called again.
@@ -31,14 +31,14 @@ namespace Parametric_FEM_Toolbox.GUI
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public Component_RFMemberHinge_GUI()
-          : base("RF Member Hinge", "RFMemberHinge", "Assembles and Disassembles RFMemberHinge objects.", "B+G Toolbox", "RFEM")
+        public Component_RFLineRelease_GUI_OBSOLETE()
+          : base("RF Line Release", "RFLineRelease", "Assembles and Disassembles RFLineRelease objects.", "B+G Toolbox", "RFEM")
         {
             this.Hidden = (true);
         }
 
         // Define Keywords to search for this Component more easily in Grasshopper
-        public override IEnumerable<string> Keywords => new string[] {"rf", "rfmemberhinge",};
+        public override IEnumerable<string> Keywords => new string[] { "rf", "rflinerelease", };
 
 
         /// <summary>
@@ -82,15 +82,15 @@ namespace Parametric_FEM_Toolbox.GUI
         // The PostConstructor is called from within each constructor.DO NOT OVERRIDE THIS unless you know what you are doing.
         protected override void RegisterEvaluationUnits(EvaluationUnitManager mngr)
         {
-            subcomponents_.Add(new SubComponent_RFMemberHinge_Assemble_GUI());
-            subcomponents_.Add(new SubComponent_RFMemberHinge_Disassemble_GUI());
+            subcomponents_.Add(new SubComponent_RFLineRelease_Assemble_GUI_OBSOLETE());
+            subcomponents_.Add(new SubComponent_RFLineRelease_Disassemble_GUI_OBSOLETE());
 
             foreach (SubComponent item in subcomponents_)
             {
                 item.registerEvaluationUnits(mngr);
             }
         }
-        
+
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
@@ -124,7 +124,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.tertiary; }
+            get { return GH_Exposure.hidden; }
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Parametric_FEM_Toolbox.GUI
             {
                 // You can add image files to your project resources and access them like this:
                 //return Resources.IconForThisComponent;
-                return Properties.Resources.Assemble_MemberRelease;                
+                return Properties.Resources.Assemble_LineReleases;
             }
         }
 
@@ -148,7 +148,7 @@ namespace Parametric_FEM_Toolbox.GUI
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("dc95f008-7e9d-4450-9089-e60d979e08e4"); }
+            get { return new Guid("0b4dcd23-3cfd-4a3d-84cf-66e96c0363e2"); }
         }
     }
 }

@@ -55,12 +55,16 @@ namespace Parametric_FEM_Toolbox.RFEM
         {
             ToModify = other.ToModify;
             ToDelete = other.ToDelete;
-            var newBaseLines = new List<RFLine>();
-            foreach (var edge in other.BaseLines)
+            if (other.BaseLines!=null)
             {
-                newBaseLines.Add(new RFLine(edge));
+                var newBaseLines = new List<RFLine>();
+                foreach (var edge in other.BaseLines)
+                {
+                    newBaseLines.Add(new RFLine(edge));
+                }
+                BaseLines = newBaseLines;
             }
-            BaseLines = newBaseLines;
+            
         }
 
         //Properties to Wrap Fields from RFEM Struct

@@ -113,7 +113,6 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                     return node;
                 }
             }
-
             // Set node with a provided index number
             if (!(rfNode.No == 0))
             {
@@ -1346,6 +1345,42 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             lastMHNo += 1;
             rfMH.No = lastMHNo;
             data.SetMemberHinge(rfMH);
+            if (rfMH.DiagramTransX != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisX) as INonlinearityDiagram;
+                iDiag.SetData(rfMH.DiagramTransX);
+            }
+            if (rfMH.DiagramTransY != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisY) as INonlinearityDiagram;
+                iDiag.SetData(rfMH.DiagramTransY);
+            }
+            if (rfMH.DiagramTransZ != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisZ) as INonlinearityDiagram;
+                iDiag.SetData(rfMH.DiagramTransZ);
+            }
+            if (rfMH.DiagramRotX != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AroundAxisX) as INonlinearityDiagram;
+                iDiag.SetData(rfMH.DiagramRotX);
+            }
+            if (rfMH.DiagramRotY != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AroundAxisY) as INonlinearityDiagram;
+                iDiag.SetData(rfMH.DiagramRotY);
+            }
+            if (rfMH.DiagramRotZ != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AroundAxisZ) as INonlinearityDiagram;
+                iDiag.SetData(rfMH.DiagramRotZ);
+            }
             return rfMH;
         }
 
@@ -1450,7 +1485,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 catch (Exception ex)
                 {
                     index.Add(null);
-                    errorMsg.Add($"Import of Member Hinge No.{rfRelease.No} failed! " + ex.Message);
+                    errorMsg.Add($"Import of Nodal Release No.{rfRelease.No} failed! " + ex.Message);
                 }
             }
         }
@@ -1469,6 +1504,152 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             rfNR.No = lastNRNo;
             data.SetNodalRelease(rfNR);
             return rfNR;
+        }
+
+        public static void SetRFLineReleases(this IModelData data, List<GH_RFEM> ghHinges, ref List<RFLineRelease> index, ref List<string> errorMsg)
+        {
+            var newData = false;
+            var inReleases = new List<RFLineRelease>();
+            var lastReleaseNo = 0;
+
+            inReleases = ghHinges.Select(x => new RFLineRelease((RFLineRelease)x.Value)).ToList();
+            foreach (var rfRelease in inReleases)
+            {
+                try
+                {
+                    if (rfRelease.ToModify)
+                    {
+                        var myRelease = (LineRelease)rfRelease;
+                        var myNo = myRelease.No;
+                        //if (rfSup.NewNo > 0)
+                        //{
+                        //    myNo = rfSup.NewNo;
+                        //}
+                        data.GetLineRelease(myNo, ItemAt.AtNo).SetData(ref myRelease);
+                        index.Add(rfRelease);
+                    }
+                    else if (rfRelease.ToDelete)
+                    {
+                        data.GetLineRelease(rfRelease.No, ItemAt.AtNo).Delete();
+                        index.Add(rfRelease);
+                    }
+                    else
+                    {
+                        if (newData == false)
+                        {
+                            lastReleaseNo = data.GetLastObjectNo(ModelObjectType.LineReleaseObject);
+                            newData = true;
+                        }
+                        index.Add(data.SetRFLineRelease(rfRelease, ref lastReleaseNo));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    index.Add(null);
+                    errorMsg.Add($"Import of Line Release No.{rfRelease.No} failed! " + ex.Message);
+                }
+            }
+        }
+
+        public static RFLineRelease SetRFLineRelease(this IModelData data, ref RFLineRelease rfLR, ref int lastLRNo)
+        {
+
+            // Set support with a provided index number
+            if (!(rfLR.No == 0))
+            {
+                data.SetLineRelease(rfLR);
+                return rfLR;
+            }
+            // Set node without provided index number
+            lastLRNo += 1;
+            rfLR.No = lastLRNo;
+            data.SetLineRelease(rfLR);
+            return rfLR;
+        }
+
+        public static void SetRFLineReleaseTypes(this IModelData data, List<GH_RFEM> ghHinges, ref List<RFLineReleaseType> index, ref List<string> errorMsg)
+        {
+            var newData = false;
+            var inReleases = new List<RFLineReleaseType>();
+            var lastReleaseNo = 0;
+
+            inReleases = ghHinges.Select(x => new RFLineReleaseType((RFLineReleaseType)x.Value)).ToList();
+            foreach (var rfRelease in inReleases)
+            {
+                try
+                {
+                    if (rfRelease.ToModify)
+                    {
+                        var myRelease = (LineReleaseType)rfRelease;
+                        var myNo = myRelease.No;
+                        //if (rfSup.NewNo > 0)
+                        //{
+                        //    myNo = rfSup.NewNo;
+                        //}
+                        data.GetLineReleaseType(myNo, ItemAt.AtNo).SetData(ref myRelease);
+                        index.Add(rfRelease);
+                    }
+                    else if (rfRelease.ToDelete)
+                    {
+                        data.GetLineReleaseType(rfRelease.No, ItemAt.AtNo).Delete();
+                        index.Add(rfRelease);
+                    }
+                    else
+                    {
+                        if (newData == false)
+                        {
+                            lastReleaseNo = data.GetLastObjectNo(ModelObjectType.LineReleaseTypeObject);
+                            newData = true;
+                        }
+                        index.Add(data.SetRFLineReleaseType(rfRelease, ref lastReleaseNo));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    index.Add(null);
+                    errorMsg.Add($"Import of Line Release Type No.{rfRelease.No} failed! " + ex.Message);
+                }
+            }
+        }
+
+        public static RFLineReleaseType SetRFLineReleaseType(this IModelData data, ref RFLineReleaseType rfLR, ref int lastLRNo)
+        {
+
+            // Set support with a provided index number
+            if (!(rfLR.No == 0))
+            {
+                data.SetLineReleaseType(rfLR);
+                return rfLR;
+            }
+            // Set node without provided index number
+            lastLRNo += 1;
+            rfLR.No = lastLRNo;
+            data.SetLineReleaseType(rfLR);
+            if(rfLR.DiagramTransX!=null)
+            {
+                var iLRType = data.GetLineReleaseType(rfLR.No, ItemAt.AtNo);
+                var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisX) as INonlinearityDiagram;
+                iDiag.SetData(rfLR.DiagramTransX);
+            }
+            if (rfLR.DiagramTransY != null)
+            {
+                var iLRType = data.GetLineReleaseType(rfLR.No, ItemAt.AtNo);
+                var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisY) as INonlinearityDiagram;
+                iDiag.SetData(rfLR.DiagramTransY);
+            }
+            if (rfLR.DiagramTransZ != null)
+            {
+                var iLRType = data.GetLineReleaseType(rfLR.No, ItemAt.AtNo);
+                var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisZ) as INonlinearityDiagram;
+                iDiag.SetData(rfLR.DiagramTransZ);
+            }
+            if (rfLR.DiagramRotX != null)
+            {
+                var iLRType = data.GetLineReleaseType(rfLR.No, ItemAt.AtNo);
+                var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AroundAxisX) as INonlinearityDiagram;
+                iDiag.SetData(rfLR.DiagramRotX);
+            }
+            return rfLR;
         }
 
         public static void SetRFCroSecs(this IModelData data, List<GH_RFEM> ghCSecs, ref List<RFCroSec> index)
@@ -2438,7 +2619,7 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                         {
                             if (newData == false)
                             {
-                                lastPLNo = loadcase.GetLastObjectNo(LoadObjectType.SurfaceLoadObject);
+                                lastPLNo = loadcase.GetLastObjectNo(LoadObjectType.FreePolygonLoadObject);
                                 newData = true;
                             }
                             index.Add(data.SetRFFreePolygonLoad(loadcase, rfLoad, ref lastPLNo));
@@ -2472,6 +2653,92 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             loadcase.SetFreePolygonLoad(rfPolyLoad);
             //loadcase.FinishModification();
             return rfPolyLoad;
+        }
+
+        private static Dictionary<ILoadCase, List<RFFreeRectangularLoad>> group_rectloads(ILoads loads, List<GH_RFEM> ghSLoads)
+        {
+            var outDict = new Dictionary<ILoadCase, List<RFFreeRectangularLoad>>();
+            var inPLoads = ghSLoads.Select(x => new RFFreeRectangularLoad((RFFreeRectangularLoad)x.Value)).ToList();
+            foreach (var rfLoad in inPLoads)
+            {
+                var loadcase = loads.GetLoadCase(rfLoad.LoadCase, ItemAt.AtNo);
+                if (!outDict.ContainsKey(loadcase))
+                {
+                    outDict.Add(loadcase, new List<RFFreeRectangularLoad>() { rfLoad });
+                }
+                else
+                {
+                    var new_list = outDict[loadcase];
+                    new_list.Add(rfLoad);
+                    outDict[loadcase] = new_list;
+                }
+            }
+            return outDict;
+        }
+
+        public static void SetRFFreeRectangularLoads(this IModelData data, ILoads loads, List<GH_RFEM> ghSLoads, ref List<RFFreeRectangularLoad> index, ref List<string> errorMsg)
+        {
+            var newData = false;
+            //var inPLoads = new List<RFFreePolygonLoad>();
+            var lastPLNo = 0;
+
+            var dict_loadcases = group_rectloads(loads, ghSLoads);
+            foreach (var loadcase in dict_loadcases.Keys)
+            {
+                loadcase.PrepareModification();
+                foreach (var rfLoad in dict_loadcases[loadcase])
+                {
+                    try
+                    {
+                        if (rfLoad.ToModify)
+                        {
+                            var myload = (FreeRectangularLoad)rfLoad;
+                            loadcase.GetFreeRectangularLoad(rfLoad.No, ItemAt.AtNo).SetData(ref myload);
+                            index.Add(rfLoad);
+                        }
+                        else if (rfLoad.ToDelete)
+                        {
+                            loadcase.GetFreeRectangularLoad(rfLoad.No, ItemAt.AtNo).Delete();
+                            index.Add(rfLoad);
+                        }
+                        else
+                        {
+                            if (newData == false)
+                            {
+                                lastPLNo = loadcase.GetLastObjectNo(LoadObjectType.FreeRectangularLoadObject);
+                                newData = true;
+                            }
+                            index.Add(data.SetRFFreeRectangularLoad(loadcase, rfLoad, ref lastPLNo));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        index.Add(null);
+                        errorMsg.Add($"Import of Free Polygon Load No.{rfLoad.No} failed! " + ex.Message);
+                    }
+                }
+                loadcase.FinishModification();
+            }
+        }
+
+        public static RFFreeRectangularLoad SetRFFreeRectangularLoad(this IModelData data, ILoadCase loadcase, ref RFFreeRectangularLoad rfRectLoad, ref int lastRLNo)
+        {
+            // Get Node List?
+            // Set support with a provided index number
+            if (!(rfRectLoad.No == 0))
+            {
+                //loadcase.PrepareModification();
+                loadcase.SetFreeRectangularLoad(rfRectLoad);
+                //loadcase.FinishModification();
+                return rfRectLoad;
+            }
+            // Set node without provided index number
+            lastRLNo += 1;
+            rfRectLoad.No = lastRLNo;
+            //loadcase.PrepareModification();
+            loadcase.SetFreeRectangularLoad(rfRectLoad);
+            //loadcase.FinishModification();
+            return rfRectLoad;
         }
 
         private static Dictionary<ILoadCase, List<RFFreeLineLoad>> group_freelineloads(ILoads loads, List<GH_RFEM> ghSLoads)
@@ -2995,6 +3262,44 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
             loadComboList.Clear();
             resultComboList.Clear();
             freeLineLoadList.Clear();
+        }
+
+        public static void ClearOutput(ref List<RFNode> nodelist, ref List<RFLine> linelist, ref List<RFMember> memberlist,
+        ref List<RFSurface> srfclist, ref List<RFOpening> oplist, ref List<RFSupportP> supPlist, ref List<RFSupportL> supLlist,
+        ref List<RFSupportS> supSlist, ref List<RFMemberHinge> memberHingelist, ref List<RFMemberEccentricity> memberEcclist, ref List<RFLineHinge> lineHingelist, ref List<RFNodalRelease> nodalReleaselist,
+        ref List<RFLineRelease>lineReleaselist, ref List<RFLineReleaseType> lineReleasetypelist,
+        ref List<RFCroSec> croSeclist, ref List<RFMaterial> matlist,
+        ref List<RFNodalLoad> nodalLoadList, ref List<RFLineLoad> lineLoadList, ref List<RFMemberLoad> memberLoadList,
+        ref List<RFSurfaceLoad> surfaceLoadList, ref List<RFFreeLineLoad> freeLineLoadList, ref List<RFFreePolygonLoad> polyLoadList, ref List<RFFreeRectangularLoad> rectLoadList, ref List<RFLoadCase> loadCaseList,
+        ref List<RFLoadCombo> loadComboList, ref List<RFResultCombo> resultComboList)
+        {
+            nodelist.Clear();
+            linelist.Clear();
+            memberlist.Clear();
+            srfclist.Clear();
+            oplist.Clear();
+            supPlist.Clear();
+            supLlist.Clear();
+            supSlist.Clear();
+            memberHingelist.Clear();
+            memberEcclist.Clear();
+            lineHingelist.Clear();
+            nodalReleaselist.Clear();
+            lineReleaselist.Clear();
+            croSeclist.Clear();
+            matlist.Clear();
+            nodalLoadList.Clear();
+            lineLoadList.Clear();
+            memberLoadList.Clear();
+            surfaceLoadList.Clear();
+            polyLoadList.Clear();
+            rectLoadList.Clear();
+            loadCaseList.Clear();
+            loadComboList.Clear();
+            resultComboList.Clear();
+            freeLineLoadList.Clear();
+            lineReleasetypelist.Clear();
+            rectLoadList.Clear();
         }
 
         #endregion
