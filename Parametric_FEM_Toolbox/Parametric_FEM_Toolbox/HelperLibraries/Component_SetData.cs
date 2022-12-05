@@ -1335,15 +1335,19 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         public static RFMemberHinge SetRFMemberHinge(this IModelData data, ref RFMemberHinge rfMH, ref int lastMHNo)
         {
 
+            //// Set support with a provided index number
+            //if (!(rfMH.No == 0))
+            //{
+            //    data.SetMemberHinge(rfMH);
+            //    return rfMH;
+            //}
             // Set support with a provided index number
-            if (!(rfMH.No == 0))
+            if (rfMH.No == 0)
             {
-                data.SetMemberHinge(rfMH);
-                return rfMH;
+                lastMHNo += 1;
+                rfMH.No = lastMHNo;
             }
-            // Set node without provided index number
-            lastMHNo += 1;
-            rfMH.No = lastMHNo;
+            // Set node without provided index number            
             data.SetMemberHinge(rfMH);
             if (rfMH.DiagramTransX != null)
             {
@@ -1380,6 +1384,42 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
                 var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AroundAxisZ) as INonlinearityDiagram;
                 iDiag.SetData(rfMH.DiagramRotZ);
+            }
+            if (rfMH.PartialActivityTransX != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iAct = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisX) as IPartialActivity;
+                iAct.SetData(rfMH.PartialActivityTransX);
+            }
+            if (rfMH.PartialActivityTransY != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iAct = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisY) as IPartialActivity;
+                iAct.SetData(rfMH.PartialActivityTransY);
+            }
+            if (rfMH.PartialActivityTransZ != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iAct = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisZ) as IPartialActivity;
+                iAct.SetData(rfMH.PartialActivityTransZ);
+            }
+            if (rfMH.PartialActivityRotX != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iAct = iLRType.GetNonlinearity(NonlinearityDirectionType.AroundAxisX) as IPartialActivity;
+                iAct.SetData(rfMH.PartialActivityRotX);
+            }
+            if (rfMH.PartialActivityRotY != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iAct = iLRType.GetNonlinearity(NonlinearityDirectionType.AroundAxisY) as IPartialActivity;
+                iAct.SetData(rfMH.PartialActivityRotY);
+            }
+            if (rfMH.PartialActivityRotZ != null)
+            {
+                var iLRType = data.GetMemberHinge(rfMH.No, ItemAt.AtNo);
+                var iAct = iLRType.GetNonlinearity(NonlinearityDirectionType.AroundAxisZ) as IPartialActivity;
+                iAct.SetData(rfMH.PartialActivityRotZ);
             }
             return rfMH;
         }
@@ -1615,15 +1655,18 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
         public static RFLineReleaseType SetRFLineReleaseType(this IModelData data, ref RFLineReleaseType rfLR, ref int lastLRNo)
         {
 
+            //// Set support with a provided index number
+            //if (!(rfLR.No == 0))
+            //{
+            //    data.SetLineReleaseType(rfLR);
+            //    return rfLR;
+            //}
             // Set support with a provided index number
-            if (!(rfLR.No == 0))
+            if (rfLR.No == 0)
             {
-                data.SetLineReleaseType(rfLR);
-                return rfLR;
-            }
-            // Set node without provided index number
-            lastLRNo += 1;
-            rfLR.No = lastLRNo;
+                lastLRNo += 1;
+                rfLR.No = lastLRNo;
+            }       
             data.SetLineReleaseType(rfLR);
             if(rfLR.DiagramTransX!=null)
             {
@@ -1648,6 +1691,30 @@ namespace Parametric_FEM_Toolbox.HelperLibraries
                 var iLRType = data.GetLineReleaseType(rfLR.No, ItemAt.AtNo);
                 var iDiag = iLRType.GetNonlinearity(NonlinearityDirectionType.AroundAxisX) as INonlinearityDiagram;
                 iDiag.SetData(rfLR.DiagramRotX);
+            }
+            if (rfLR.PartialActivityTransX != null)
+            {
+                var iLRType = data.GetLineReleaseType(rfLR.No, ItemAt.AtNo);
+                var iAct = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisX) as IPartialActivity;
+                iAct.SetData(rfLR.PartialActivityTransX);
+            }
+            if (rfLR.PartialActivityTransY != null)
+            {
+                var iLRType = data.GetLineReleaseType(rfLR.No, ItemAt.AtNo);
+                var iAct = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisY) as IPartialActivity;
+                iAct.SetData(rfLR.PartialActivityTransY);
+            }
+            if (rfLR.PartialActivityTransZ != null)
+            {
+                var iLRType = data.GetLineReleaseType(rfLR.No, ItemAt.AtNo);
+                var iAct = iLRType.GetNonlinearity(NonlinearityDirectionType.AlongAxisZ) as IPartialActivity;
+                iAct.SetData(rfLR.PartialActivityTransZ);
+            }
+            if (rfLR.PartialActivityRotX != null)
+            {
+                var iLRType = data.GetLineReleaseType(rfLR.No, ItemAt.AtNo);
+                var iAct = iLRType.GetNonlinearity(NonlinearityDirectionType.AroundAxisX) as IPartialActivity;
+                iAct.SetData(rfLR.PartialActivityRotX);
             }
             return rfLR;
         }

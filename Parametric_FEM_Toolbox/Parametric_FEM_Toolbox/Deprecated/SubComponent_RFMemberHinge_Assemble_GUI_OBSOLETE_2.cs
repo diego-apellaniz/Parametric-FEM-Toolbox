@@ -9,10 +9,11 @@ using Parametric_FEM_Toolbox.Utilities;
 using Parametric_FEM_Toolbox.HelperLibraries;
 using Dlubal.RFEM5;
 using Parametric_FEM_Toolbox.RFEM;
+using Parametric_FEM_Toolbox.GUI;
 
-namespace Parametric_FEM_Toolbox.GUI
+namespace Parametric_FEM_Toolbox.Deprecated
 {
-    public class SubComponent_RFMemberHinge_Assemble_GUI : SubComponent
+    public class SubComponent_RFMemberHinge_Assemble_GUI_OBSOLETE_2 : SubComponent
     {
         public override string name()
         {
@@ -61,43 +62,31 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.Inputs[8].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_RFEM(), "Diagram for Translational Nonlinearity X", "DiagTransX", "Diagram for Translational Nonlinearity X.", GH_ParamAccess.item);
             unit.Inputs[9].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_RFEM(), "Partial Activity for Translational Nonlinearity X", "ActTransX", "Partial Activity for Translational Nonlinearity X.", GH_ParamAccess.item);
-            unit.Inputs[10].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Integer(), "DisplacementNonlinearityY", "NTy", UtilLibrary.DescriptionRFTypes(typeof(NonlinearityType)), GH_ParamAccess.item);
-            unit.Inputs[11].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
-            unit.Inputs[11].Parameter.Optional = true;
+            unit.Inputs[10].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
+            unit.Inputs[10].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_RFEM(), "Diagram for Translational Nonlinearity Y", "DiagTransY", "Diagram for Translational Nonlinearity Y.", GH_ParamAccess.item);
-            unit.Inputs[12].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_RFEM(), "Partial Activity for Translational Nonlinearity Y", "ActTransY", "Partial Activity for Translational Nonlinearity Y.", GH_ParamAccess.item);
-            unit.Inputs[13].Parameter.Optional = true;
+            unit.Inputs[11].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Integer(), "DisplacementNonlinearityZ", "NTz", UtilLibrary.DescriptionRFTypes(typeof(NonlinearityType)), GH_ParamAccess.item);
+            unit.Inputs[12].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
+            unit.Inputs[12].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_RFEM(), "Diagram for Translational Nonlinearity Z", "DiagTransZ", "Diagram for Translational Nonlinearity Z.", GH_ParamAccess.item);
+            unit.Inputs[13].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Integer(), "RotationNonlinearityX", "NRx", UtilLibrary.DescriptionRFTypes(typeof(NonlinearityType)), GH_ParamAccess.item);
             unit.Inputs[14].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
             unit.Inputs[14].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_RFEM(), "Diagram for Translational Nonlinearity Z", "DiagTransZ", "Diagram for Translational Nonlinearity Z.", GH_ParamAccess.item);
-            unit.Inputs[15].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_RFEM(), "Partial Activity for Translational Nonlinearity Z", "ActTransZ", "Partial Activity for Translational Nonlinearity Z.", GH_ParamAccess.item);
-            unit.Inputs[16].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_Integer(), "RotationNonlinearityX", "NRx", UtilLibrary.DescriptionRFTypes(typeof(NonlinearityType)), GH_ParamAccess.item);
-            unit.Inputs[17].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
-            unit.Inputs[17].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_RFEM(), "Diagram for Rotational Nonlinearity X", "DiagRotX", "Diagram for Rotational Nonlinearity X.", GH_ParamAccess.item);
-            unit.Inputs[18].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_RFEM(), "Partial Activity for Rotational Nonlinearity X", "ActRotX", "Partial Activity for Rotational Nonlinearity X.", GH_ParamAccess.item);
-            unit.Inputs[19].Parameter.Optional = true;
+            unit.Inputs[15].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Integer(), "RotationNonlinearityY", "NRy", UtilLibrary.DescriptionRFTypes(typeof(NonlinearityType)), GH_ParamAccess.item);
-            unit.Inputs[20].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
-            unit.Inputs[20].Parameter.Optional = true;
+            unit.Inputs[16].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
+            unit.Inputs[16].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_RFEM(), "Diagram for Rotational Nonlinearity Y", "DiagRotY", "Diagram for Rotational Nonlinearity Y.", GH_ParamAccess.item);
-            unit.Inputs[21].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_RFEM(), "Partial Activity for Rotational Nonlinearity Y", "ActRotY", "Partial Activity for Rotational Nonlinearity Y.", GH_ParamAccess.item);
-            unit.Inputs[22].Parameter.Optional = true;
+            unit.Inputs[17].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Integer(), "RotationNonlinearityZ", "NRz", UtilLibrary.DescriptionRFTypes(typeof(NonlinearityType)), GH_ParamAccess.item);
-            unit.Inputs[23].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
-            unit.Inputs[23].Parameter.Optional = true;
+            unit.Inputs[18].EnumInput = UtilLibrary.ListRFTypes(typeof(NonlinearityType));
+            unit.Inputs[18].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_RFEM(), "Diagram for Rotational Nonlinearity Z", "DiagRotZ", "Diagram for Rotational Nonlinearity Z.", GH_ParamAccess.item);
-            unit.Inputs[24].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_RFEM(), "Partial Activity for Rotational Nonlinearity Z", "ActRotZ", "Partial Activity for Rotational Nonlinearity ZY.", GH_ParamAccess.item);
-            unit.Inputs[25].Parameter.Optional = true;
+            unit.Inputs[19].Parameter.Optional = true;
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[8]);
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[9]);
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[10]);
@@ -110,26 +99,20 @@ namespace Parametric_FEM_Toolbox.GUI
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[17]);
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[18]);
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[19]);
-            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[20]);
-            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[21]);
-            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[22]);
-            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[23]);
-            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[24]);
-            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[25]);
             unit.AddMenu(gH_ExtendableMenu1);
 
             GH_ExtendableMenu gH_ExtendableMenu2 = new GH_ExtendableMenu(1, "modify");
             gH_ExtendableMenu2.Name = "Modify";
             gH_ExtendableMenu2.Collapse();
             unit.RegisterInputParam(new Param_RFEM(), "RF Member Hinge", "RF MemberHinge", "Member Hinge object from the RFEM model to modify", GH_ParamAccess.item);
-            unit.Inputs[26].Parameter.Optional = true;
+            unit.Inputs[20].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Boolean(), "Modify", "Modify", "Modify object?", GH_ParamAccess.item);
-            unit.Inputs[27].Parameter.Optional = true;
+            unit.Inputs[21].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Boolean(), "Delete", "Delete", "Delete object?", GH_ParamAccess.item);
-            unit.Inputs[28].Parameter.Optional = true;
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[26]);
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[27]);
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[28]);
+            unit.Inputs[22].Parameter.Optional = true;
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[20]);
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[21]);
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[22]);
             unit.AddMenu(gH_ExtendableMenu2);
 
             unit.RegisterOutputParam(new Param_RFEM(), "RF Member Hinge", "RF MemberHinge", "Output RFMemberHinge.");
@@ -164,14 +147,8 @@ namespace Parametric_FEM_Toolbox.GUI
             var inDiagRx = new GH_RFEM();
             var inDiagRy = new GH_RFEM();
             var inDiagRz = new GH_RFEM();
-            var inActTx = new GH_RFEM();
-            var inActTy = new GH_RFEM();
-            var inActTz = new GH_RFEM();
-            var inActRx = new GH_RFEM();
-            var inActRy = new GH_RFEM();
-            var inActRz = new GH_RFEM();
 
-            if (DA.GetData(26, ref inRFEM))
+            if (DA.GetData(20, ref inRFEM))
             {
                 rfHinge = new RFMemberHinge((RFMemberHinge)inRFEM.Value);                
             }
@@ -182,11 +159,11 @@ namespace Parametric_FEM_Toolbox.GUI
                 //level = GH_RuntimeMessageLevel.Warning;
                 //return;
             }
-            if (DA.GetData(27, ref mod))
+            if (DA.GetData(21, ref mod))
             {
                 rfHinge.ToModify = mod;
             }
-            if (DA.GetData(28, ref del))
+            if (DA.GetData(22, ref del))
             {
                 rfHinge.ToDelete = del;
             }
@@ -227,7 +204,7 @@ namespace Parametric_FEM_Toolbox.GUI
                 rfHinge.TranslationalNonlinearityX = (NonlinearityType)ntx;
                 if (rfHinge.TranslationalNonlinearityX == NonlinearityType.UnknownNonlinearityType || (rfHinge.TranslationalNonlinearityX != NonlinearityType.NoneNonlinearityType &&
                     rfHinge.TranslationalNonlinearityX != NonlinearityType.FixedIfNegativeType && rfHinge.TranslationalNonlinearityX != NonlinearityType.FixedIfPositiveType &&
-                    rfHinge.TranslationalNonlinearityX != NonlinearityType.WorkingDiagramType && rfHinge.TranslationalNonlinearityX != NonlinearityType.PartialActivityNLType))
+                    rfHinge.TranslationalNonlinearityX != NonlinearityType.WorkingDiagramType))
                 {
                     msg = "Nonlinearity Type not supported. ";
                     level = GH_RuntimeMessageLevel.Warning;
@@ -251,23 +228,12 @@ namespace Parametric_FEM_Toolbox.GUI
                 var diag = new RFDiagram((RFDiagram)inDiagTx.Value);
                 rfHinge.DiagramTransX = diag;
             }
-            if (DA.GetData(10, ref inActTx))
-            {
-                if (ntx != 6)
-                {
-                    msg = "Nonlinearity Type must be partial activity. ";
-                    level = GH_RuntimeMessageLevel.Warning;
-                    return;
-                }
-                var act = new RFPartialActivity((RFPartialActivity)inActTx.Value);
-                rfHinge.PartialActivityTransX = act;
-            }
-            if (DA.GetData(11, ref nty))
+            if (DA.GetData(10, ref nty))
             {
                 rfHinge.TranslationalNonlinearityY = (NonlinearityType)nty;
                 if (rfHinge.TranslationalNonlinearityY == NonlinearityType.UnknownNonlinearityType || (rfHinge.TranslationalNonlinearityY != NonlinearityType.NoneNonlinearityType &&
                     rfHinge.TranslationalNonlinearityY != NonlinearityType.FixedIfNegativeType && rfHinge.TranslationalNonlinearityY != NonlinearityType.FixedIfPositiveType &&
-                    rfHinge.TranslationalNonlinearityY != NonlinearityType.WorkingDiagramType && rfHinge.TranslationalNonlinearityY != NonlinearityType.PartialActivityNLType))
+                    rfHinge.TranslationalNonlinearityY != NonlinearityType.WorkingDiagramType))
                 {
                     msg = "Nonlinearity Type not supported. ";
                     level = GH_RuntimeMessageLevel.Warning;
@@ -280,7 +246,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     return;
                 }
             }
-            if (DA.GetData(12, ref inDiagTy))
+            if (DA.GetData(11, ref inDiagTy))
             {
                 if (nty != 7)
                 {
@@ -291,23 +257,12 @@ namespace Parametric_FEM_Toolbox.GUI
                 var diag = new RFDiagram((RFDiagram)inDiagTy.Value);
                 rfHinge.DiagramTransY = diag;
             }
-            if (DA.GetData(13, ref inActTy))
-            {
-                if (nty != 6)
-                {
-                    msg = "Nonlinearity Type must be partial activity. ";
-                    level = GH_RuntimeMessageLevel.Warning;
-                    return;
-                }
-                var act = new RFPartialActivity((RFPartialActivity)inActTy.Value);
-                rfHinge.PartialActivityTransY = act;
-            }
-            if (DA.GetData(14, ref ntz))
+            if (DA.GetData(12, ref ntz))
             {
                 rfHinge.TranslationalNonlinearityZ = (NonlinearityType)ntz;
                 if (rfHinge.TranslationalNonlinearityZ == NonlinearityType.UnknownNonlinearityType || (rfHinge.TranslationalNonlinearityZ != NonlinearityType.NoneNonlinearityType &&
                     rfHinge.TranslationalNonlinearityZ != NonlinearityType.FixedIfNegativeType && rfHinge.TranslationalNonlinearityZ != NonlinearityType.FixedIfPositiveType &&
-                    rfHinge.TranslationalNonlinearityZ != NonlinearityType.WorkingDiagramType && rfHinge.TranslationalNonlinearityZ != NonlinearityType.PartialActivityNLType))
+                    rfHinge.TranslationalNonlinearityZ != NonlinearityType.WorkingDiagramType))
                 {
                     msg = "Nonlinearity Type not supported. ";
                     level = GH_RuntimeMessageLevel.Warning;
@@ -320,7 +275,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     return;
                 }
             }
-            if (DA.GetData(15, ref inDiagTz))
+            if (DA.GetData(13, ref inDiagTz))
             {
                 if (ntz != 7)
                 {
@@ -331,23 +286,12 @@ namespace Parametric_FEM_Toolbox.GUI
                 var diag = new RFDiagram((RFDiagram)inDiagTz.Value);
                 rfHinge.DiagramTransZ = diag;
             }
-            if (DA.GetData(16, ref inActTz))
-            {
-                if (ntz != 6)
-                {
-                    msg = "Nonlinearity Type must be partial activity. ";
-                    level = GH_RuntimeMessageLevel.Warning;
-                    return;
-                }
-                var act = new RFPartialActivity((RFPartialActivity)inActTz.Value);
-                rfHinge.PartialActivityTransZ = act;
-            }
-            if (DA.GetData(17, ref nrx))
+            if (DA.GetData(14, ref nrx))
             {
                 rfHinge.RotationalNonlinearityX = (NonlinearityType)nrx;
                 if (rfHinge.RotationalNonlinearityX == NonlinearityType.UnknownNonlinearityType || (rfHinge.RotationalNonlinearityX != NonlinearityType.NoneNonlinearityType &&
                     rfHinge.RotationalNonlinearityX != NonlinearityType.FixedIfNegativeType && rfHinge.RotationalNonlinearityX != NonlinearityType.FixedIfPositiveType &&
-                    rfHinge.RotationalNonlinearityX != NonlinearityType.WorkingDiagramType && rfHinge.RotationalNonlinearityX != NonlinearityType.PartialActivityNLType))
+                    rfHinge.RotationalNonlinearityX != NonlinearityType.WorkingDiagramType))
                 {
                     msg = "Nonlinearity Type not supported. ";
                     level = GH_RuntimeMessageLevel.Warning;
@@ -360,7 +304,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     return;
                 }
             }
-            if (DA.GetData(18, ref inDiagRx))
+            if (DA.GetData(15, ref inDiagRx))
             {
                 if (nrx != 7)
                 {
@@ -371,23 +315,12 @@ namespace Parametric_FEM_Toolbox.GUI
                 var diag = new RFDiagram((RFDiagram)inDiagRx.Value);
                 rfHinge.DiagramRotX = diag;
             }
-            if (DA.GetData(19, ref inActRx))
-            {
-                if (nrx != 6)
-                {
-                    msg = "Nonlinearity Type must be partial activity. ";
-                    level = GH_RuntimeMessageLevel.Warning;
-                    return;
-                }
-                var act = new RFPartialActivity((RFPartialActivity)inActRx.Value);
-                rfHinge.PartialActivityRotX = act;
-            }
-            if (DA.GetData(20, ref nry))
+            if (DA.GetData(16, ref nry))
             {
                 rfHinge.RotationalNonlinearityY = (NonlinearityType)nry;
                 if (rfHinge.RotationalNonlinearityY == NonlinearityType.UnknownNonlinearityType || (rfHinge.RotationalNonlinearityY != NonlinearityType.NoneNonlinearityType &&
                     rfHinge.RotationalNonlinearityY != NonlinearityType.FixedIfNegativeType && rfHinge.RotationalNonlinearityY != NonlinearityType.FixedIfPositiveType &&
-                    rfHinge.RotationalNonlinearityY != NonlinearityType.WorkingDiagramType && rfHinge.RotationalNonlinearityY != NonlinearityType.PartialActivityNLType))
+                    rfHinge.RotationalNonlinearityY != NonlinearityType.WorkingDiagramType))
                 {
                     msg = "Nonlinearity Type not supported. ";
                     level = GH_RuntimeMessageLevel.Warning;
@@ -400,7 +333,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     return;
                 }
             }
-            if (DA.GetData(21, ref inDiagRy))
+            if (DA.GetData(17, ref inDiagRy))
             {
                 if (nry != 7)
                 {
@@ -411,23 +344,12 @@ namespace Parametric_FEM_Toolbox.GUI
                 var diag = new RFDiagram((RFDiagram)inDiagRy.Value);
                 rfHinge.DiagramRotY = diag;
             }
-            if (DA.GetData(22, ref inActRy))
-            {
-                if (nry != 6)
-                {
-                    msg = "Nonlinearity Type must be partial activity. ";
-                    level = GH_RuntimeMessageLevel.Warning;
-                    return;
-                }
-                var act = new RFPartialActivity((RFPartialActivity)inActRy.Value);
-                rfHinge.PartialActivityRotY = act;
-            }
-            if (DA.GetData(23, ref nrz))
+            if (DA.GetData(18, ref nrz))
             {
                 rfHinge.RotationalNonlinearityZ = (NonlinearityType)nrz;
                 if (rfHinge.RotationalNonlinearityZ == NonlinearityType.UnknownNonlinearityType || (rfHinge.RotationalNonlinearityZ != NonlinearityType.NoneNonlinearityType &&
                     rfHinge.RotationalNonlinearityZ != NonlinearityType.FixedIfNegativeType && rfHinge.RotationalNonlinearityZ != NonlinearityType.FixedIfPositiveType &&
-                    rfHinge.RotationalNonlinearityZ != NonlinearityType.WorkingDiagramType && rfHinge.RotationalNonlinearityZ != NonlinearityType.PartialActivityNLType))
+                    rfHinge.RotationalNonlinearityZ != NonlinearityType.WorkingDiagramType))
                 {
                     msg = "Nonlinearity Type not supported. ";
                     level = GH_RuntimeMessageLevel.Warning;
@@ -440,7 +362,7 @@ namespace Parametric_FEM_Toolbox.GUI
                     return;
                 }
             }
-            if (DA.GetData(24, ref inDiagRz))
+            if (DA.GetData(19, ref inDiagRz))
             {
                 if (nrz != 7)
                 {
@@ -450,17 +372,6 @@ namespace Parametric_FEM_Toolbox.GUI
                 }
                 var diag = new RFDiagram((RFDiagram)inDiagRz.Value);
                 rfHinge.DiagramRotZ = diag;
-            }
-            if (DA.GetData(25, ref inActRz))
-            {
-                if (nrz != 6)
-                {
-                    msg = "Nonlinearity Type must be partial activity. ";
-                    level = GH_RuntimeMessageLevel.Warning;
-                    return;
-                }
-                var act = new RFPartialActivity((RFPartialActivity)inActRz.Value);
-                rfHinge.PartialActivityRotZ = act;
             }
             DA.SetData(0, rfHinge);
         }

@@ -49,6 +49,12 @@ namespace Parametric_FEM_Toolbox.RFEM
             DiagramRotX = other.DiagramRotX;
             DiagramRotY = other.DiagramRotY;
             DiagramRotZ = other.DiagramRotZ;
+            PartialActivityTransX = other.PartialActivityTransX;
+            PartialActivityTransY = other.PartialActivityTransY;
+            PartialActivityTransZ = other.PartialActivityTransZ;
+            PartialActivityRotX = other.PartialActivityRotX;
+            PartialActivityRotY = other.PartialActivityRotY;
+            PartialActivityRotZ = other.PartialActivityRotZ;
         }
 
         //Properties to Wrap Fields from RFEM Struct
@@ -78,6 +84,12 @@ namespace Parametric_FEM_Toolbox.RFEM
         public RFDiagram DiagramRotX { get; set; }
         public RFDiagram DiagramRotY { get; set; }
         public RFDiagram DiagramRotZ { get; set; }
+        public RFPartialActivity PartialActivityTransX { get; set; }
+        public RFPartialActivity PartialActivityTransY { get; set; }
+        public RFPartialActivity PartialActivityTransZ { get; set; }
+        public RFPartialActivity PartialActivityRotX { get; set; }
+        public RFPartialActivity PartialActivityRotY { get; set; }
+        public RFPartialActivity PartialActivityRotZ { get; set; }
 
         //public int NewNo { get; set; }
 

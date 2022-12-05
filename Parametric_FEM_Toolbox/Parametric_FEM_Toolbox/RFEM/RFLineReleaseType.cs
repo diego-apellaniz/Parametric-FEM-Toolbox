@@ -41,6 +41,10 @@ namespace Parametric_FEM_Toolbox.RFEM
             DiagramTransY = other.DiagramTransY;
             DiagramTransZ = other.DiagramTransZ;
             DiagramRotX = other.DiagramRotX;
+            PartialActivityTransX = other.PartialActivityTransX;
+            PartialActivityTransY = other.PartialActivityTransY;
+            PartialActivityTransZ = other.PartialActivityTransZ;
+            PartialActivityRotX = other.PartialActivityRotX;
             ToModify = other.ToModify;
             ToDelete = other.ToDelete;
         }
@@ -69,6 +73,10 @@ namespace Parametric_FEM_Toolbox.RFEM
         public RFDiagram DiagramTransY { get; set; }
         public RFDiagram DiagramTransZ { get; set; }
         public RFDiagram DiagramRotX { get; set; }
+        public RFPartialActivity PartialActivityTransX { get; set; }
+        public RFPartialActivity PartialActivityTransY { get; set; }
+        public RFPartialActivity PartialActivityTransZ { get; set; }
+        public RFPartialActivity PartialActivityRotX { get; set; }
 
         // Display Info of the RFEM Objects on Panels
         // Parameters are separated by ";". The component split text can be used to break the string down into a list.

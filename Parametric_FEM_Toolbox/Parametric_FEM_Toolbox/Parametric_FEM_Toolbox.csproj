@@ -113,6 +113,8 @@
     <Compile Include="GUI\Component_ExtrudeMembers_GUI.cs" />
     <Compile Include="GUI\Component_LCA_GUI.cs" />
     <Compile Include="Deprecated\Component_OptimizeCS_GUI_OBSOLETE.cs" />
+    <Compile Include="Deprecated\Component_RFMemberHinge_GUI_OBSOLETE_2.cs" />
+    <Compile Include="GUI\Component_RFPartialActivity_GUI.cs" />
     <Compile Include="GUI\Component_RFDiagram_GUI.cs" />
     <Compile Include="GUI\Component_ResultsLineReactions_GUI.cs" />
     <Compile Include="Deprecated\Component_ResultsLineReactions_GUI_OBSOLETE.cs" />
@@ -234,6 +236,7 @@
     <Compile Include="GUI\SubComponent_RFLineRelease_Disassemble_GUI.cs" />
     <Compile Include="Deprecated\SubComponent_RFMemberHinge_Disassemble_GUI_OBSOLETE.cs" />
     <Compile Include="Deprecated\SubComponent_RFMemberHinge_Assemble_GUI_OBSOLETE.cs" />
+    <Compile Include="Deprecated\SubComponent_RFMemberHinge_Assemble_GUI_OBSOLETE_2.cs" />
     <Compile Include="GUI\SubComponent_RFNodalRelease_Disassemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFNodalRelease_Assemble_GUI.cs" />
     <Compile Include="GUI\SubComponent_RFMemberHinge_Disassemble_GUI.cs" />
@@ -297,6 +300,7 @@
     <Compile Include="HelperLibraries\Component_RFLine.cs" />
     <Compile Include="HelperLibraries\Component_SetData.cs" />
     <Compile Include="HelperLibraries\Component_GetData.cs" />
+    <Compile Include="RFEM\RFPartialActivity.cs" />
     <Compile Include="RFEM\RFFreeLineLoad.cs" />
     <Compile Include="RFEM\RFDiagram.cs" />
     <Compile Include="RFEM\RFFreeRectangularLoad.cs" />
@@ -666,6 +670,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Assemble_LineReleases.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Partial_Activity.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
