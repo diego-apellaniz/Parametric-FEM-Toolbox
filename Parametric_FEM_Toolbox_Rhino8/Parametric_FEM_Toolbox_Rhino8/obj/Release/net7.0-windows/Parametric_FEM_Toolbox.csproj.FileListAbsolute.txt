@@ -1,0 +1,15 @@
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\bin\Release\net7.0-windows\Parametric_FEM_Toolbox.deps.json
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\bin\Release\net7.0-windows\Parametric_FEM_Toolbox.gha
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\bin\Release\net7.0-windows\Parametric_FEM_Toolbox.pdb
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\Parametric_FEM_Toolbox.csproj.AssemblyReference.cache
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\Parametric_FEM_Toolbox.Properties.Resources.resources
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\Parametric_FEM_Toolbox.csproj.GenerateResource.cache
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\Parametric_FEM_Toolbox.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\Parametric_FEM_Toolbox.AssemblyInfoInputs.cache
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\Parametric_FEM_Toolbox.AssemblyInfo.cs
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\Parametric_FEM_Toolbox.csproj.CoreCompileInputs.cache
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\Parametric_FEM_Toolbox.sourcelink.json
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\Parametric_FEM_Toolbox.gha
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\refint\Parametric_FEM_Toolbox.gha
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\Parametric_FEM_Toolbox.pdb
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\obj\Release\net7.0-windows\ref\Parametric_FEM_Toolbox.gha

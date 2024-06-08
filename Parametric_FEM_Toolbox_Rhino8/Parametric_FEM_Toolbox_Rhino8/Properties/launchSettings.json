@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Parametric_FEM_Toolbox_Rhino8": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Rhino 8\\System\\Rhino.exe"
+    },
+    "Rhino8_Debug": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Rhino 8\\System\\Rhino.exe"
+    }
+  }
+}

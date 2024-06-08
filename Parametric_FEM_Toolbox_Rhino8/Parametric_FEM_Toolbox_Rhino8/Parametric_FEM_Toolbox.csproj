@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+	
+  <PropertyGroup>
+    <TargetFrameworks>net7.0-windows;net48-windows</TargetFrameworks>
+    <Version>1.0</Version>
+    <Title>Parametric_FEM_Toolbox_Rhino8</Title>
+    <Description>Description of Parametric_FEM_Toolbox_Rhino8</Description>
+    <TargetExt>.gha</TargetExt>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Eto.Forms" Version="2.8.3" />
+    <PackageReference Include="Grasshopper" Version="8.6.24101.5001" IncludeAssets="compile;build" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="Dlubal.RFEM3">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Common Files\Dlubal\ImportExport\RX-Common.NET\Dlubal.RFEM3.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Dlubal.RFEM5">
+      <HintPath>..\..\..\..\..\Otros\cominterfaces\SDK\Reference Assemblies\x64\Dlubal.RFEM5.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Dlubal.STEEL_EC3">
+      <HintPath>..\..\..\..\..\..\..\..\Windows\assembly\GAC_64\Dlubal.STEEL_EC3\1.0.0.0__6e4df275960cb606\Dlubal.STEEL_EC3.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="Copy &quot;C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox_Rhino8\Parametric_FEM_Toolbox_Rhino8\bin\Debug\net48-windows\$(TargetName).gha&quot; &quot;C:\Users\diego\AppData\Roaming\Grasshopper\Libraries\$(TargetName).gha&quot;" />
+  </Target>
+
+</Project>

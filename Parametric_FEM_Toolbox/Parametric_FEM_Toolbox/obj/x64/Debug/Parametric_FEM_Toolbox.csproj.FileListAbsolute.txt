@@ -24,13 +24,8 @@ C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Too
 C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\GH_IO.dll
 C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\Grasshopper.dll
 C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\RhinoCommon.dll
-C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\Mono.Cecil.dll
-C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\GH_Util.dll
 C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\Eto.pdb
 C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\Eto.xml
-C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\GH_IO.xml
-C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\Grasshopper.xml
-C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\RhinoCommon.xml
 C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Debug\Parametric_FEM_Toolbox.Properties.Resources.resources
 C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Debug\Parametric_FEM_Toolbox.csproj.GenerateResource.cache
 C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Debug\Parametric_FEM_Toolbox.csproj.CoreCompileInputs.cache
@@ -58,3 +53,9 @@ C:\Users\dapellaniz\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FE
 C:\Users\dapellaniz\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\RhinoCommon.xml
 C:\Users\dapellaniz\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Debug\Parametric_FEM_Toolbox.csproj.CopyComplete
 C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Debug\Parametric_FEM_Toolbox.csproj.AssemblyReference.cache
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\System.Collections.Immutable.dll
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\System.Reflection.Metadata.dll
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\System.Memory.dll
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\System.Numerics.Vectors.dll
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Debug\System.Buffers.dll

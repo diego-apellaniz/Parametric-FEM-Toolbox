@@ -1,0 +1,122 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\diego\\OneDrive\\Projects\\Repos\\Parametric_FEM_Toolbox\\Parametric_FEM_Toolbox_Rhino8\\Parametric_FEM_Toolbox_Rhino8\\Parametric_FEM_Toolbox.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\diego\\OneDrive\\Projects\\Repos\\Parametric_FEM_Toolbox\\Parametric_FEM_Toolbox_Rhino8\\Parametric_FEM_Toolbox_Rhino8\\Parametric_FEM_Toolbox.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\diego\\OneDrive\\Projects\\Repos\\Parametric_FEM_Toolbox\\Parametric_FEM_Toolbox_Rhino8\\Parametric_FEM_Toolbox_Rhino8\\Parametric_FEM_Toolbox.csproj",
+        "projectName": "Parametric_FEM_Toolbox",
+        "projectPath": "C:\\Users\\diego\\OneDrive\\Projects\\Repos\\Parametric_FEM_Toolbox\\Parametric_FEM_Toolbox_Rhino8\\Parametric_FEM_Toolbox_Rhino8\\Parametric_FEM_Toolbox.csproj",
+        "packagesPath": "C:\\Users\\diego\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\diego\\OneDrive\\Projects\\Repos\\Parametric_FEM_Toolbox\\Parametric_FEM_Toolbox_Rhino8\\Parametric_FEM_Toolbox_Rhino8\\obj\\",
+        "projectStyle": "PackageReference",
+        "crossTargeting": true,
+        "configFilePaths": [
+          "C:\\Users\\diego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net48-windows",
+          "net7.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0-windows7.0": {
+            "targetAlias": "net7.0-windows",
+            "projectReferences": {}
+          },
+          "net48": {
+            "targetAlias": "net48-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0-windows7.0": {
+          "targetAlias": "net7.0-windows",
+          "dependencies": {
+            "Eto.Forms": {
+              "target": "Package",
+              "version": "[2.8.3, )"
+            },
+            "Grasshopper": {
+              "include": "Compile, Build",
+              "target": "Package",
+              "version": "[8.6.24101.5001, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
+            "System.Resources.Extensions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WindowsForms": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+        },
+        "net48": {
+          "targetAlias": "net48-windows",
+          "dependencies": {
+            "Eto.Forms": {
+              "target": "Package",
+              "version": "[2.8.3, )"
+            },
+            "Grasshopper": {
+              "include": "Compile, Build",
+              "target": "Package",
+              "version": "[8.6.24101.5001, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
+            "System.Resources.Extensions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

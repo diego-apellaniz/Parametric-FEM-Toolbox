@@ -1,0 +1,16 @@
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Release\Parametric_FEM_Toolbox.dll
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Release\Parametric_FEM_Toolbox.pdb
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Release\Eto.dll
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Release\GH_IO.dll
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Release\Grasshopper.dll
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Release\RhinoCommon.dll
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Release\Eto.pdb
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Release\Eto.xml
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Release\Parametric_FEM_Toolbox.csproj.AssemblyReference.cache
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Release\Parametric_FEM_Toolbox.Properties.Resources.resources
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Release\Parametric_FEM_Toolbox.csproj.GenerateResource.cache
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Release\Parametric_FEM_Toolbox.csproj.CoreCompileInputs.cache
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Release\Parametric_FEM_Toolbox.csproj.CopyComplete
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Release\Parametric_FEM_Toolbox.dll
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\obj\x64\Release\Parametric_FEM_Toolbox.pdb
+C:\Users\diego\OneDrive\Projects\Repos\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\Parametric_FEM_Toolbox\bin\x64\Release\Rhino.UI.dll

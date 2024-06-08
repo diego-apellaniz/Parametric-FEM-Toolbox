@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Condition=" '$(TargetFramework)' == 'net48-windows' AND '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)system.resources.extensions\8.0.0\buildTransitive\net462\System.Resources.Extensions.targets" Condition="Exists('$(NuGetPackageRoot)system.resources.extensions\8.0.0\buildTransitive\net462\System.Resources.Extensions.targets')" />
+    <Import Project="$(NuGetPackageRoot)rhinocommon\8.6.24101.5001\build\net48\RhinoCommon.targets" Condition="Exists('$(NuGetPackageRoot)rhinocommon\8.6.24101.5001\build\net48\RhinoCommon.targets')" />
+    <Import Project="$(NuGetPackageRoot)grasshopper\8.6.24101.5001\build\net48\Grasshopper.targets" Condition="Exists('$(NuGetPackageRoot)grasshopper\8.6.24101.5001\build\net48\Grasshopper.targets')" />
+    <Import Project="$(NuGetPackageRoot)eto.forms\2.8.3\build\Eto.Forms.targets" Condition="Exists('$(NuGetPackageRoot)eto.forms\2.8.3\build\Eto.Forms.targets')" />
+  </ImportGroup>
+  <ImportGroup Condition=" '$(TargetFramework)' == 'net7.0-windows' AND '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)rhinocommon\8.6.24101.5001\build\net48\RhinoCommon.targets" Condition="Exists('$(NuGetPackageRoot)rhinocommon\8.6.24101.5001\build\net48\RhinoCommon.targets')" />
+    <Import Project="$(NuGetPackageRoot)grasshopper\8.6.24101.5001\build\net48\Grasshopper.targets" Condition="Exists('$(NuGetPackageRoot)grasshopper\8.6.24101.5001\build\net48\Grasshopper.targets')" />
+    <Import Project="$(NuGetPackageRoot)eto.forms\2.8.3\build\Eto.Forms.targets" Condition="Exists('$(NuGetPackageRoot)eto.forms\2.8.3\build\Eto.Forms.targets')" />
+  </ImportGroup>
+</Project>
