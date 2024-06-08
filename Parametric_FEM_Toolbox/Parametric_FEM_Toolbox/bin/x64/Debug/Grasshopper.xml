@@ -4883,6 +4883,14 @@ Nechť již hříšné saxofony ďáblů rozzvučí síň úděsnými tóny walt
  <param name="key1">Test key.</param>
  <returns>True if they keys match, false if otherwise.</returns>
 </member>
+<member name="P:Grasshopper.Kernel.Special.GH_Cluster.EnableCaching">
+ <summary>
+ Gets whether cluster caching is enabled.
+ This is an application wide setting modified by the 
+ "TestClusterCache" command. It's primary aim is to
+ reduce computational overhead on Rhino Compute servers.
+ </summary>
+</member>
 <member name="T:Grasshopper.Kernel.Special.GH_Cluster.GH_ClusterPasswordUndoAction">
  <summary>
  Stores a single password change undo record.
@@ -9291,6 +9299,16 @@ Nechť již hříšné saxofony ďáblů rozzvučí síň úděsnými tóny walt
 <member name="F:Grasshopper.Kernel.GH_Exposure.septenary">
  <summary>
  Expose the object in the seventh section on the toolbar.
+ </summary>
+</member>
+<member name="F:Grasshopper.Kernel.GH_Exposure.octonary">
+ <summary>
+ Expose the object in the eighth section on the toolbar.
+ </summary>
+</member>
+<member name="F:Grasshopper.Kernel.GH_Exposure.last">
+ <summary>
+ This exposure will be the last subcategory available.
  </summary>
 </member>
 <member name="F:Grasshopper.Kernel.GH_Exposure.dropdown">

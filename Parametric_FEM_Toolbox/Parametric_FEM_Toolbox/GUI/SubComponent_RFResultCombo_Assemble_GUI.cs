@@ -146,8 +146,7 @@ namespace Parametric_FEM_Toolbox.GUI
             if (DA.GetData(5, ref toSolve))
             {
                 rfLoadCcombo.ToSolve = toSolve;
-            }
-                      
+            }                      
             DA.SetData(0, rfLoadCcombo);
         }
     }

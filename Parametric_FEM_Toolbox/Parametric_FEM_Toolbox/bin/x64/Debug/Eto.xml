@@ -3061,6 +3061,34 @@
             <copyright>(c) 2014 by Curtis Wensley</copyright>
             <license type="BSD-3">See LICENSE for full terms</license>
         </member>
+        <member name="M:Eto.Drawing.Font.FromFile(System.String,System.Single,Eto.Drawing.FontDecoration)">
+            <summary>
+            Creates a new instance of the Font class with the specified font file on disk.
+            </summary>
+            <remarks>
+            Note that calling this multiple times for the same file may cause additional overhead or unpredictable results, 
+            so you should keep a copy of it in memory when you want to use it.
+            </remarks>
+            <param name="fileName">Path to the font file to load</param>
+            <param name="size">Size of the font, in points</param>
+            <param name="decoration">Docorations to apply to the font</param>
+            <returns>A new instance of the Font object</returns>
+            <seealso cref="M:Eto.Drawing.FontTypeface.#ctor(System.String)"/>
+        </member>
+        <member name="M:Eto.Drawing.Font.FromStream(System.IO.Stream,System.Single,Eto.Drawing.FontDecoration)">
+            <summary>
+            Creates a new instance of the Font class from the specified stream.
+            </summary>
+            <remarks>
+            Note that calling this multiple times for the same stream may cause additional overhead or unpredictable results, 
+            so you should keep a copy of it in memory when you want to use it.
+            </remarks>
+            <param name="stream">Stream to a font file to load</param>
+            <param name="size">Size of the font, in points</param>
+            <param name="decoration">Decorations to apply to the font</param>
+            <returns>A new instance of the Font object</returns>
+            <seealso cref="M:Eto.Drawing.FontTypeface.#ctor(System.IO.Stream)"/>
+        </member>
         <member name="M:Eto.Drawing.Font.#ctor(System.String,System.Single,Eto.Drawing.FontStyle,Eto.Drawing.FontDecoration)">
             <summary>
             Creates a new instance of the Font class with a specified <paramref name="family"/>, <paramref name="size"/>, and <paramref name="style"/>
@@ -3517,6 +3545,58 @@
             Gets an enumeration of the one or more supported typefaces for this font family
             </summary>
         </member>
+        <member name="M:Eto.Drawing.FontFamily.FromFiles(System.String[])">
+            <summary>
+            Creates a new instance of the FontFamily class with the specified font files.
+            </summary>
+            <remarks>
+            All font files specified must be a part of the same typographical font family.
+            
+            Also, calling this multiple times for the same streams may cause additional overhead or unpredictable results, 
+            so you should keep a copy of it in memory when you want to use it.
+            </remarks>
+            <param name="fileNames">Path to the file(s) to include in this font family</param>
+            <returns>A new instance of the FontFamily class</returns>
+        </member>
+        <member name="M:Eto.Drawing.FontFamily.FromFiles(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new instance of the FontFamily class with the specified font files.
+            </summary>
+            <remarks>
+            All font files specified must be a part of the same typographical font family.
+            
+            Also, calling this multiple times for the same streams may cause additional overhead or unpredictable results, 
+            so you should keep a copy of it in memory when you want to use it.
+            </remarks>
+            <param name="fileNames">Path to the file(s) to include in this font family</param>
+            <returns>A new instance of the FontFamily class</returns>
+        </member>
+        <member name="M:Eto.Drawing.FontFamily.FromStreams(System.IO.Stream[])">
+            <summary>
+            Creates a new instance of the FontFamily class with the specified font file streams.
+            </summary>
+            <remarks>
+            All font files specified must be a part of the same typographical font family.
+            
+            Also, calling this multiple times for the same streams may cause additional overhead or unpredictable results, 
+            so you should keep a copy of it in memory when you want to use it.
+            </remarks>
+            <param name="streams">Streams of the font file(s) to include in this font family</param>
+            <returns>A new instance of the FontFamily class</returns>
+        </member>
+        <member name="M:Eto.Drawing.FontFamily.FromStreams(System.Collections.Generic.IEnumerable{System.IO.Stream})">
+            <summary>
+            Creates a new instance of the FontFamily class with the specified font file streams.
+            </summary>
+            <remarks>
+            All font files specified must be a part of the same typographical font family.
+            
+            Also, calling this multiple times for the same streams may cause additional overhead or unpredictable results, 
+            so you should keep a copy of it in memory when you want to use it.
+            </remarks>
+            <param name="streams">Streams of the font file(s) to include in this font family</param>
+            <returns>A new instance of the FontFamily class</returns>
+        </member>
         <member name="M:Eto.Drawing.FontFamily.#ctor(Eto.Drawing.FontFamily.IHandler)">
             <summary>
             Initializes a new instance of the FontFamily class with the specified handler
@@ -3615,6 +3695,18 @@
             Creates a new instance of a font family with a given name
             </summary>
             <param name="familyName">Name of the font family to create this instance for</param>
+        </member>
+        <member name="M:Eto.Drawing.FontFamily.IHandler.CreateFromFiles(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new instance of a font family with the given file names.
+            </summary>
+            <param name="fileNames">Paths to the font files to include in this FontFamily</param>
+        </member>
+        <member name="M:Eto.Drawing.FontFamily.IHandler.CreateFromStreams(System.Collections.Generic.IEnumerable{System.IO.Stream})">
+            <summary>
+            Creates a new instance of a font family with the given font file streams.
+            </summary>
+            <param name="streams">Streams to each of the font files to include in this FontFamily</param>
         </member>
         <member name="T:Eto.Drawing.Fonts">
             <summary>
@@ -3784,6 +3876,28 @@
             <param name="family">Family this typeface is part of</param>
             <param name="handler">Handler to use for this typeface instance</param>
         </member>
+        <member name="M:Eto.Drawing.FontTypeface.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the FontTypeface from the specified font file on disk.
+            </summary>
+            <remarks>
+            Note that calling this multiple times for the same file may cause additional overhead or unpredictable results, 
+            so you should keep a copy of it in memory when you want to use it.
+            </remarks>
+            <param name="fileName">Path to the font file to load</param>
+            <seealso cref="M:Eto.Drawing.FontFamily.FromFiles(System.Collections.Generic.IEnumerable{System.String})"/>
+        </member>
+        <member name="M:Eto.Drawing.FontTypeface.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a new instance of the FontTypeface from a font in the specified stream.
+            </summary>
+            <remarks>
+            Note that calling this multiple times for the same stream may cause additional overhead or unpredictable results, 
+            so you should keep a copy of it in memory when you want to use it.
+            </remarks>
+            <param name="stream">Stream to a font file to load</param>
+            <seealso cref="M:Eto.Drawing.FontFamily.FromStreams(System.Collections.Generic.IEnumerable{System.IO.Stream})"/>
+        </member>
         <member name="M:Eto.Drawing.FontTypeface.ToString">
             <summary>
             Gets a string representation of this typeface
@@ -3892,6 +4006,35 @@
             <summary>
             Gets a value indicating that this font is a symbol font and not generally used for text
             </summary>
+        </member>
+        <member name="P:Eto.Drawing.FontTypeface.IHandler.Family">
+            <summary>
+            Gets the FontFamily associated with this typeface
+            </summary>
+        </member>
+        <member name="M:Eto.Drawing.FontTypeface.IHandler.Create(Eto.Drawing.FontFamily)">
+            <summary>
+            Called when creating a FontTypeface for the specified FontFamily
+            </summary>
+            <param name="family">FontFamily this typeface was created for</param>
+        </member>
+        <member name="M:Eto.Drawing.FontTypeface.IHandler.Create(System.IO.Stream)">
+            <summary>
+            Called when creating a FontTypeface for the specified font file stream.
+            </summary>
+            <remarks>
+            Note that the Family must not be null after this call.
+            </remarks>
+            <param name="stream">Stream of the font file to load in this typeface</param>
+        </member>
+        <member name="M:Eto.Drawing.FontTypeface.IHandler.Create(System.String)">
+            <summary>
+            Called when creating a FontTypeface for the specified font file name.
+            </summary>
+            <remarks>
+            Note that the Family must not be null after this call.
+            </remarks>
+            <param name="fileName">Path to the font file to load in this typeface</param>
         </member>
         <member name="M:Eto.Drawing.FontTypeface.IHandler.HasCharacterRanges(System.Collections.Generic.IEnumerable{Eto.Forms.Range{System.Int32}})">
             <summary>
@@ -11640,10 +11783,10 @@
             Application settings folder to store settings or data
             </summary>
             <remarks>
-            This will return a different folder, depending on the platform:
-              OS X:    ~/Library/Application Settings/[Name Of Application]
-              Windows: [User's Home]/AppSettings
-              Linux:   ~/.config
+            This will return a different folder, depending on the platform: <br/>
+              OS X:    ~/Library/Application Support/ <br/>
+              Windows: %APPDATA% [User's Home]/Appdata/Roaming <br/>
+              Linux:   ~/.config <br/>
             </remarks>
         </member>
         <member name="F:Eto.EtoSpecialFolder.ApplicationResources">
@@ -11651,8 +11794,8 @@
             The application resources.path
             </summary>
             <remarks>
-            In OS X, this will be the .app bunldle's resource path.  Other platforms
-            will typically return the same path as the current executable file
+            In OS X, this will be the .app bundle's resource path.  Other platforms
+            will typically return the same path as the current executable file.
             </remarks>
         </member>
         <member name="F:Eto.EtoSpecialFolder.Documents">
@@ -11673,6 +11816,10 @@
             <summary>
             Gets the user's downloads folder
             </summary>
+            <remarks>
+            Note that for GTK on Windows, this will *always* return "[User's Home]/Downloads",
+            regardless of what the user's actual download path is.
+            </remarks>
         </member>
         <member name="T:Eto.EtoEnvironment">
             <summary>
@@ -12217,6 +12364,22 @@
             </summary>
             <param name="e">Event arguments</param>
         </member>
+        <member name="F:Eto.Forms.Application.IsActiveChangedEvent">
+            <summary>
+            Identifier for handlers when attaching the <see cref="E:Eto.Forms.Application.IsActiveChanged"/> event
+            </summary>
+        </member>
+        <member name="E:Eto.Forms.Application.IsActiveChanged">
+            <summary>
+            Occurs when the <see cref="P:Eto.Forms.Application.IsActive"/> property is changed, which tracks whether the application is currently active or not.
+            </summary>
+        </member>
+        <member name="M:Eto.Forms.Application.OnIsActiveChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Eto.Forms.Application.IsActiveChanged"/> event
+            </summary>
+            <param name="e">Event arguments</param>
+        </member>
         <member name="P:Eto.Forms.Application.MainForm">
             <summary>
             Gets or sets the main form for your application.
@@ -12397,6 +12560,12 @@
             </remarks>
             <value>The badge label.</value>
         </member>
+        <member name="P:Eto.Forms.Application.IsActive">
+            <summary>
+            Gets a value indicating that the application is currently the active application.
+            </summary>
+            <seealso cref="E:Eto.Forms.Application.IsActiveChanged"/>
+        </member>
         <member name="M:Eto.Forms.Application.RunIteration">
             <summary>
             Advanced. Runs an iteration of the main UI loop when you are blocking the UI thread with logic.
@@ -12453,6 +12622,11 @@
             Raises the notification activated event.
             </summary>
         </member>
+        <member name="M:Eto.Forms.Application.ICallback.OnIsActiveChanged(Eto.Forms.Application,System.EventArgs)">
+            <summary>
+            Raises the IsActiveChanged event.
+            </summary>
+        </member>
         <member name="T:Eto.Forms.Application.Callback">
             <summary>
             Callback implementation for the <see cref="T:Eto.Forms.Application"/> class
@@ -12476,6 +12650,11 @@
         <member name="M:Eto.Forms.Application.Callback.OnNotificationActivated(Eto.Forms.Application,Eto.Forms.NotificationEventArgs)">
             <summary>
             Raises the notification activated event.
+            </summary>
+        </member>
+        <member name="M:Eto.Forms.Application.Callback.OnIsActiveChanged(Eto.Forms.Application,System.EventArgs)">
+            <summary>
+            Raises the IsActiveChanged event.
             </summary>
         </member>
         <member name="T:Eto.Forms.Application.IHandler">
@@ -12579,6 +12758,11 @@
             <remarks>
             This is not recommended to use and you should use asynchronous calls instead via Task.Run or threads.
             </remarks>
+        </member>
+        <member name="P:Eto.Forms.Application.IHandler.IsActive">
+            <summary>
+            Gets a value indicating that the application is currently the active application
+            </summary>
         </member>
         <member name="T:Eto.Forms.BindingExtensions">
             <summary>
@@ -19260,6 +19444,34 @@
             <param name="availableSize">The available size to determine the preferred size</param>
             <returns>The preferred size this control would like to be, which can be larger than the specified <paramref name="availableSize" />.</returns>
         </member>
+        <member name="T:Eto.Forms.DataStoreExtensions">
+            <summary>
+            Extension methods for the <see cref="T:Eto.Forms.IDataStore`1"/>
+            </summary>
+        </member>
+        <member name="M:Eto.Forms.DataStoreExtensions.GetExpandedRowCount``1(Eto.Forms.IDataStore{``0},System.Int32)">
+            <summary>
+            Gets the expanded row count of the specified IDataStore&lt;ITreeItem&gt;, taking into account the expanded state of each child.
+            </summary>
+            <remarks>
+            Note that this has to traverse the entire tree up to the <paramref name="index"/>, so it will get slower for large trees
+            </remarks>
+            <typeparam name="T">Type of item</typeparam>
+            <param name="store">The data store to count the rows</param>
+            <param name="index">The index in <paramref name="store"/> to count up to, or -1 to count all rows</param>
+            <returns>The total row count including the count of any expanded nodes</returns>
+            <exception cref="T:System.ArgumentNullException">When store is null</exception>
+        </member>
+        <member name="M:Eto.Forms.DataStoreExtensions.GetRowOfIndexPath``1(Eto.Forms.IDataStore{``0},System.Int32[])">
+            <summary>
+            Gets the row of a path of indecies for each level in a IDataStore&lt;ITreeItem&gt;
+            </summary>
+            <typeparam name="T">Type of item</typeparam>
+            <param name="store">The data store to get the row.</param>
+            <param name="indexPath">Array of indexes leading to the item to get the row for.</param>
+            <returns>Row index where the specified index path points to</returns>
+            <exception cref="T:System.ArgumentNullException">When store is null</exception>
+        </member>
         <member name="T:Eto.Forms.DateTimePickerMode">
             <summary>
             Modes for the <see cref="T:Eto.Forms.DateTimePicker"/>
@@ -20991,6 +21203,38 @@
             Occurs when the <see cref="P:Eto.Forms.Grid.SelectedRows"/> is changed.
             </summary>
         </member>
+        <member name="F:Eto.Forms.Grid.ColumnOrderChangedEvent">
+            <summary>
+            Event identifier for handlers when attaching the <see cref="E:Eto.Forms.Grid.ColumnOrderChanged"/> event
+            </summary>
+        </member>
+        <member name="E:Eto.Forms.Grid.ColumnOrderChanged">
+            <summary>
+            Event to handle when a column has been reordered by the user.
+            </summary>
+        </member>
+        <member name="M:Eto.Forms.Grid.OnColumnOrderChanged(Eto.Forms.GridColumnEventArgs)">
+            <summary>
+            Raises the <see cref="E:Eto.Forms.Grid.ColumnOrderChanged"/> event
+            </summary>
+            <param name="e">Event arguments</param>
+        </member>
+        <member name="F:Eto.Forms.Grid.ColumnWidthChangedEvent">
+            <summary>
+            Event identifier for handlers when attaching the <see cref="E:Eto.Forms.Grid.ColumnWidthChanged"/> event
+            </summary>
+        </member>
+        <member name="E:Eto.Forms.Grid.ColumnWidthChanged">
+            <summary>
+            Event to handle when a column width has been changed.
+            </summary>
+        </member>
+        <member name="M:Eto.Forms.Grid.OnColumnWidthChanged(Eto.Forms.GridColumnEventArgs)">
+            <summary>
+            Raises the <see cref="E:Eto.Forms.Grid.ColumnWidthChanged"/> event
+            </summary>
+            <param name="e">Event arguments</param>
+        </member>
         <member name="M:Eto.Forms.Grid.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Eto.Forms.Grid"/> class.
@@ -21187,6 +21431,16 @@
             Raises the cell formatting event.
             </summary>
         </member>
+        <member name="M:Eto.Forms.Grid.ICallback.OnColumnOrderChanged(Eto.Forms.Grid,Eto.Forms.GridColumnEventArgs)">
+            <summary>
+            Raises the column display index changed event.
+            </summary>
+        </member>
+        <member name="M:Eto.Forms.Grid.ICallback.OnColumnWidthChanged(Eto.Forms.Grid,Eto.Forms.GridColumnEventArgs)">
+            <summary>
+            Raises the column width changed event.
+            </summary>
+        </member>
         <member name="T:Eto.Forms.Grid.Callback">
             <summary>
             Callbacks for instances of <see cref="T:Eto.Forms.Grid"/>
@@ -21225,6 +21479,16 @@
         <member name="M:Eto.Forms.Grid.Callback.OnCellFormatting(Eto.Forms.Grid,Eto.Forms.GridCellFormatEventArgs)">
             <summary>
             Raises the cell formatting event.
+            </summary>
+        </member>
+        <member name="M:Eto.Forms.Grid.Callback.OnColumnOrderChanged(Eto.Forms.Grid,Eto.Forms.GridColumnEventArgs)">
+            <summary>
+            Raises the column display index changed event.
+            </summary>
+        </member>
+        <member name="M:Eto.Forms.Grid.Callback.OnColumnWidthChanged(Eto.Forms.Grid,Eto.Forms.GridColumnEventArgs)">
+            <summary>
+            Raises the column width changed event.
             </summary>
         </member>
         <member name="T:Eto.Forms.Grid.IHandler">
@@ -21431,6 +21695,14 @@
             </summary>
             <value>The column maximum width</value>
         </member>
+        <member name="P:Eto.Forms.GridColumn.DisplayIndex">
+            <summary>
+            Gets or sets the index of the column in display order, or -1 to use the order they are added.
+            </summary>
+            <remarks>
+            This value must be within the range of the total number of columns that are added.
+            </remarks>
+        </member>
         <member name="T:Eto.Forms.GridColumn.IHandler">
             <summary>
             Handler interface for the <see cref="T:Eto.Forms.GridColumn"/>.
@@ -21514,6 +21786,14 @@
             Gets or sets the maximum width for the column
             </summary>
             <value>The column maximum width</value>
+        </member>
+        <member name="P:Eto.Forms.GridColumn.IHandler.DisplayIndex">
+            <summary>
+            Gets or sets the index of the column in display order, or -1 to use the order they are added.
+            </summary>
+            <remarks>
+            This value must be within the range of the total number of columns that are added.
+            </remarks>
         </member>
         <member name="T:Eto.Forms.GridItem">
             <summary>
@@ -21606,27 +21886,43 @@
         </member>
         <member name="P:Eto.Forms.GridCell.Item">
             <summary>
-            Gets the item associated with the row of the cell.
+            Gets the item associated with the row of the cell, or null if there is no row.
             </summary>
             <value>The row item.</value>
         </member>
         <member name="P:Eto.Forms.GridCell.RowIndex">
             <summary>
-            Gets the index of the row.
+            Gets the index of the row, or -1 if there is no row at this location.
             </summary>
             <value>The index of the row.</value>
         </member>
         <member name="P:Eto.Forms.GridCell.Column">
             <summary>
-            Gets the column of the cell, or null
+            Gets the column of the cell, or null if there is no column at the specified location.
             </summary>
             <value>The column.</value>
         </member>
         <member name="P:Eto.Forms.GridCell.ColumnIndex">
             <summary>
-            Gets the index of the column.
+            Gets the index of the column, or -1 if there is no column at the specified location.
             </summary>
             <value>The index of the column.</value>
+        </member>
+        <member name="P:Eto.Forms.GridCell.Type">
+            <summary>
+            Gets the type of the cell
+            </summary>
+            <value>Type of the cell</value>
+        </member>
+        <member name="M:Eto.Forms.GridCell.#ctor(Eto.Forms.GridColumn,System.Int32,System.Int32,Eto.Forms.GridCellType,System.Object)">
+            <summary>
+            Initializes a new instance of the GridCell class
+            </summary>
+            <param name="column">Column instance, or null if no column (e.g. empty area to right of columns)</param>
+            <param name="columnIndex">Index of the column for this cell, or -1 if no column (e.g. empty area to right of columns)</param>
+            <param name="rowIndex">Index of the row at the cell, or -1 if no row (e.g. header or empty area)</param>
+            <param name="type">Type of the cell, e.g. header, data, none</param>
+            <param name="item">Item instance for this row</param>
         </member>
         <member name="T:Eto.Forms.GridViewDragInfo">
             <summary>
@@ -21810,12 +22106,12 @@
         </member>
         <member name="M:Eto.Forms.GridView.GetCellAt(Eto.Drawing.PointF)">
             <summary>
-            Gets the node at a specified location from the origin of the control
+            Gets the cell information at a specified location from the origin of the control
             </summary>
             <remarks>
-            Useful for determining which node is under the mouse cursor.
+            Useful for determining which cell is under the mouse cursor.
             </remarks>
-            <returns>The item from the data store that is displayed at the specified location</returns>
+            <returns>The cell information at the specified location</returns>
             <param name="location">Point to find the node</param>
         </member>
         <member name="P:Eto.Forms.GridView.SelectionPreserver">
@@ -21900,17 +22196,15 @@
             </remarks>
             <param name="rows">Rows to update.</param>
         </member>
-        <member name="M:Eto.Forms.GridView.IHandler.GetCellAt(Eto.Drawing.PointF,System.Int32@,System.Int32@)">
+        <member name="M:Eto.Forms.GridView.IHandler.GetCellAt(Eto.Drawing.PointF)">
             <summary>
-            Gets the node at a specified point from the origin of the control
+            Gets the cell information at a specified location from the origin of the control
             </summary>
             <remarks>
-            Useful for determining which node is under the mouse cursor.
+            Useful for determining which cell is under the mouse cursor.
             </remarks>
-            <returns>The item from the data store that is displayed at the specified location</returns>
+            <returns>The cell information at the specified location</returns>
             <param name="location">Point to find the node</param>
-            <param name="row">Row under the specified location</param>
-            <param name="column">Column under the specified location</param>
         </member>
         <member name="M:Eto.Forms.GridView.IHandler.GetDragInfo(Eto.Forms.DragEventArgs)">
             <summary>
@@ -27451,6 +27745,26 @@
             </summary>
             <param name="item">Item that triggered the event.</param>
         </member>
+        <member name="T:Eto.Forms.GridCellType">
+            <summary>
+            Enumeration of the types of grid cells
+            </summary>
+        </member>
+        <member name="F:Eto.Forms.GridCellType.None">
+            <summary>
+            Empty part of the grid
+            </summary>
+        </member>
+        <member name="F:Eto.Forms.GridCellType.Data">
+            <summary>
+            Cell containing the data, that is when the row and column are a valid value.
+            </summary>
+        </member>
+        <member name="F:Eto.Forms.GridCellType.ColumnHeader">
+            <summary>
+            Column header
+            </summary>
+        </member>
         <member name="T:Eto.Forms.TreeGridCell">
             <summary>
             Information of a cell in the <see cref="T:Eto.Forms.TreeGridView"/>
@@ -27458,21 +27772,36 @@
         </member>
         <member name="P:Eto.Forms.TreeGridCell.Item">
             <summary>
-            Gets the item associated with the row of the cell.
+            Gets the item associated with the row of the cell, or null if there is no item.
             </summary>
             <value>The row item.</value>
         </member>
         <member name="P:Eto.Forms.TreeGridCell.Column">
             <summary>
-            Gets the column of the cell, or null
+            Gets the column of the cell, or null if there is no column at the specified location.
             </summary>
             <value>The column.</value>
         </member>
         <member name="P:Eto.Forms.TreeGridCell.ColumnIndex">
             <summary>
-            Gets the index of the column.
+            Gets the index of the column, or -1 if there is no column at the specified location.
             </summary>
             <value>The index of the column.</value>
+        </member>
+        <member name="P:Eto.Forms.TreeGridCell.Type">
+            <summary>
+            Gets the type of the cell
+            </summary>
+            <value>Type of the cell</value>
+        </member>
+        <member name="M:Eto.Forms.TreeGridCell.#ctor(Eto.Forms.GridColumn,System.Int32,Eto.Forms.GridCellType,System.Object)">
+            <summary>
+            Initializes a new instance of the TreeGridCell class
+            </summary>
+            <param name="column">Column instance, or null if no column (e.g. empty area to right of columns)</param>
+            <param name="columnIndex">Index of the column for this cell, or -1 if no column (e.g. empty area to right of columns)</param>
+            <param name="type">Type of the cell, e.g. header, data, none</param>
+            <param name="item">Item instance for this row</param>
         </member>
         <member name="T:Eto.Forms.GridDragPosition">
             <summary>
@@ -27742,12 +28071,12 @@
         </member>
         <member name="M:Eto.Forms.TreeGridView.GetCellAt(Eto.Drawing.PointF)">
             <summary>
-            Gets the node at a specified location from the origin of the control
+            Gets the cell information at a specified location from the origin of the control
             </summary>
             <remarks>
             Useful for determining which node is under the mouse cursor.
             </remarks>
-            <returns>The item from the data store that is displayed at the specified location</returns>
+            <returns>The cell information at the specified location</returns>
             <param name="location">Point to find the node</param>
         </member>
         <member name="M:Eto.Forms.TreeGridView.GetDragInfo(Eto.Forms.DragEventArgs)">
@@ -27874,13 +28203,12 @@
             <param name="item">Item to refresh</param>
             <param name="reloadChildren">Reload children of the specified item</param>
         </member>
-        <member name="M:Eto.Forms.TreeGridView.IHandler.GetCellAt(Eto.Drawing.PointF,System.Int32@)">
+        <member name="M:Eto.Forms.TreeGridView.IHandler.GetCellAt(Eto.Drawing.PointF)">
             <summary>
-            Gets the item and column of a location in the control.
+            Gets the cell information at a specified location from the origin of the control
             </summary>
-            <returns>The item from the data store that is displayed at the specified location</returns>
+            <returns>The cell information at the specified location</returns>
             <param name="location">Point to find the node</param>
-            <param name="column">Column at the location, or -1 if no column (e.g. at the end of the row)</param>
         </member>
         <member name="M:Eto.Forms.TreeGridView.IHandler.GetDragInfo(Eto.Forms.DragEventArgs)">
             <summary>
@@ -32244,7 +32572,7 @@
         </member>
         <member name="T:Eto.Forms.VerticalAlignment">
             <summary>
-            Horizontal alignment for controls
+            Vertical alignment for controls
             </summary>
         </member>
         <member name="F:Eto.Forms.VerticalAlignment.Top">
@@ -41032,39 +41360,34 @@
             Type of the GTK 3 platform
             </summary>
         </member>
-        <member name="F:Eto.Platforms.Mac">
-            <summary>
-            Type of the Mac OS X platform
-            </summary>
-        </member>
         <member name="F:Eto.Platforms.Mac64">
             <summary>
-            Type of the Mac OS X platform on 64-bit mono
-            </summary>
-        </member>
-        <member name="F:Eto.Platforms.XamMac">
-            <summary>
-            Type of the Xamarin.Mac v1 OS X platform
+            Type of the macOS platform on .NET 6+ or mono
             </summary>
         </member>
         <member name="F:Eto.Platforms.XamMac2">
             <summary>
-            Type of the Xamarin.Mac v2 OS X platform
+            Type of the Xamarin.Mac v2 macOS platform on mono
+            </summary>
+        </member>
+        <member name="F:Eto.Platforms.macOS">
+            <summary>
+            Type of the macOS platform on .NET 6.0.2xx+ SDK
             </summary>
         </member>
         <member name="F:Eto.Platforms.WinForms">
             <summary>
-            Type of the Windows forms platform
+            Type of the Windows Forms platform
             </summary>
         </member>
         <member name="F:Eto.Platforms.Wpf">
             <summary>
-            ID of the WPF platform
+            Type of the WPF platform
             </summary>
         </member>
         <member name="F:Eto.Platforms.Android">
             <summary>
-            ID of the Android platform
+            Type of the Android platform
             </summary>
         </member>
         <member name="T:Eto.PropertyStore">

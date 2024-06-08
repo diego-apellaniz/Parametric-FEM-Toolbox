@@ -175,6 +175,9 @@ namespace Parametric_FEM_Toolbox.GUI
                             data.SetCrossSection(crosec);
                         }
                         data.FinishModification();
+                        // Berechnung durchführen
+                        error = myCaseEC3.moCalculate();
+
                     }                    
 
                     // Get utilization of members

@@ -57,6 +57,7 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterOutputParam(new Param_String(), "Taper Shape", "Taper", "Taper Shape");
             unit.RegisterOutputParam(new Param_Number(), "FactorY", "Kcr,y", "Effective length factor Kcr,y");
             unit.RegisterOutputParam(new Param_Number(), "FactorZ", "Kcr,z", "Effective length factor Kcr,z");
+            unit.RegisterOutputParam(new Param_Integer(), "Foundation", "Found", "Number of Elastic Foundation");
             unit.RegisterOutputParam(new Param_Number(), "Weight [kg]", "W", "Member Weight");
 
             GH_ExtendableMenu gH_ExtendableMenu = new GH_ExtendableMenu(0, "result_beam");
@@ -69,8 +70,7 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.RegisterOutputParam(new Param_String(), "Include Solids", "ISolids", "List of solids (as string) to be included.");
             unit.RegisterOutputParam(new Param_String(), "Include Surfaces", "ISfcs", "List of surfaces (as string) to be included.");
             unit.RegisterOutputParam(new Param_String(), "IntegrateStressesAndForcesType", "Integrate", "IntegrateStressesAndForcesType");
-            unit.RegisterOutputParam(new Param_Number(), "Parameters", "Params", "Parameters to integrate stresses and forces.");
-            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[18]);
+            unit.RegisterOutputParam(new Param_Number(), "Parameters", "Params", "Parameters to integrate stresses and forces.");            
             gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[19]);
             gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[20]);
             gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[21]);
@@ -78,6 +78,7 @@ namespace Parametric_FEM_Toolbox.GUI
             gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[23]);
             gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[24]);
             gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[25]);
+            gH_ExtendableMenu.RegisterOutputPlug(unit.Outputs[26]);
             unit.AddMenu(gH_ExtendableMenu);
 
         }
@@ -112,15 +113,16 @@ namespace Parametric_FEM_Toolbox.GUI
             DA.SetData(14, rFMember.TaperShape);
             DA.SetData(15, rFMember.Kcry);
             DA.SetData(16, rFMember.Kcrz);
-            DA.SetData(17, rFMember.Weight);
-            DA.SetData(18, rFMember.ExceptMembers);
-            DA.SetData(19, rFMember.ExceptSolids);
-            DA.SetData(20, rFMember.ExceptSurfaces);
-            DA.SetData(21, rFMember.IncludeMembers);
-            DA.SetData(22, rFMember.IncludeSolids);
-            DA.SetData(23, rFMember.IncludeSurfaces);
-            DA.SetData(24, rFMember.Integrate);
-            DA.SetDataList(25, rFMember.Parameters);
+            DA.SetData(17, rFMember.FoundationNo);
+            DA.SetData(18, rFMember.Weight);
+            DA.SetData(19, rFMember.ExceptMembers);
+            DA.SetData(20, rFMember.ExceptSolids);
+            DA.SetData(21, rFMember.ExceptSurfaces);
+            DA.SetData(22, rFMember.IncludeMembers);
+            DA.SetData(23, rFMember.IncludeSolids);
+            DA.SetData(24, rFMember.IncludeSurfaces);
+            DA.SetData(25, rFMember.Integrate);
+            DA.SetDataList(26, rFMember.Parameters);
         }
     }
 }

@@ -74,6 +74,8 @@ namespace Parametric_FEM_Toolbox.GUI
             unit.Inputs[13].Parameter.Optional = true;
             unit.RegisterInputParam(new Param_Number(), "FactorZ", "Kcr,z", "Effective length factor Kcr,z", GH_ParamAccess.item);
             unit.Inputs[14].Parameter.Optional = true;
+            unit.RegisterInputParam(new Param_Integer(), "Foundation", "Found", "Number of Elastic Foundation", GH_ParamAccess.item);
+            unit.Inputs[15].Parameter.Optional = true;
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[4]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[5]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[6]);
@@ -85,29 +87,29 @@ namespace Parametric_FEM_Toolbox.GUI
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[12]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[13]);
             gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[14]);
+            gH_ExtendableMenu.RegisterInputPlug(unit.Inputs[15]);
             unit.AddMenu(gH_ExtendableMenu);
 
             GH_ExtendableMenu gH_ExtendableMenu1 = new GH_ExtendableMenu(1, "result_beam");
             gH_ExtendableMenu1.Name = "Result Beam";
             gH_ExtendableMenu1.Collapse();
             unit.RegisterInputParam(new Param_String(), "Except Members", "EMembers", "List of members (as string) NOT to be included.", GH_ParamAccess.item);
-            unit.Inputs[15].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_String(), "Except Solids", "ESolids", "List of solids (as string) NOT to be included.", GH_ParamAccess.item);
             unit.Inputs[16].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_String(), "Except Surfaces", "ESfcs", "List of surfaces (as string) NOT to be included.", GH_ParamAccess.item);
+            unit.RegisterInputParam(new Param_String(), "Except Solids", "ESolids", "List of solids (as string) NOT to be included.", GH_ParamAccess.item);
             unit.Inputs[17].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_String(), "Include Members", "IMembers", "List of members (as string) to be included.", GH_ParamAccess.item);
+            unit.RegisterInputParam(new Param_String(), "Except Surfaces", "ESfcs", "List of surfaces (as string) NOT to be included.", GH_ParamAccess.item);
             unit.Inputs[18].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_String(), "Include Solids", "ISolids", "List of solids (as string) to be included.", GH_ParamAccess.item);
+            unit.RegisterInputParam(new Param_String(), "Include Members", "IMembers", "List of members (as string) to be included.", GH_ParamAccess.item);
             unit.Inputs[19].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_String(), "Include Surfaces", "ISfcs", "List of surfaces (as string) to be included.", GH_ParamAccess.item);
+            unit.RegisterInputParam(new Param_String(), "Include Solids", "ISolids", "List of solids (as string) to be included.", GH_ParamAccess.item);
             unit.Inputs[20].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_Integer(), "IntegrateStressesAndForcesType", "Integrate", UtilLibrary.DescriptionRFTypes(typeof(IntegrateStressesAndForcesType)), GH_ParamAccess.item);
-            unit.Inputs[21].EnumInput = UtilLibrary.ListRFTypes(typeof(IntegrateStressesAndForcesType));
+            unit.RegisterInputParam(new Param_String(), "Include Surfaces", "ISfcs", "List of surfaces (as string) to be included.", GH_ParamAccess.item);
             unit.Inputs[21].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_Number(), "Parameters", "Params", "Parameters to integrate stresses and forces.", GH_ParamAccess.list);
+            unit.RegisterInputParam(new Param_Integer(), "IntegrateStressesAndForcesType", "Integrate", UtilLibrary.DescriptionRFTypes(typeof(IntegrateStressesAndForcesType)), GH_ParamAccess.item);
+            unit.Inputs[22].EnumInput = UtilLibrary.ListRFTypes(typeof(IntegrateStressesAndForcesType));
             unit.Inputs[22].Parameter.Optional = true;
-            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[15]);
+            unit.RegisterInputParam(new Param_Number(), "Parameters", "Params", "Parameters to integrate stresses and forces.", GH_ParamAccess.list);
+            unit.Inputs[23].Parameter.Optional = true;            
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[16]);
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[17]);
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[18]);
@@ -115,20 +117,21 @@ namespace Parametric_FEM_Toolbox.GUI
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[20]);
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[21]);
             gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[22]);
+            gH_ExtendableMenu1.RegisterInputPlug(unit.Inputs[23]);
             unit.AddMenu(gH_ExtendableMenu1);
 
             GH_ExtendableMenu gH_ExtendableMenu2 = new GH_ExtendableMenu(2, "modify");
             gH_ExtendableMenu2.Name = "Modify";
             gH_ExtendableMenu2.Collapse();
             unit.RegisterInputParam(new Param_RFEM(), "RF Member", "RF Member", "Member object from the RFEM model to modify", GH_ParamAccess.item);
-            unit.Inputs[23].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_Boolean(), "Modify", "Modify", "Modify object?", GH_ParamAccess.item);
             unit.Inputs[24].Parameter.Optional = true;
-            unit.RegisterInputParam(new Param_Boolean(), "Delete", "Delete", "Delete object?", GH_ParamAccess.item);
+            unit.RegisterInputParam(new Param_Boolean(), "Modify", "Modify", "Modify object?", GH_ParamAccess.item);
             unit.Inputs[25].Parameter.Optional = true;
-            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[23]);
+            unit.RegisterInputParam(new Param_Boolean(), "Delete", "Delete", "Delete object?", GH_ParamAccess.item);
+            unit.Inputs[26].Parameter.Optional = true;            
             gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[24]);
             gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[25]);
+            gH_ExtendableMenu2.RegisterInputPlug(unit.Inputs[26]);
             unit.AddMenu(gH_ExtendableMenu2);
 
             unit.RegisterOutputParam(new Param_RFEM(), "RF Member", "RF Member", "Output RFMember.");
@@ -159,6 +162,7 @@ namespace Parametric_FEM_Toolbox.GUI
             var div = 0;
             var kcry = 1.0;
             var kcrz = 1.0;
+            int fou = 0;
             //int newNo = 0;
             var emem = "";
             var esfc = "";
@@ -169,7 +173,7 @@ namespace Parametric_FEM_Toolbox.GUI
             var parameters = new List<double>();
             var integrate = 0;
 
-            if (DA.GetData(23, ref inRFEM))
+            if (DA.GetData(24, ref inRFEM))
             {
                 var oldRFMember = (RFMember)inRFEM.Value;
                 rFMember = new RFMember(oldRFMember);
@@ -214,11 +218,11 @@ namespace Parametric_FEM_Toolbox.GUI
                 level = GH_RuntimeMessageLevel.Warning;
                 msg = "Line is too short. It may cause import errors.";
             }
-            if (DA.GetData(24, ref mod))
+            if (DA.GetData(25, ref mod))
             {
                 rFMember.ToModify = mod;
             }
-            if (DA.GetData(25, ref del))
+            if (DA.GetData(26, ref del))
             {
                 rFMember.ToDelete = del;
             }
@@ -299,12 +303,16 @@ namespace Parametric_FEM_Toolbox.GUI
                 }
                 rFMember.Kcrz = kcrz;
             }
-
-            if (DA.GetData(15, ref emem) | DA.GetData(16, ref esol) | DA.GetData(17, ref esfc) |
-                DA.GetData(18, ref imem) | DA.GetData(19, ref isol) | DA.GetData(20, ref isfc) |
-                DA.GetDataList(22, parameters))
+            if (DA.GetData(15, ref fou))
             {
-                if(!DA.GetData(21, ref integrate))
+                rFMember.FoundationNo = fou;
+            }
+
+            if (DA.GetData(16, ref emem) | DA.GetData(17, ref esol) | DA.GetData(18, ref esfc) |
+                DA.GetData(19, ref imem) | DA.GetData(20, ref isol) | DA.GetData(21, ref isfc) |
+                DA.GetDataList(23, parameters))
+            {
+                if(!DA.GetData(22, ref integrate))
                 {
                     msg = "Insufficient input parameters. Provide Integrate Type. ";
                     level = GH_RuntimeMessageLevel.Warning;
