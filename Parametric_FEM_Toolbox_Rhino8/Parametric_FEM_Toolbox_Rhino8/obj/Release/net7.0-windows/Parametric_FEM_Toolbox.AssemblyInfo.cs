@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Description of Parametric_FEM_Toolbox_Rhino8")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+4b2193c77b36ee899305f7c41e0c7d033e707f2c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+8f43e0e135a64103d28e439efde177eaea0a9577")]
 [assembly: System.Reflection.AssemblyProductAttribute("Parametric_FEM_Toolbox")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Parametric_FEM_Toolbox")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
